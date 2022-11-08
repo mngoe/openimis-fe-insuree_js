@@ -176,6 +176,11 @@ export function fetchEducations(mm) {
   return graphql(payload, "INSUREE_EDUCATIONS");
 }
 
+export function fetchSalaries(mm) {
+  const payload = formatQuery("salaries", null, ["id"]);
+  return graphql(payload, "INSUREE_SALARIES");
+}
+
 export function fetchProfessions(mm) {
   const payload = formatQuery("professions", null, ["id"]);
   return graphql(payload, "INSUREE_PROFESSIONS");
