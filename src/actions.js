@@ -176,6 +176,26 @@ export function fetchEducations(mm) {
   return graphql(payload, "INSUREE_EDUCATIONS");
 }
 
+export function fetchSalaries(mm) {
+  const payload = formatQuery("salaries", null, ["id"]);
+  return graphql(payload, "INSUREE_SALARIES");
+}
+
+export function fetchFoodNumber(mm) {
+  const payload = formatQuery("foods", null, ["id"]);
+  return graphql(payload, "INSUREE_FOODS");
+}
+
+export function fetchSupport(mm) {
+  const payload = formatQuery("supports", null, ["id"]);
+  return graphql(payload, "INSUREE_SUPPORTS");
+}
+
+export function fetchDisplacement(mm) {
+  const payload = formatQuery("displacement_conditions", null, ["id"]);
+  return graphql(payload, "INSUREE_DISPLACEMENT_CONDITIONS");
+}
+
 export function fetchProfessions(mm) {
   const payload = formatQuery("professions", null, ["id"]);
   return graphql(payload, "INSUREE_PROFESSIONS");
