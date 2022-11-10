@@ -3,27 +3,27 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { injectIntl } from "react-intl";
 import { formatMessage, AutoSuggestion, withModulesManager } from "@openimis/fe-core";
-import { fetchSalaries } from "../actions";
+import { fetchSupport } from "../actions";
 import _debounce from "lodash/debounce";
 import _ from "lodash";
 
 class SalaryPicker extends Component {
   constructor(props) {
     super(props);
-    this.selectThreshold = props.modulesManager.getConf("fe-insuree", "SalaryPicker.selectThreshold", 10);
+    this.selectThreshold = props.modulesManager.getConf("fe-insuree", "SupportPicker.selectThreshold", 10);
   }
 
   componentDidMount() {
-    if (!this.props.salaries) {
+    if (!this.props.supports) {
       // prevent loading multiple times the cache when component is
       // several times on a page
       setTimeout(() => {
-        !this.props.fetching && !this.props.fetched && this.props.fetchSalaries(this.props.modulesManager);
+        !this.props.fetching && !this.props.fetched && this.props.fetchSupport(this.props.modulesManager);
       }, Math.floor(Math.random() * 300));
     }
   }
 
-  nullDisplay = this.props.nullLabel || formatMessage(this.props.intl, "insuree", `Salary.null`);
+  nullDisplay = this.props.nullLabel || formatMessage(this.props.intl, "insuree", `Support.null`);
 
   formatSuggestion = (i) => `${formatMessage(this.props.intl, "insuree", `Salary.${i}`)}`;
 
@@ -32,7 +32,7 @@ class SalaryPicker extends Component {
   render() {
     const {
       intl,
-      salaries,
+      supports,
       withLabel = true,
       label,
       withPlaceholder = false,
@@ -47,10 +47,10 @@ class SalaryPicker extends Component {
     return (
       <AutoSuggestion
         module="insuree"
-        items={salaries}
-        label={!!withLabel && (label || formatMessage(intl, "insuree", "SalaryPicker.label"))}
+        items={supports}
+        label={!!withLabel && (label || formatMessage(intl, "insuree", "SupportPicker.label"))}
         placeholder={
-          !!withPlaceholder ? placeholder || formatMessage(intl, "insuree", "SalaryPicker.placehoder") : null
+          !!withPlaceholder ? placeholder || formatMessage(intl, "insuree", "SupportPicker.placehoder") : null
         }
         getSuggestionValue={this.formatSuggestion}
         onSuggestionSelected={this.onSuggestionSelected}
@@ -67,13 +67,13 @@ class SalaryPicker extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  salaries: state.insuree.salaries,
-  fetching: state.insuree.fetchingSalaries,
-  fetched: state.medical.fetchedSalaries,
+  supports: state.insuree.supports,
+  fetching: state.insuree.fetchingSupport,
+  fetched: state.medical.fetchedSupport,
 });
 
 const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({ fetchSalaries }, dispatch);
+  return bindActionCreators({ fetchSupport }, dispatch);
 };
 
-export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(withModulesManager(SalaryPicker)));
+export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(withModulesManager(SupportPicker)));
