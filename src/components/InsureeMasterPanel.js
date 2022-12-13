@@ -237,16 +237,22 @@ class InsureeMasterPanel extends FormPanel {
                 />
               </Grid>
               <Grid item xs={3} className={classes.item}>
-                <PublishedComponent
-                  pubRef="insuree.EducationPicker"
-                  label="Revenu mensuel en CFA"
-                  module="insuree"
-                  value={!!edited && !!edited.salary ? edited.salary : ""}
-                  readOnly={readOnly}
-                  withNull={true}
-                  nullLabel={formatMessage(intl, "insuree", "insuree.Education.none")}
-                  onChange={(v) => this.updateAttribute("salary", { id: v })}
-                />
+                {insureeQuestions && insureeQuestions.length > 0 &&
+                  insureeQuestions.map((i, idx) => {
+                    return (
+                      <PublishedComponent
+                        pubRef="insuree.EducationPicker"
+                        label={i.question}
+                        module="insuree"
+                        value={!!edited && !!edited.salary ? edited.salary : ""}
+                        readOnly={readOnly}
+                        withNull={true}
+                        nullLabel={formatMessage(intl, "insuree", "insuree.Education.none")}
+                        onChange={(v) => this.updateAttribute("salary", { id: v })}
+                      />
+                    )
+                  })
+                }
               </Grid>
               <Grid item xs={3} className={classes.item}>
                 <FormControlLabel

@@ -176,24 +176,27 @@ export function fetchEducations(mm) {
   return graphql(payload, "INSUREE_EDUCATIONS");
 }
 
-export function fetchSalaries(mm) {
-  const payload = formatQuery("salaries", null, ["id"]);
-  return graphql(payload, "INSUREE_SALARIES");
+export function fetchQuestions(mm) {
+  const payload = formatQuery("insureeQuestions",
+    null,
+    [
+      "id",
+      "question",
+      "altLanguage"
+    ]);
+  return graphql(payload, "INSUREE_QUESTIONS");
 }
 
-export function fetchFoodNumber(mm) {
-  const payload = formatQuery("foods", null, ["id"]);
-  return graphql(payload, "INSUREE_FOODS");
-}
-
-export function fetchSupport(mm) {
-  const payload = formatQuery("supports", null, ["id"]);
-  return graphql(payload, "INSUREE_SUPPORTS");
-}
-
-export function fetchDisplacement(mm) {
-  const payload = formatQuery("displacement_conditions", null, ["id"]);
-  return graphql(payload, "INSUREE_DISPLACEMENT_CONDITIONS");
+export function fetchOptions(mm) {
+  const payload = formatQuery("insureeOptions",
+    null,
+    [
+      "id",
+      "option",
+      "altLanguage",
+      "questionId{id question}"
+    ]);
+  return graphql(payload, "INSUREE_OPTIONS");
 }
 
 export function fetchProfessions(mm) {
@@ -257,10 +260,9 @@ export function formatInsureeGQL(mm, insuree) {
     ${!!insuree.phone ? `phone: "${formatGQLString(insuree.phone)}"` : ""}
     ${!!insuree.email ? `email: "${formatGQLString(insuree.email)}"` : ""}
     ${!!insuree.currentAddress ? `currentAddress: "${formatGQLString(insuree.currentAddress)}"` : ""}
-    ${
-      !!insuree.currentVillage && !!insuree.currentVillage.id
-        ? `currentVillageId: ${decodeId(insuree.currentVillage.id)}`
-        : ""
+    ${!!insuree.currentVillage && !!insuree.currentVillage.id
+      ? `currentVillageId: ${decodeId(insuree.currentVillage.id)}`
+      : ""
     }
     ${!!insuree.photo ? `photo:${formatInsureePhoto(insuree.photo)}` : ""}
     cardIssued:${!!insuree.cardIssued}
@@ -269,10 +271,9 @@ export function formatInsureeGQL(mm, insuree) {
     ${!!insuree.typeOfId && !!insuree.typeOfId.code ? `typeOfIdId: "${insuree.typeOfId.code}"` : ""}
     ${!!insuree.family && !!insuree.family.id ? `familyId: ${decodeId(insuree.family.id)}` : ""}
     ${!!insuree.relationship && !!insuree.relationship.id ? `relationshipId: ${insuree.relationship.id}` : ""}
-    ${
-      !!insuree.healthFacility && !!insuree.healthFacility.id
-        ? `healthFacilityId: ${decodeId(insuree.healthFacility.id)}`
-        : ""
+    ${!!insuree.healthFacility && !!insuree.healthFacility.id
+      ? `healthFacilityId: ${decodeId(insuree.healthFacility.id)}`
+      : ""
     }
     ${!!insuree.jsonExt ? `jsonExt: ${formatJsonField(insuree.jsonExt)}` : ""}
   `;
@@ -288,10 +289,9 @@ export function formatFamilyGQL(mm, family) {
     poverty: ${!!family.poverty}
     ${!!family.familyType && !!family.familyType.code ? `familyTypeId: "${family.familyType.code}"` : ""}
     ${!!family.address ? `address: "${formatGQLString(family.address)}"` : ""}
-    ${
-      !!family.confirmationType && !!family.confirmationType.code
-        ? `confirmationTypeId: "${family.confirmationType.code}"`
-        : ""
+    ${!!family.confirmationType && !!family.confirmationType.code
+      ? `confirmationTypeId: "${family.confirmationType.code}"`
+      : ""
     }
     ${!!family.confirmationNo ? `confirmationNo: "${formatGQLString(family.confirmationNo)}"` : ""}
     ${!!family.jsonExt ? `jsonExt: ${formatJsonField(family.jsonExt)}` : ""}
