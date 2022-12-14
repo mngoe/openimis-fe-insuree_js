@@ -43,6 +43,10 @@ function reducer(
     fetchedEducations: false,
     educations: null,
     errorEducations: null,
+    fetchingInsureeQuestions: false,
+    fetchedInsureeQuestions: false,
+    insureeQuestions: null,
+    errorInsureeQuestions: null,
     fetchingProfessions: false,
     fetchedProfessions: false,
     professions: null,
@@ -327,6 +331,28 @@ function reducer(
         ...state,
         fetchingFamily: false,
         errorFamily: formatServerError(action.payload),
+      };
+    case "INSUREE_QUESTIONS_REQ":
+      return {
+        ...state,
+        fetchingInsureeQuestions: true,
+        fetchedInsureeQuestions: false,
+        insureeQuestions: [],
+        errorInsureeQuestions: null,
+      };
+    case "INSUREE_QUESTIONS_RESP":
+      return {
+        ...state,
+        fetchingInsureeQuestions: false,
+        fetchedInsureeQuestions: true,
+        insureeQuestions: parseData(action.payload.data.insureeQuestions),
+        errorInsureeQuestions: formatGraphQLError(action.payload),
+      };
+    case "INSUREE_QUESTIONS_ERR":
+      return {
+        ...state,
+        fetchingInsureeQuestions: false,
+        errorInsureeQuestions: formatServerError(action.payload),
       };
     case "INSUREE_EDUCATIONS_REQ":
       return {

@@ -177,7 +177,8 @@ export function fetchEducations(mm) {
 }
 
 export function fetchQuestions(mm) {
-  const payload = formatQuery("insureeQuestions",
+  const payload = formatQuery(
+    "insureeQuestions",
     null,
     [
       "id",
