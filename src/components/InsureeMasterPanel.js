@@ -11,7 +11,10 @@ import {
   Contributions,
   withModulesManager,
 } from "@openimis/fe-core";
-import InsureeQuestionsPicker from "../pickers/InsureeQuestionsPicker"
+import { bindActionCreators } from "redux";
+import { injectIntl } from "react-intl";
+import { connect } from "react-redux";
+import { fetchQuestions, fetchOptions } from "../actions";
 
 const styles = (theme) => ({
   paper: theme.paper.paper,
@@ -27,6 +30,11 @@ const INSUREE_INSUREE_PANELS_CONTRIBUTION_KEY = "insuree.Insuree.panels";
 
 class InsureeMasterPanel extends FormPanel {
 
+  componentDidMount() {
+    this.props.fetchQuestions(this.props.modulesManager);
+    this.props.fetchOptions(this.props.modulesManager)
+  }
+
   render() {
     const {
       intl,
@@ -36,7 +44,11 @@ class InsureeMasterPanel extends FormPanel {
       titleParams = { label: "" },
       readOnly = true,
       actions,
+      insureeQuestions,
+      insureeOptions
     } = this.props;
+
+    console.log(this.props.insureeOptions);
 
     return (
       <Grid container>
@@ -239,47 +251,27 @@ class InsureeMasterPanel extends FormPanel {
                   onChange={(v) => this.updateAttribute("photo", !!v ? v : null)}
                 />
               </Grid>
-              <Grid item xs={3} className={classes.item}>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      color="primary"
-                      checked={!!edited && !!edited.healthStatus}
-                      disabled={readOnly}
-                      onChange={(v) => this.updateAttribute("healthStatus", !edited || !edited.healthStatus)}
-                    />
-                  }
-                  label={formatMessage(intl, "insuree", "Antécédants médicaux")}
-                />
-              </Grid>
-              <Grid item xs={2} className={classes.item}>
-                <TextInput
-                  module="insuree"
-                  label="Personne dans la maison"
-                  readOnly={readOnly}
-                  value={!!edited && !!edited.peopleHouse ? edited.peopleHouse : ""}
-                  onChange={(v) => this.updateAttribute("peopleHouse", v)}
-                  required={true}
-                />
-              </Grid>
-              <Grid item xs={2} className={classes.item}>
-                <TextInput
-                  module="insuree"
-                  label="Nombre de chambre"
-                  readOnly={readOnly}
-                  value={!!edited && !!edited.numberOfRoom ? edited.numberOfRoom : ""}
-                  onChange={(v) => this.updateAttribute("numberOfRoom", v)}
-                  required={true}
-                />
-              </Grid>
+              {!!insureeQuestions && insureeQuestions.length > 0 && (
+                <Grid container className={classes.item}>
+                  {insureeQuestions.map(e => {
+                    return (
+                      <Grid item xs={4} className={classes.item}>
+                        <TextInput
+                          module="insuree"
+                          label={e.question}
+                          required={true}
+                          readOnly={false}
+                        />
+                      </Grid>
+                    )
+                  })}
+                </Grid>
+              )}
               <Contributions
                 {...this.props}
                 updateAttribute={this.updateAttribute}
                 contributionKey={INSUREE_INSUREE_CONTRIBUTION_KEY}
               />
-            </Grid>
-            <Grid item xs={5} className={classes.item}>
-              <InsureeQuestionsPicker />
             </Grid>
           </Paper>
           <Contributions
@@ -293,4 +285,20 @@ class InsureeMasterPanel extends FormPanel {
   }
 }
 
-export default withModulesManager(withTheme(withStyles(styles)(InsureeMasterPanel)));
+const mapStateToProps = state => ({
+  insureeQuestions: state.insuree.insureeQuestions,
+  fetchingInsureeQuestions: state.insuree.fetchingInsureeQuestions,
+  fetchedInsureeQuestions: state.insuree.fetchedInsureeQuestions,
+  errorInsureeQuestions: state.insuree.errorInsureeQuestions,
+  insureeOptions: state.insuree.insureeOptions,
+  fetchingInsureeOptions: state.insuree.fetchingInsureeOptions,
+  fetchedInsureeOptions: state.insuree.fetchedInsureeOptions,
+  errorInsureeOptions: state.insuree.errorInsureeOptions,
+});
+
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators({ fetchQuestions, fetchOptions }, dispatch);
+};
+
+
+export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(withModulesManager(withTheme(withStyles(styles)(InsureeMasterPanel)))));

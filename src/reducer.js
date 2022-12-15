@@ -45,8 +45,12 @@ function reducer(
     errorEducations: null,
     fetchingInsureeQuestions: false,
     fetchedInsureeQuestions: false,
-    insureeQuestions: null,
+    insureeQuestions: [],
     errorInsureeQuestions: null,
+    fetchingInsureeOptions: false,
+    fetchedInsureeOptions: false,
+    insureeOptions: [],
+    errorInsureeOptions: null,
     fetchingProfessions: false,
     fetchedProfessions: false,
     professions: null,
@@ -345,7 +349,7 @@ function reducer(
         ...state,
         fetchingInsureeQuestions: false,
         fetchedInsureeQuestions: true,
-        insureeQuestions: parseData(action.payload.data.insureeQuestions),
+        insureeQuestions: action.payload.data.insureeQuestions,
         errorInsureeQuestions: formatGraphQLError(action.payload),
       };
     case "INSUREE_QUESTIONS_ERR":
@@ -353,6 +357,28 @@ function reducer(
         ...state,
         fetchingInsureeQuestions: false,
         errorInsureeQuestions: formatServerError(action.payload),
+      };
+    case "INSUREE_OPTIONS_REQ":
+      return {
+        ...state,
+        fetchingInsureeOptions: true,
+        fetchedInsureeOptions: false,
+        insureeOptions: [],
+        errorInsureeOptions: null,
+      };
+    case "INSUREE_OPTIONS_RESP":
+      return {
+        ...state,
+        fetchingInsureeOptions: false,
+        fetchedInsureeOptions: true,
+        insureeOptions: action.payload.data.insureeOptions,
+        errorInsureeOptions: formatGraphQLError(action.payload),
+      };
+    case "INSUREE_OPTIONS_ERR":
+      return {
+        ...state,
+        fetchingInsureeOptions: false,
+        errorInsureeOptions: formatServerError(action.payload),
       };
     case "INSUREE_EDUCATIONS_REQ":
       return {
