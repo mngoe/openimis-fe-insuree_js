@@ -15,6 +15,7 @@ import { bindActionCreators } from "redux";
 import { injectIntl } from "react-intl";
 import { connect } from "react-redux";
 import { fetchQuestions, fetchOptions } from "../actions";
+import InsureeOptionsPicker from "../pickers/InsureeOptionsPicker"
 
 const styles = (theme) => ({
   paper: theme.paper.paper,
@@ -32,7 +33,6 @@ class InsureeMasterPanel extends FormPanel {
 
   componentDidMount() {
     this.props.fetchQuestions(this.props.modulesManager);
-    this.props.fetchOptions(this.props.modulesManager)
   }
 
   render() {
@@ -45,10 +45,7 @@ class InsureeMasterPanel extends FormPanel {
       readOnly = true,
       actions,
       insureeQuestions,
-      insureeOptions
     } = this.props;
-
-    console.log(this.props.insureeOptions);
 
     return (
       <Grid container>
@@ -256,11 +253,14 @@ class InsureeMasterPanel extends FormPanel {
                   {insureeQuestions.map(e => {
                     return (
                       <Grid item xs={4} className={classes.item}>
-                        <TextInput
+                        <InsureeOptionsPicker
                           module="insuree"
                           label={e.question}
+                          questionID={e.id}
+                          value={!!edited? edited.response : null}
                           required={true}
                           readOnly={false}
+                          onChange={(v) => this.updateAttribute(`response${e.id}`, v)}
                         />
                       </Grid>
                     )
@@ -290,10 +290,6 @@ const mapStateToProps = state => ({
   fetchingInsureeQuestions: state.insuree.fetchingInsureeQuestions,
   fetchedInsureeQuestions: state.insuree.fetchedInsureeQuestions,
   errorInsureeQuestions: state.insuree.errorInsureeQuestions,
-  insureeOptions: state.insuree.insureeOptions,
-  fetchingInsureeOptions: state.insuree.fetchingInsureeOptions,
-  fetchedInsureeOptions: state.insuree.fetchedInsureeOptions,
-  errorInsureeOptions: state.insuree.errorInsureeOptions,
 });
 
 const mapDispatchToProps = (dispatch) => {
