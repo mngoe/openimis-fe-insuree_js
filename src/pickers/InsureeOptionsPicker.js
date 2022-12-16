@@ -33,6 +33,8 @@ class InsureeOptionsPicker extends Component {
     });
   };
 
+  onSuggestionSelected = (v) => this.props.onChange(v, v);
+
   nullDisplay = this.props.nullLabel || formatMessage(this.props.intl, "insuree", `InsureeGender.null`);
 
   render() {
@@ -40,7 +42,6 @@ class InsureeOptionsPicker extends Component {
       intl,
       label,
       module = "insuree",
-      onChange,
       classes,
       questionID,
       insureeOptions,
@@ -59,15 +60,15 @@ class InsureeOptionsPicker extends Component {
     });
 
     let options = !!opt ? opt.map((v) => ({ value: v, label: v })) : [];
-    console.log(this.props);
-    console.log(options);
+    //console.log(this.props);
+    console.log(value);
 
     return (
       <SelectInput
         module={module}
         options={options}
         label={!!withLabel ? label : null}
-        onChange={this._onChange}
+        onChange={this.onSuggestionSelected}
         value={value}
         reset={reset}
         readOnly={readOnly}

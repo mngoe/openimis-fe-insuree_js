@@ -260,7 +260,7 @@ class InsureeMasterPanel extends FormPanel {
                           value={!!edited? edited.response : null}
                           required={true}
                           readOnly={false}
-                          onChange={(v) => this.updateAttribute(`response${e.id}`, v)}
+                          onChange={(v) => this.updateAttribute([e.id],v)}
                         />
                       </Grid>
                     )
