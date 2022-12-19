@@ -177,8 +177,17 @@ export function fetchEducations(mm) {
 }
 
 export function fetchQuestions(mm) {
-  const payload = formatQuery("insureeQuestions", null,["id", "question", "altLanguage"]);
+  const payload = formatQuery("insureeQuestions", null, ["id", "question", "altLanguage"]);
   return graphql(payload, "INSUREE_QUESTIONS");
+}
+
+export function fetchInsureeAnswers(mm) {
+  const payload = formatQuery("insureeAnswers", null,
+    [
+      "id",
+      "insureeAnswer{questionId{ id } option}"
+    ]);
+  return graphql(payload, "INSUREE_ANSWERS");
 }
 
 export function fetchOptions(mm) {

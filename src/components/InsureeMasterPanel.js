@@ -31,9 +31,66 @@ const INSUREE_INSUREE_PANELS_CONTRIBUTION_KEY = "insuree.Insuree.panels";
 
 class InsureeMasterPanel extends FormPanel {
 
+  state = {
+    answers: [],
+  };
+
   componentDidMount() {
     this.props.fetchQuestions(this.props.modulesManager);
+    this.setState({ answers: this.initData() });
   }
+
+  _answer = (v) => {
+    return (
+      v.label
+    );
+  };
+
+  _question = (v) => {
+    return (
+      v.question.id
+    );
+  };
+
+  initData = () => {
+    let answers = [];
+    if (!!this.props.insureeAnswers) {
+      answers = this.props.insureeAnswers || [];
+    }
+    return answers;
+  };
+
+  _onChange = (idx, attr, v) => {
+    let data = this._updateData(idx, [{ attr, v }]);
+    this._onEditedChanged(data);
+  };
+
+  _updateData = (idx, updates) => {
+    const answers = [...this.state.answers];
+    updates.forEach((update) => (answers[idx][update.attr] = update.v));
+    if (answers.length === idx + 1) {
+      answers.push({});
+    }
+    return answers;
+  };
+
+  _onEditedChanged = (answers) => {
+    let edited = { ...this.props.edited };
+    edited[`insureeAnswers`] = answers;
+    this.props.onEditedChanged(edited);
+  };
+
+  _onChangeItem = (idx, attr, v) => {
+    let answers = this._updateData(idx, [{ attr, v }]);
+    if (!v) {
+      answers[idx].insureeAnswer.questionId.id = null;
+      answers[idx].insureeAnswer.option = null;
+    } else {
+      answers[idx].insureeAnswer.questionId.id = this._question(v);
+      answers[idx].insureeAnswer.option = this._answer(v);
+    }
+    this._onEditedChanged(answers);
+  };
 
   render() {
     const {
@@ -45,6 +102,7 @@ class InsureeMasterPanel extends FormPanel {
       readOnly = true,
       actions,
       insureeQuestions,
+      insureeAnswers
     } = this.props;
 
     return (
@@ -250,17 +308,17 @@ class InsureeMasterPanel extends FormPanel {
               </Grid>
               {!!insureeQuestions && insureeQuestions.length > 0 && (
                 <Grid container className={classes.item}>
-                  {insureeQuestions.map(e => {
+                  {insureeQuestions.map((e, edx) => {
                     return (
                       <Grid item xs={4} className={classes.item}>
                         <InsureeOptionsPicker
                           module="insuree"
                           label={e.question}
                           questionID={e.id}
-                          value={!!edited? edited.response : null}
+                          value={!!edited ? edited.response : ''}
                           required={true}
                           readOnly={false}
-                          onChange={(v) => this.updateAttribute([e.id],v)}
+                          onChange={(v) => this._onChangeItem(edx, `insureeAnswer`, v)}
                         />
                       </Grid>
                     )
@@ -290,6 +348,10 @@ const mapStateToProps = state => ({
   fetchingInsureeQuestions: state.insuree.fetchingInsureeQuestions,
   fetchedInsureeQuestions: state.insuree.fetchedInsureeQuestions,
   errorInsureeQuestions: state.insuree.errorInsureeQuestions,
+  insureeAnswers: state.insuree.insureeAnswers,
+  fetchingInsureeAnswers: state.insuree.fetchingInsureeAnswers,
+  fetchedInsureeAnswers: state.insuree.fetchedInsureeAnswers,
+  errorInsureeAnswers: state.insuree.errorInsureeAnswers,
 });
 
 const mapDispatchToProps = (dispatch) => {

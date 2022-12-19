@@ -380,6 +380,28 @@ function reducer(
         fetchingInsureeOptions: false,
         errorInsureeOptions: formatServerError(action.payload),
       };
+    case "INSUREE_ANSWERS_REQ":
+      return {
+        ...state,
+        fetchingInsureeAnswers: true,
+        fetchedInsureeAnswers: false,
+        insureeAnswers: [],
+        errorInsureeAnswers: null,
+      };
+    case "INSUREE_ANSWERS_RESP":
+      return {
+        ...state,
+        fetchingInsureeAnswers: false,
+        fetchedInsureeAnswers: true,
+        insureeAnswers: action.payload.data.insureeAnswers,
+        errorInsureeAnswers: formatGraphQLError(action.payload),
+      };
+    case "INSUREE_ANSWERS_ERR":
+      return {
+        ...state,
+        fetchingInsureeAnswers: false,
+        errorInsureeAnswers: formatServerError(action.payload),
+      };
     case "INSUREE_EDUCATIONS_REQ":
       return {
         ...state,
