@@ -177,7 +177,12 @@ export function fetchEducations(mm) {
 }
 
 export function fetchQuestions(mm) {
-  const payload = formatQuery("insureeQuestions", null, ["id", "question", "altLanguage"]);
+  const payload = formatQuery("insureeQuestions", null, 
+  [
+    "id", 
+    "question", 
+    "altLanguage"
+  ]);
   return graphql(payload, "INSUREE_QUESTIONS");
 }
 

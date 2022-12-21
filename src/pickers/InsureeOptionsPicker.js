@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { injectIntl } from "react-intl";
 import { formatMessage, SelectInput, withModulesManager } from "@openimis/fe-core";
-import { fetchOptions } from "../actions";
 import _debounce from "lodash/debounce";
 import _ from "lodash";
 
@@ -18,7 +17,6 @@ class InsureeOptionsPicker extends Component {
     if (!!this.props.value) {
       this.setState((state, props) => ({ value: props.value }));
     };
-    this.props.fetchOptions(this.props.modulesManager);
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -27,13 +25,41 @@ class InsureeOptionsPicker extends Component {
     }
   }
 
-  _onChange = (v) => {
-    this.setState({ value: v }, (e) => {
-      this.props.onChange(v, v);
-    });
+  onSuggestionSelected = (v) => this.props.onChange(v, v);
+
+  _updateData = (idx, updates) => {
+    const data = [...this.props.insureeAnswers];
+    console.log(data);
+    updates.forEach((update) => (data[idx][update.attr] = update.v));
+    return data;
   };
 
-  onSuggestionSelected = (v) => this.props.onChange(v, v);
+  _onEditedChanged = (data) => {
+    let edited = { ...this.props.edited };
+    edited[`insureeAnswers`] = data;
+    //this.props.onEditedChanged(edited);
+  };
+
+  _onChange = (idx, attr, v) => {
+    let data = this._updateData(idx, [{ attr, v }]);
+    this._onEditedChanged(data);
+    console.log(v);
+  };
+
+  _onChangeItem = (idx, attr, v) => {
+    let data = this._updateData(idx, [{ attr, v }]);
+    if (!v) {
+      data[idx].optionLabel = null;
+    } else {
+      data[idx].options.forEach((e) => {
+        if (e.value === v) {
+          data[idx].optionId = e.id;
+        }
+      })
+      data[idx].optionLabel = v;
+    }
+    this._onEditedChanged(data);
+  };
 
   nullDisplay = this.props.nullLabel || formatMessage(this.props.intl, "insuree", `InsureeGender.null`);
 
@@ -42,31 +68,24 @@ class InsureeOptionsPicker extends Component {
       intl,
       label,
       module = "insuree",
-      classes,
-      questionID,
-      insureeOptions,
-      value,
+      options,
       reset,
+      value,
+      edited,
       readOnly = false,
       required = false,
       withNull = true,
       withLabel = true,
+      insureeAnswers,
+      position
     } = this.props;
-    let opt = [];
-    insureeOptions.forEach(function (item) {
-      if (questionID == item.questionId.id) {
-        opt.push(item.option);
-      }
-    });
 
-    let options = !!opt ? opt.map((v) => ({ value: v, label: v })) : [];
-    //console.log(this.props);
-    console.log(value);
+    console.log(value); 
 
     return (
       <SelectInput
         module={module}
-        options={options}
+        options={insureeAnswers[position].options}
         label={!!withLabel ? label : null}
         onChange={this.onSuggestionSelected}
         value={value}
@@ -74,20 +93,10 @@ class InsureeOptionsPicker extends Component {
         readOnly={readOnly}
         required={required}
         nullLabel={this.nullDisplay}
+        withNull={withNull}
       />
     );
   }
 }
 
-const mapStateToProps = state => ({
-  insureeOptions: state.insuree.insureeOptions,
-  fetchingInsureeOptions: state.insuree.fetchingInsureeOptions,
-  fetchedInsureeOptions: state.insuree.fetchedInsureeOptions,
-  errorInsureeOptions: state.insuree.errorInsureeOptions,
-});
-
-const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({ fetchOptions }, dispatch);
-};
-
-export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(withModulesManager(InsureeOptionsPicker)));
+export default injectIntl(withModulesManager(InsureeOptionsPicker));

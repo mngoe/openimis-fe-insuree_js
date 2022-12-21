@@ -32,78 +32,41 @@ const INSUREE_INSUREE_PANELS_CONTRIBUTION_KEY = "insuree.Insuree.panels";
 class InsureeMasterPanel extends FormPanel {
 
   state = {
-    answers: [],
+    data: [],
   };
 
   componentDidMount() {
     this.props.fetchQuestions(this.props.modulesManager);
-    this.setState({ answers: this.initData() });
+    this.props.fetchOptions(this.props.modulesManager);
   }
+  
 
-  _answer = (v) => {
-    return (
-      v.label
-    );
-  };
-
-  _question = (v) => {
-    return (
-      v.question.id
-    );
-  };
-
-  initData = () => {
-    let answers = [];
-    if (!!this.props.insureeAnswers) {
-      answers = this.props.insureeAnswers || [];
-    }
-    return answers;
-  };
-
-  _onChange = (idx, attr, v) => {
-    let data = this._updateData(idx, [{ attr, v }]);
-    this._onEditedChanged(data);
-  };
-
-  _updateData = (idx, updates) => {
-    const answers = [...this.state.answers];
-    updates.forEach((update) => (answers[idx][update.attr] = update.v));
-    if (answers.length === idx + 1) {
-      answers.push({});
-    }
-    return answers;
-  };
-
-  _onEditedChanged = (answers) => {
-    let edited = { ...this.props.edited };
-    edited[`insureeAnswers`] = answers;
-    this.props.onEditedChanged(edited);
-  };
-
-  _onChangeItem = (idx, attr, v) => {
-    let answers = this._updateData(idx, [{ attr, v }]);
-    if (!v) {
-      answers[idx].insureeAnswer.questionId.id = null;
-      answers[idx].insureeAnswer.option = null;
-    } else {
-      answers[idx].insureeAnswer.questionId.id = this._question(v);
-      answers[idx].insureeAnswer.option = this._answer(v);
-    }
-    this._onEditedChanged(answers);
-  };
+  nullDisplay = this.props.nullLabel || formatMessage(this.props.intl, "insuree", `InsureeGender.null`);
 
   render() {
     const {
       intl,
       classes,
       edited,
+      module = "insuree",
       title = "Insuree.title",
       titleParams = { label: "" },
       readOnly = true,
       actions,
       insureeQuestions,
-      insureeAnswers
+      insureeAnswers = [],
+      insureeOptions,
     } = this.props;
+
+    insureeQuestions.forEach(function (question) {
+      let opt = [];
+      insureeOptions.forEach(function (option) {
+        if (question.id == option.questionId.id) {
+          opt.push({ value: option.option, label: option.option, id: option.id});
+        }
+      });
+      insureeAnswers.push({ questionId: question.id, options: opt, optionLabel: '', optionId: ''});
+    });
 
     return (
       <Grid container>
@@ -306,19 +269,21 @@ class InsureeMasterPanel extends FormPanel {
                   onChange={(v) => this.updateAttribute("photo", !!v ? v : null)}
                 />
               </Grid>
-              {!!insureeQuestions && insureeQuestions.length > 0 && (
+              {!!insureeAnswers && insureeAnswers.length > 0 && (
                 <Grid container className={classes.item}>
-                  {insureeQuestions.map((e, edx) => {
+                  {insureeAnswers.map((e, edx) => {
                     return (
                       <Grid item xs={4} className={classes.item}>
                         <InsureeOptionsPicker
                           module="insuree"
-                          label={e.question}
-                          questionID={e.id}
-                          value={!!edited ? edited.response : ''}
+                          label={insureeQuestions[edx].question}
+                          value={!!edited ? edited[`insureeAnswers-${edx}`] : ''}
                           required={true}
                           readOnly={false}
-                          onChange={(v) => this._onChangeItem(edx, `insureeAnswer`, v)}
+                          position={edx}
+                          edited={edited}
+                          insureeAnswers={insureeAnswers}
+                          onChange={(v) => this.updateAttribute(`insureeAnswers-${edx}`, v)}
                         />
                       </Grid>
                     )
@@ -348,10 +313,10 @@ const mapStateToProps = state => ({
   fetchingInsureeQuestions: state.insuree.fetchingInsureeQuestions,
   fetchedInsureeQuestions: state.insuree.fetchedInsureeQuestions,
   errorInsureeQuestions: state.insuree.errorInsureeQuestions,
-  insureeAnswers: state.insuree.insureeAnswers,
-  fetchingInsureeAnswers: state.insuree.fetchingInsureeAnswers,
-  fetchedInsureeAnswers: state.insuree.fetchedInsureeAnswers,
-  errorInsureeAnswers: state.insuree.errorInsureeAnswers,
+  insureeOptions: state.insuree.insureeOptions,
+  fetchingInsureeOptions: state.insuree.fetchingInsureeOptions,
+  fetchedInsureeOptions: state.insuree.fetchedInsureeOptions,
+  errorInsureeOptions: state.insuree.errorInsureeOptions,
 });
 
 const mapDispatchToProps = (dispatch) => {
