@@ -28,13 +28,9 @@ class InsureeOptionsPicker extends Component {
   };
 
   componentDidMount() {
-    this.setState({ data: this.initData() });
-  }
-
-  componentDidUpdate(prevProps, prevState, snapshot) {
-    if (prevProps.reset !== this.props.reset || prevProps.value !== this.props.value) {
-      this.setState((state, props) => ({ data: props.insureeAnswers }));
-    }
+    setTimeout(() => {
+      this.setState({ data: this.initData() });
+    }, Math.floor(Math.random() * 1000));
   }
 
   _updateData = (idx, updates) => {
@@ -45,10 +41,10 @@ class InsureeOptionsPicker extends Component {
 
   _onEditedChanged = (data) => {
     let edited = { ...this.props.edited };
-    edited[`insureeAnswers`] = data.map((e) =>({
-      questionId: e.questionId, 
-      optionId: e.optionId, 
-      optionMark:''
+    edited[`insureeAnswers`] = data.map((e) => ({
+      questionId: e.questionId,
+      optionId: e.optionId,
+      optionMark: e.optionMark
     }));
     console.log(edited)
     this.props.onEditedChanged(edited);
@@ -67,6 +63,7 @@ class InsureeOptionsPicker extends Component {
       data[idx].options.forEach((e) => {
         if (e.value === v) {
           data[idx].optionId = e.id;
+          data[idx].optionMark = e.mark;
         }
       })
       //data[idx].optionLabel = v;
@@ -96,17 +93,18 @@ class InsureeOptionsPicker extends Component {
       position
     } = this.props;
 
+    //console.log(insureeAnswers)
+
 
     return (
       <SelectInput
         module={module}
         options={insureeAnswers[position].options}
         label={!!withLabel ? label : null}
-        value={this.state.data[position]?this.state.data[position].optionLabel:null}
+        value={this.state.data[position]?.optionLabel}
         reset={reset}
         readOnly={readOnly}
         required={required}
-        nullLabel={this.nullDisplay}
         withNull={withNull}
         onChange={(v) => this._onChangeItem(position, "optionLabel", v)}
       />

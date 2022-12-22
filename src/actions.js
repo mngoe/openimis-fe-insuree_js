@@ -202,7 +202,8 @@ export function fetchOptions(mm) {
       "id",
       "option",
       "altLanguage",
-      "questionId{id question}"
+      "questionId{id question}",
+      "optionValue"
     ]);
   return graphql(payload, "INSUREE_OPTIONS");
 }

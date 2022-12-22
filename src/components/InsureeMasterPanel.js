@@ -62,10 +62,10 @@ class InsureeMasterPanel extends FormPanel {
       let opt = [];
       insureeOptions.forEach(function (option) {
         if (question.id == option.questionId.id) {
-          opt.push({ value: option.option, label: option.option, id: option.id});
+          opt.push({ value: option.option, label: option.option, id: option.id, mark: option.optionValue});
         }
       });
-      insureeAnswers.push({ questionId: question.id, options: opt, optionLabel: '', optionId: ''});
+      insureeAnswers.push({ questionId: question.id, options: opt, optionLabel: "", optionId: "", optionMark: ""});
     });
 
     return (
