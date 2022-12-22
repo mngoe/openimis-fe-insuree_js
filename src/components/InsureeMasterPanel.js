@@ -277,13 +277,13 @@ class InsureeMasterPanel extends FormPanel {
                         <InsureeOptionsPicker
                           module="insuree"
                           label={insureeQuestions[edx].question}
-                          value={!!edited ? edited[`insureeAnswers-${edx}`] : ''}
                           required={true}
                           readOnly={false}
                           position={edx}
                           edited={edited}
                           insureeAnswers={insureeAnswers}
-                          onChange={(v) => this.updateAttribute(`insureeAnswers-${edx}`, v)}
+                          updateAttribute={this.updateAttribute}
+                          onEditedChanged={this.props.onEditedChanged}
                         />
                       </Grid>
                     )

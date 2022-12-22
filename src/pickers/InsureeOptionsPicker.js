@@ -11,39 +11,52 @@ const INIT_STATE = {
 };
 
 class InsureeOptionsPicker extends Component {
-  state = INIT_STATE;
+  state = {
+    data: [],
+  };
+
+  initData = () => {
+    let data = [];
+    if (!!this.props.insureeAnswers) {
+
+      data = this.props.insureeAnswers || [];
+      console.log(data);
+      let edited = { ...this.props.edited };
+      edited[`insureeAnswers`] = data;
+    }
+    return data;
+  };
 
   componentDidMount() {
-    if (!!this.props.value) {
-      this.setState((state, props) => ({ value: props.value }));
-    };
+    this.setState({ data: this.initData() });
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (prevProps.reset !== this.props.reset || prevProps.value !== this.props.value) {
-      this.setState((state, props) => ({ value: props.value }));
+      this.setState((state, props) => ({ data: props.insureeAnswers }));
     }
   }
 
-  onSuggestionSelected = (v) => this.props.onChange(v, v);
-
   _updateData = (idx, updates) => {
-    const data = [...this.props.insureeAnswers];
-    console.log(data);
+    const data = [...this.state.data];
     updates.forEach((update) => (data[idx][update.attr] = update.v));
     return data;
   };
 
   _onEditedChanged = (data) => {
     let edited = { ...this.props.edited };
-    edited[`insureeAnswers`] = data;
-    //this.props.onEditedChanged(edited);
+    edited[`insureeAnswers`] = data.map((e) =>({
+      questionId: e.questionId, 
+      optionId: e.optionId, 
+      optionMark:''
+    }));
+    console.log(edited)
+    this.props.onEditedChanged(edited);
   };
 
   _onChange = (idx, attr, v) => {
     let data = this._updateData(idx, [{ attr, v }]);
     this._onEditedChanged(data);
-    console.log(v);
   };
 
   _onChangeItem = (idx, attr, v) => {
@@ -56,8 +69,9 @@ class InsureeOptionsPicker extends Component {
           data[idx].optionId = e.id;
         }
       })
-      data[idx].optionLabel = v;
+      //data[idx].optionLabel = v;
     }
+    console.log(data);
     this._onEditedChanged(data);
   };
 
@@ -72,6 +86,8 @@ class InsureeOptionsPicker extends Component {
       reset,
       value,
       edited,
+      updateAttribute,
+      onEditedChanged,
       readOnly = false,
       required = false,
       withNull = true,
@@ -80,20 +96,19 @@ class InsureeOptionsPicker extends Component {
       position
     } = this.props;
 
-    console.log(value); 
 
     return (
       <SelectInput
         module={module}
         options={insureeAnswers[position].options}
         label={!!withLabel ? label : null}
-        onChange={this.onSuggestionSelected}
-        value={value}
+        value={this.state.data[position]?this.state.data[position].optionLabel:null}
         reset={reset}
         readOnly={readOnly}
         required={required}
         nullLabel={this.nullDisplay}
         withNull={withNull}
+        onChange={(v) => this._onChangeItem(position, "optionLabel", v)}
       />
     );
   }
