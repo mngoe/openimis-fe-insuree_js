@@ -65,7 +65,7 @@ class InsureeMasterPanel extends FormPanel {
           opt.push({ value: option.option, label: option.option, id: option.id, mark: option.optionValue});
         }
       });
-      insureeAnswers.push({ questionId: question.id, options: opt, optionLabel: "", optionId: "", optionMark: ""});
+      insureeAnswers.push({ questionId: question.id, options: opt});
     });
 
     return (
