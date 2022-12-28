@@ -284,8 +284,24 @@ export function formatInsureeGQL(mm, insuree) {
       ? `healthFacilityId: ${decodeId(insuree.healthFacility.id)}`
       : ""
     }
+    ${formatAnswers(insuree.insureeAnswers)}
     ${!!insuree.jsonExt ? `jsonExt: ${formatJsonField(insuree.jsonExt)}` : ""}
   `;
+}
+
+export function formatAnswers(insureeAnswers) {
+  if (!insureeAnswers) return "";
+  return `insureeAnswers: [
+      ${insureeAnswers.map((a) => formatAnswer(a)).join("\n")}
+    ]`;
+}
+
+export function formatAnswer(answer) {
+  return `{
+    ${answer.questionId !== undefined && answer.questionId !== null ? `questionId: ${answer.questionId}` : ""}
+    ${answer.optionId !== undefined && answer.optionId !== null ? `optionId: ${answer.optionId}` : ""}
+    ${answer.optionMark !== undefined && answer.optionMark !== null ? `optionMark: ${answer.optionMark}` : ""}
+  }`;
 }
 
 export function formatFamilyGQL(mm, family) {
