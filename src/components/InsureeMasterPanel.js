@@ -36,8 +36,8 @@ class InsureeMasterPanel extends FormPanel {
   };
 
   componentDidMount() {
-    this.props.fetchQuestions(this.props.modulesManager);
     this.props.fetchOptions(this.props.modulesManager);
+    this.props.fetchQuestions(this.props.modulesManager);
   }
   
 
@@ -269,14 +269,14 @@ class InsureeMasterPanel extends FormPanel {
                   onChange={(v) => this.updateAttribute("photo", !!v ? v : null)}
                 />
               </Grid>
-              {!!insureeAnswers && insureeAnswers.length > 0 && (
+              {!!insureeQuestions && insureeQuestions.length > 0 && (
                 <Grid container className={classes.item}>
-                  {insureeAnswers.map((e, edx) => {
+                  {insureeQuestions.map((e, edx) => {
                     return (
                       <Grid item xs={4} className={classes.item}>
                         <InsureeOptionsPicker
                           module="insuree"
-                          label={insureeQuestions[edx].question}
+                          label={e.question}
                           required={true}
                           readOnly={false}
                           position={edx}

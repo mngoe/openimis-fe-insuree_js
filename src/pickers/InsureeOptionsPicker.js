@@ -18,11 +18,8 @@ class InsureeOptionsPicker extends Component {
   initData = () => {
     let data = [];
     if (!!this.props.insureeAnswers) {
-
       data = this.props.insureeAnswers || [];
       console.log(data);
-      let edited = { ...this.props.edited };
-      edited[`insureeAnswers`] = data;
     }
     return data;
   };
@@ -30,7 +27,7 @@ class InsureeOptionsPicker extends Component {
   componentDidMount() {
     setTimeout(() => {
       this.setState({ data: this.initData() });
-    }, Math.floor(100));
+    }, Math.floor(Math.random() * 300));
   }
 
   _updateData = (idx, updates) => {
