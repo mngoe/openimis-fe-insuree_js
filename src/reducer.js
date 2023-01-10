@@ -43,6 +43,14 @@ function reducer(
     fetchedEducations: false,
     educations: null,
     errorEducations: null,
+    fetchingInsureeQuestions: false,
+    fetchedInsureeQuestions: false,
+    insureeQuestions: [],
+    errorInsureeQuestions: null,
+    fetchingInsureeOptions: false,
+    fetchedInsureeOptions: false,
+    insureeOptions: [],
+    errorInsureeOptions: null,
     fetchingProfessions: false,
     fetchedProfessions: false,
     professions: null,
@@ -327,6 +335,72 @@ function reducer(
         ...state,
         fetchingFamily: false,
         errorFamily: formatServerError(action.payload),
+      };
+    case "INSUREE_QUESTIONS_REQ":
+      return {
+        ...state,
+        fetchingInsureeQuestions: true,
+        fetchedInsureeQuestions: false,
+        insureeQuestions: [],
+        errorInsureeQuestions: null,
+      };
+    case "INSUREE_QUESTIONS_RESP":
+      return {
+        ...state,
+        fetchingInsureeQuestions: false,
+        fetchedInsureeQuestions: true,
+        insureeQuestions: action.payload.data.insureeQuestions,
+        errorInsureeQuestions: formatGraphQLError(action.payload),
+      };
+    case "INSUREE_QUESTIONS_ERR":
+      return {
+        ...state,
+        fetchingInsureeQuestions: false,
+        errorInsureeQuestions: formatServerError(action.payload),
+      };
+    case "INSUREE_OPTIONS_REQ":
+      return {
+        ...state,
+        fetchingInsureeOptions: true,
+        fetchedInsureeOptions: false,
+        insureeOptions: [],
+        errorInsureeOptions: null,
+      };
+    case "INSUREE_OPTIONS_RESP":
+      return {
+        ...state,
+        fetchingInsureeOptions: false,
+        fetchedInsureeOptions: true,
+        insureeOptions: action.payload.data.insureeOptions,
+        errorInsureeOptions: formatGraphQLError(action.payload),
+      };
+    case "INSUREE_OPTIONS_ERR":
+      return {
+        ...state,
+        fetchingInsureeOptions: false,
+        errorInsureeOptions: formatServerError(action.payload),
+      };
+    case "INSUREE_ANSWERS_REQ":
+      return {
+        ...state,
+        fetchingInsureeAnswers: true,
+        fetchedInsureeAnswers: false,
+        insureeAnswers: [],
+        errorInsureeAnswers: null,
+      };
+    case "INSUREE_ANSWERS_RESP":
+      return {
+        ...state,
+        fetchingInsureeAnswers: false,
+        fetchedInsureeAnswers: true,
+        insureeAnswers: action.payload.data.insureeAnswers,
+        errorInsureeAnswers: formatGraphQLError(action.payload),
+      };
+    case "INSUREE_ANSWERS_ERR":
+      return {
+        ...state,
+        fetchingInsureeAnswers: false,
+        errorInsureeAnswers: formatServerError(action.payload),
       };
     case "INSUREE_EDUCATIONS_REQ":
       return {

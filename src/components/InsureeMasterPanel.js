@@ -11,6 +11,11 @@ import {
   Contributions,
   withModulesManager,
 } from "@openimis/fe-core";
+import { bindActionCreators } from "redux";
+import { injectIntl } from "react-intl";
+import { connect } from "react-redux";
+import { fetchQuestions, fetchOptions } from "../actions";
+import InsureeOptionsPicker from "../pickers/InsureeOptionsPicker"
 
 const styles = (theme) => ({
   paper: theme.paper.paper,
@@ -25,16 +30,50 @@ const INSUREE_INSUREE_CONTRIBUTION_KEY = "insuree.Insuree";
 const INSUREE_INSUREE_PANELS_CONTRIBUTION_KEY = "insuree.Insuree.panels";
 
 class InsureeMasterPanel extends FormPanel {
+
+  state = {
+    data: [],
+  };
+
+  componentDidMount() {
+    this.props.fetchOptions(this.props.modulesManager);
+    this.props.fetchQuestions(this.props.modulesManager);
+  }
+
+
+  nullDisplay = this.props.nullLabel || formatMessage(this.props.intl, "insuree", `InsureeGender.null`);
+
   render() {
     const {
       intl,
       classes,
       edited,
+      module = "insuree",
       title = "Insuree.title",
       titleParams = { label: "" },
       readOnly = true,
       actions,
+      insureeQuestions,
+      insureeAnswers = [],
+      insureeOptions,
     } = this.props;
+
+    insureeQuestions.forEach(function (question) {
+      if (question.questionType == "DROPDOWN") {
+        let opt = [];
+        insureeOptions.forEach(function (option) {
+          if (question.id == option.questionId.id) {
+            opt.push({ value: option.option, label: option.option, id: option.id, mark: option.optionValue });
+          }
+        });
+        insureeAnswers.push({ questionId: question.id, options: opt });
+      }else if (question.questionType == "TEXT") {
+        insureeAnswers.push({ questionId: question.id})
+      }else if (question.questionType == "CHECKBOX"){
+        insureeAnswers.push({questionId: question.id})
+      }
+    });
+
     return (
       <Grid container>
         <Grid item xs={12}>
@@ -236,115 +275,28 @@ class InsureeMasterPanel extends FormPanel {
                   onChange={(v) => this.updateAttribute("photo", !!v ? v : null)}
                 />
               </Grid>
-              <Grid item xs={3} className={classes.item}>
-                <PublishedComponent
-                  pubRef="insuree.EducationPicker"
-                  label="Revenu mensuel en CFA"
-                  module="insuree"
-                  value={!!edited && !!edited.salary ? edited.salary : ""}
-                  readOnly={readOnly}
-                  withNull={true}
-                  nullLabel={formatMessage(intl, "insuree", "insuree.Education.none")}
-                  onChange={(v) => this.updateAttribute("salary", { id: v })}
-                />
-              </Grid>
-              <Grid item xs={3} className={classes.item}>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      color="primary"
-                      checked={!!edited && !!edited.healthStatus}
-                      disabled={readOnly}
-                      onChange={(v) => this.updateAttribute("healthStatus", !edited || !edited.healthStatus)}
-                    />
-                  }
-                  label={formatMessage(intl, "insuree", "Antécédants médicaux")}
-                />
-              </Grid>
-              <Grid item xs={2} className={classes.item}>
-                <PublishedComponent
-                  pubRef="insuree.EducationPicker"
-                  label="Repas par jour"
-                  module="insuree"
-                  value={!!edited && !!edited.nutritionStatus ? edited.nutritionStatus : ""}
-                  readOnly={readOnly}
-                  withNull={true}
-                  nullLabel={formatMessage(intl, "insuree", "insuree.Education.none")}
-                  onChange={(v) => this.updateAttribute("nutritionStatus", { id: v })}
-                />
-              </Grid>
-              <Grid item xs={2} className={classes.item}>
-                <TextInput
-                  module="insuree"
-                  label="Personne dans la maison"
-                  readOnly={readOnly}
-                  value={!!edited && !!edited.peopleHouse ? edited.peopleHouse : ""}
-                  onChange={(v) => this.updateAttribute("peopleHouse", v)}
-                  required={true}
-                />
-              </Grid>
-              <Grid item xs={2} className={classes.item}>
-                <TextInput
-                  module="insuree"
-                  label="Nombre de chambre"
-                  readOnly={readOnly}
-                  value={!!edited && !!edited.numberOfRoom ? edited.numberOfRoom : ""}
-                  onChange={(v) => this.updateAttribute("numberOfRoom", v)}
-                  required={true}
-                />
-              </Grid>
-              <Grid item xs={3} className={classes.item}>
-                <PublishedComponent
-                  pubRef="insuree.EducationPicker"
-                  label="Soutien alimentaire"
-                  module="insuree"
-                  value={!!edited && !!edited.foodSupport ? edited.foodSupport : ""}
-                  readOnly={readOnly}
-                  withNull={true}
-                  nullLabel={formatMessage(intl, "insuree", "insuree.Education.none")}
-                  onChange={(v) => this.updateAttribute("foodSupport", { id: v })}
-                  required={true}
-                />
-              </Grid>
-              <Grid item xs={3} className={classes.item}>
-                <PublishedComponent
-                  pubRef="insuree.EducationPicker"
-                  label="Soutien matériel"
-                  module="insuree"
-                  value={!!edited && !!edited.materialSupport ? edited.materialSupport : ""}
-                  readOnly={readOnly}
-                  withNull={true}
-                  nullLabel={formatMessage(intl, "insuree", "insuree.Education.none")}
-                  onChange={(v) => this.updateAttribute("materialSupport", { id: v })}
-                  required={true}
-                />
-              </Grid>
-              <Grid item xs={3} className={classes.item}>
-                <PublishedComponent
-                  pubRef="insuree.EducationPicker"
-                  label="Soutien sanitaire"
-                  module="insuree"
-                  value={!!edited && !!edited.healthSupport ? edited.healthSupport : ""}
-                  readOnly={readOnly}
-                  withNull={true}
-                  nullLabel={formatMessage(intl, "insuree", "insuree.Education.none")}
-                  onChange={(v) => this.updateAttribute("healthSupport", { id: v })}
-                  required={true}
-                />
-              </Grid>
-              <Grid item xs={3} className={classes.item}>
-                <PublishedComponent
-                  pubRef="insuree.EducationPicker"
-                  label="Condition de déplacement"
-                  module="insuree"
-                  value={!!edited && !!edited.displacementCondition ? edited.displacementCondition : ""}
-                  readOnly={readOnly}
-                  withNull={true}
-                  nullLabel={formatMessage(intl, "insuree", "insuree.Education.none")}
-                  onChange={(v) => this.updateAttribute("displacementCondition", { id: v })}
-                  required={true}
-                />
-              </Grid>
+              {!!insureeQuestions && insureeQuestions.length > 0 && (
+                <Grid container className={classes.item}>
+                  {insureeQuestions.map((e, edx) => {
+                    return (
+                      <Grid item xs={4} className={classes.item}>
+                        <InsureeOptionsPicker
+                          module="insuree"
+                          label={e.question}
+                          required={true}
+                          readOnly={false}
+                          position={edx}
+                          edited={edited}
+                          insureeAnswers={insureeAnswers}
+                          insureeQuestions={insureeQuestions}
+                          updateAttribute={this.updateAttribute}
+                          onEditedChanged={this.props.onEditedChanged}
+                        />
+                      </Grid>
+                    )
+                  })}
+                </Grid>
+              )}
               <Contributions
                 {...this.props}
                 updateAttribute={this.updateAttribute}
@@ -363,4 +315,20 @@ class InsureeMasterPanel extends FormPanel {
   }
 }
 
-export default withModulesManager(withTheme(withStyles(styles)(InsureeMasterPanel)));
+const mapStateToProps = state => ({
+  insureeQuestions: state.insuree.insureeQuestions,
+  fetchingInsureeQuestions: state.insuree.fetchingInsureeQuestions,
+  fetchedInsureeQuestions: state.insuree.fetchedInsureeQuestions,
+  errorInsureeQuestions: state.insuree.errorInsureeQuestions,
+  insureeOptions: state.insuree.insureeOptions,
+  fetchingInsureeOptions: state.insuree.fetchingInsureeOptions,
+  fetchedInsureeOptions: state.insuree.fetchedInsureeOptions,
+  errorInsureeOptions: state.insuree.errorInsureeOptions,
+});
+
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators({ fetchQuestions, fetchOptions }, dispatch);
+};
+
+
+export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(withModulesManager(withTheme(withStyles(styles)(InsureeMasterPanel)))));
