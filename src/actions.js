@@ -181,7 +181,8 @@ export function fetchQuestions(mm) {
   [
     "id", 
     "question", 
-    "altLanguage"
+    "altLanguage",
+    "questionType"
   ]);
   return graphql(payload, "INSUREE_QUESTIONS");
 }

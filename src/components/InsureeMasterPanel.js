@@ -39,7 +39,7 @@ class InsureeMasterPanel extends FormPanel {
     this.props.fetchOptions(this.props.modulesManager);
     this.props.fetchQuestions(this.props.modulesManager);
   }
-  
+
 
   nullDisplay = this.props.nullLabel || formatMessage(this.props.intl, "insuree", `InsureeGender.null`);
 
@@ -59,13 +59,19 @@ class InsureeMasterPanel extends FormPanel {
     } = this.props;
 
     insureeQuestions.forEach(function (question) {
-      let opt = [];
-      insureeOptions.forEach(function (option) {
-        if (question.id == option.questionId.id) {
-          opt.push({ value: option.option, label: option.option, id: option.id, mark: option.optionValue});
-        }
-      });
-      insureeAnswers.push({ questionId: question.id, options: opt});
+      if (question.questionType == "DROPDOWN") {
+        let opt = [];
+        insureeOptions.forEach(function (option) {
+          if (question.id == option.questionId.id) {
+            opt.push({ value: option.option, label: option.option, id: option.id, mark: option.optionValue });
+          }
+        });
+        insureeAnswers.push({ questionId: question.id, options: opt });
+      }else if (question.questionType == "TEXT") {
+        insureeAnswers.push({ questionId: question.id})
+      }else if (question.questionType == "CHECKBOX"){
+        insureeAnswers.push({questionId: question.id})
+      }
     });
 
     return (
@@ -282,6 +288,7 @@ class InsureeMasterPanel extends FormPanel {
                           position={edx}
                           edited={edited}
                           insureeAnswers={insureeAnswers}
+                          insureeQuestions={insureeQuestions}
                           updateAttribute={this.updateAttribute}
                           onEditedChanged={this.props.onEditedChanged}
                         />
