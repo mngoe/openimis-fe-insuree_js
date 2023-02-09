@@ -69,6 +69,10 @@ function reducer(
     errorCanAddInsuree: null,
     submittingMutation: false,
     mutation: {},
+    fetchingInsureeAnswers: false,
+    fetchedInsureeAnswers: false,
+    insureeAnswers: [],
+    errorInsureeAnswers: null
   },
   action,
 ) {

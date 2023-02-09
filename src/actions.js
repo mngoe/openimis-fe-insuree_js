@@ -191,7 +191,7 @@ export function fetchInsureeAnswers(mm) {
   const payload = formatQuery("insureeAnswers", null,
     [
       "id",
-      "insureeAnswer{questionId{ id } option}"
+      "insureeAnswer{questionId{id question} option}"
     ]);
   return graphql(payload, "INSUREE_ANSWERS");
 }

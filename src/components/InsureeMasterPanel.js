@@ -284,7 +284,7 @@ class InsureeMasterPanel extends FormPanel {
                           module="insuree"
                           label={e.question}
                           required={true}
-                          readOnly={false}
+                          readOnly={readOnly}
                           position={edx}
                           edited={edited}
                           insureeAnswers={insureeAnswers}
@@ -297,6 +297,18 @@ class InsureeMasterPanel extends FormPanel {
                   })}
                 </Grid>
               )}
+              { !!edited && (
+                <Grid container className={classes.item}>
+                  <TextInput
+                  module="insuree"
+                  label="Insuree.score"
+                  readOnly={true}
+                  value={!!edited && !!edited.score ? edited.score : "90"}
+                />
+                </Grid>
+              )
+
+              }
               <Contributions
                 {...this.props}
                 updateAttribute={this.updateAttribute}

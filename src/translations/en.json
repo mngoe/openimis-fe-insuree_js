@@ -21,6 +21,7 @@
   "insuree.noFSP": "First Service Point not registered.",
   "insuree.FSP.title": "First Service Point",
   "insuree.Insuree.label": "Insuree",
+  "insuree.Insuree.score": "Score",
   "insuree.Insuree.picker.dialog.title": "Search Insuree",
   "insuree.Insuree.chfId": "Insurance No.",
   "insuree.Insuree.lastName": "Last Name",
