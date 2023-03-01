@@ -25,6 +25,7 @@
   "insuree.Insuree.chfId": "Insurance No.",
   "insuree.Insuree.lastName": "Last Name",
   "insuree.Insuree.otherNames": "Given Names",
+  "insuree.Insuree.tarvCode": "Tarv Code",
   "insuree.Insuree.names": "Name",
   "insuree.Insuree.gender": "Gender",
   "insuree.Insuree.dob": "Birth Date",
