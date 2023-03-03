@@ -121,6 +121,7 @@ class InsureeForm extends Component {
   render() {
     const {
       rights,
+      programs,
       insuree_uuid,
       fetchingInsuree,
       fetchedInsuree,
@@ -159,6 +160,7 @@ class InsureeForm extends Component {
               title="Insuree.title"
               titleParams={{ label: insureeLabel(this.state.insuree) }}
               edited_id={insuree_uuid}
+              rights = {rights}
               edited={this.state.insuree}
               reset={this.state.reset}
               back={this.back}

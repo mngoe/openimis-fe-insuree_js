@@ -11,6 +11,7 @@ import {
   Contributions,
   withModulesManager,
 } from "@openimis/fe-core";
+import { RIGHT_VIH } from "../constants";
 
 const styles = (theme) => ({
   paper: theme.paper.paper,
@@ -30,11 +31,13 @@ class InsureeMasterPanel extends FormPanel {
       intl,
       classes,
       edited,
+      rights,
       title = "Insuree.title",
       titleParams = { label: "" },
       readOnly = true,
       actions,
     } = this.props;
+
     return (
       <Grid container>
         <Grid item xs={12}>
@@ -75,7 +78,7 @@ class InsureeMasterPanel extends FormPanel {
             </Grid>
             <Divider />
             <Grid container className={classes.item}>
-              <Grid item xs={4} className={classes.item}>
+              <Grid item xs={3} className={classes.item}>
                 <PublishedComponent
                   pubRef="insuree.InsureeNumberInput"
                   module="insuree"
@@ -87,23 +90,33 @@ class InsureeMasterPanel extends FormPanel {
                   onChange={(v) => this.updateAttribute("chfId", v)}
                 />
               </Grid>
-              <Grid item xs={4} className={classes.item}>
+              <Grid item xs={3} className={classes.item}>
                 <TextInput
                   module="insuree"
                   label="Insuree.lastName"
-                  required={true}
+                  required={!rights.includes(RIGHT_VIH) ? true : false}
                   readOnly={readOnly}
                   value={!!edited && !!edited.lastName ? edited.lastName : ""}
                   onChange={(v) => this.updateAttribute("lastName", v)}
                 />
               </Grid>
-              <Grid item xs={4} className={classes.item}>
+              <Grid item xs={3} className={classes.item}>
                 <TextInput
                   module="insuree"
                   label="Insuree.otherNames"
-                  required={true}
+                  required={!rights.includes(RIGHT_VIH) ? true : false}
                   readOnly={readOnly}
                   value={!!edited && !!edited.otherNames ? edited.otherNames : ""}
+                  onChange={(v) => this.updateAttribute("otherNames", v)}
+                />
+              </Grid>
+              <Grid item xs={3} className={classes.item}>
+                <TextInput
+                  module="insuree"
+                  label="Insuree.tarvCode"
+                  required={true}
+                  readOnly={readOnly}
+                  value={!!edited && !!edited.tarvCode ? edited.tarvCode : ""}
                   onChange={(v) => this.updateAttribute("otherNames", v)}
                 />
               </Grid>
