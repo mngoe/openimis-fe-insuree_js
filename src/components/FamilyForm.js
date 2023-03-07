@@ -204,6 +204,7 @@ class FamilyForm extends Component {
             edited_id={family_uuid}
             edited={family}
             reset={this.state.reset}
+            rights={rights}
             back={back}
             add={!!add && !newFamily ? this._add : null}
             readOnly={readOnly || runningMutation || !!family.validityTo}
