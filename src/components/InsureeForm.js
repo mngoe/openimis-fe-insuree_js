@@ -3,6 +3,7 @@ import { injectIntl } from "react-intl";
 import { connect } from "react-redux";
 import { withTheme, withStyles } from "@material-ui/core/styles";
 import ReplayIcon from "@material-ui/icons/Replay";
+import AttachIcon from "@material-ui/icons/AttachFile";
 import {
   formatMessageWithValues,
   withModulesManager,
@@ -12,6 +13,7 @@ import {
   Form,
   ProgressOrError,
   Helmet,
+  PublishedComponent
 } from "@openimis/fe-core";
 import { RIGHT_INSUREE } from "../constants";
 import FamilyDisplayPanel from "./FamilyDisplayPanel";
@@ -19,7 +21,6 @@ import InsureeMasterPanel from "../components/InsureeMasterPanel";
 
 import { fetchInsureeFull, fetchFamily } from "../actions";
 import { insureeLabel } from "../utils/utils";
-import InsureeAttachmentPanel from "./InsureeAttachmentPanel";
 
 const styles = (theme) => ({
   page: theme.page,
@@ -33,7 +34,13 @@ class InsureeForm extends Component {
     reset: 0,
     insuree: this._newInsuree(),
     newInsuree: true,
+    attachmentsInsuree: null,
   };
+
+  constructor(props) {
+    super(props);
+    this.insureeAttachments = props.modulesManager.getConf("fe-insuree", "insureeAttachments", true);
+  }
 
   _newInsuree() {
     let insuree = {};
@@ -144,6 +151,12 @@ class InsureeForm extends Component {
         onlyIfDirty: !readOnly,
       },
     ];
+    if (!!this.insureeAttachments) {
+      actions.push({
+        doIt: (e) => this.setState({ attachmentsInsuree: insuree }),
+        icon: <AttachIcon />,
+      });
+    }
     return (
       <Fragment>
         <Helmet
@@ -155,25 +168,34 @@ class InsureeForm extends Component {
         <ProgressOrError progress={fetchingFamily} error={errorFamily} />
         {((!!fetchedInsuree && !!insuree && insuree.uuid === insuree_uuid) || !insuree_uuid) &&
           ((!!fetchedFamily && !!family && family.uuid === family_uuid) || !family_uuid) && (
-            <Form
-              module="insuree"
-              title="Insuree.title"
-              titleParams={{ label: insureeLabel(this.state.insuree) }}
-              edited_id={insuree_uuid}
-              edited={this.state.insuree}
-              reset={this.state.reset}
-              back={this.back}
-              add={!!add && !this.state.newInsuree ? this._add : null}
-              readOnly={readOnly || !!insuree.validityTo}
-              actions={actions}
-              HeadPanel={FamilyDisplayPanel}
-              Panels={[InsureeMasterPanel, InsureeAttachmentPanel]}
-              contributedPanelsKey={INSUREE_INSUREE_FORM_CONTRIBUTION_KEY}
-              insuree={this.state.insuree}
-              onEditedChanged={this.onEditedChanged}
-              canSave={this.canSave}
-              save={!!save ? this._save : null}
-            />
+            <Fragment>
+              <PublishedComponent
+                pubRef="insuree.AttachmentsDialog"
+                readOnly={!rights.includes(RIGHT_INSUREE) || readOnly}
+                insuree={this.state.attachmentsInsuree}
+                close={(e) => this.setState({ attachmentsInsuree: null })}
+                onUpdated={() => this.setState({ forcedDirty: true })}
+              />
+              <Form
+                module="insuree"
+                title="Insuree.title"
+                titleParams={{ label: insureeLabel(this.state.insuree) }}
+                edited_id={insuree_uuid}
+                edited={this.state.insuree}
+                reset={this.state.reset}
+                back={this.back}
+                add={!!add && !this.state.newInsuree ? this._add : null}
+                readOnly={readOnly || !!insuree.validityTo}
+                actions={actions}
+                HeadPanel={FamilyDisplayPanel}
+                Panels={[InsureeMasterPanel]}
+                contributedPanelsKey={INSUREE_INSUREE_FORM_CONTRIBUTION_KEY}
+                insuree={this.state.insuree}
+                onEditedChanged={this.onEditedChanged}
+                canSave={this.canSave}
+                save={!!save ? this._save : null}
+              />
+            </Fragment>
           )}
       </Fragment>
     );

@@ -5,7 +5,6 @@ import {
   formatPageQueryWithCount,
   formatJsonField,
   decodeId,
-  formatServerError,
   formatMutation,
   formatGQLString,
 } from "@openimis/fe-core";
@@ -143,6 +142,82 @@ export function print(selection) {
   }
 }
 
+export function fetchInsureeAttachments(insuree) {
+  const payload = formatPageQuery(
+    "insureeAttachments",
+    [`insuree_id: "${decodeId(insuree.id)}"`],
+    ["id", "type", "title", "date", "filename", "mime"],
+  );
+  return graphql(payload, "INSUREE_INSUREE_ATTACHMENTS");
+}
+
+export function downloadAttachment(attach) {
+  var url = new URL(`${window.location.origin}${baseApiUrl}/insuree/attach`);
+  url.search = new URLSearchParams({ id: decodeId(attach.id) });
+  return (dispatch) => {
+    return fetch(url)
+      .then((response) => response.blob())
+      .then((blob) => openBlob(blob, attach.filename, attach.mime));
+  };
+}
+
+export function deleteAttachment(attach, clientMutationLabel) {
+  let mutation = formatMutation("deleteInsureeAttachment", `id: "${decodeId(attach.id)}"`, clientMutationLabel);
+  var requestedDateTime = new Date();
+  return graphql(mutation.payload, ["CLAIM_MUTATION_REQ", "INSUREE_DELETE_INSUREE_ATTACHMENT_RESP", "INSUREE_MUTATION_ERR"], {
+    clientMutationId: mutation.clientMutationId,
+    clientMutationLabel,
+    requestedDateTime,
+  });
+}
+
+export function createAttachment(attach, clientMutationLabel) {
+  let payload = formatAttachment(attach);
+  let mutation = formatMutation("createInsureeAttachment", payload, clientMutationLabel);
+  var requestedDateTime = new Date();
+  return graphql(mutation.payload, ["INSUREE_MUTATION_REQ", "INSUREE_CREATE_INSUREE_ATTACHMENT_RESP", "INSUREE_MUTATION_ERR"], {
+    clientMutationId: mutation.clientMutationId,
+    clientMutationLabel,
+    requestedDateTime,
+  });
+}
+
+export function updateAttachment(attach, clientMutationLabel) {
+  let payload = formatAttachment(attach);
+  let mutation = formatMutation("updateInsureeAttachment", payload, clientMutationLabel);
+  var requestedDateTime = new Date();
+  return graphql(mutation.payload, ["INSUREE_MUTATION_REQ", "INSUREE_UPDATE_INSUREE_ATTACHMENT_RESP", "INSUREE_MUTATION_ERR"], {
+    clientMutationId: mutation.clientMutationId,
+    clientMutationLabel,
+    requestedDateTime,
+  });
+}
+
+export function formatAttachments(mm, attachments) {
+  return `[
+    ${attachments
+      .map(
+        (a) => `{
+      ${formatAttachment(a)}
+    }`,
+      )
+      .join("\n")}
+  ]`;
+}
+
+export function formatAttachment(attach) {
+  return `
+    ${!!attach.id ? `id: "${decodeId(attach.id)}"` : ""}
+    ${!!attach.claimUuid ? `insureeId: "${decodeId(attach.insureeId)}"` : ""}
+    ${!!attach.type ? `type: "${formatGQLString(attach.type)}"` : ""}
+    ${!!attach.title ? `title: "${formatGQLString(attach.title)}"` : ""}
+    ${!!attach.date ? `date: "${attach.date}"` : ""}
+    ${!!attach.mime ? `mime: "${attach.mime}"` : ""}
+    ${!!attach.filename ? `filename: "${formatGQLString(attach.filename)}"` : ""}
+    ${!!attach.document ? `document: "${attach.document}"` : ""}
+  `;
+}
+
 export function fetchConfirmationTypes() {
   const payload = formatQuery("confirmationTypes", null, ["code"]);
   return graphql(payload, "INSUREE_CONFIRMATION_TYPES");
@@ -266,6 +341,11 @@ export function formatInsureeGQL(mm, insuree) {
       : ""
     }
     ${!!insuree.jsonExt ? `jsonExt: ${formatJsonField(insuree.jsonExt)}` : ""}
+    ${
+      !!insuree.attachments && !!insuree.attachments.length
+        ? `attachments: ${formatAttachments(mm, insuree.attachments)}`
+        : ""
+    }
   `;
 }
 

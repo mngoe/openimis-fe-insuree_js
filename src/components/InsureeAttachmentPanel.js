@@ -1,4 +1,7 @@
 import React, { Component, Fragment } from "react";
+import { bindActionCreators } from "redux";
+import { injectIntl } from "react-intl";
+import { connect } from "react-redux";
 import { withTheme, withStyles } from "@material-ui/core/styles";
 import SaveIcon from "@material-ui/icons/SaveAlt";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -7,10 +10,15 @@ import { Button, IconButton, Input, Paper, Grid, Typography, Divider } from "@ma
 import {
   TextInput,
   FormattedMessage,
+  formatMessage,
+  formatMessageWithValues,
   PublishedComponent,
   Table,
   withModulesManager
 } from "@openimis/fe-core";
+import {
+  fetchInsureeAttachments,
+} from "../actions";
 
 const styles = (theme) => ({
   paper: theme.paper.paper,
@@ -21,7 +29,7 @@ const styles = (theme) => ({
 class InsureeAttachmentPanel extends Component {
   state = {
     open: false,
-    claimUuid: null,
+    insureeId: null,
     insureeAttachments: [],
     attachmentToDelete: null,
     updatedAttachments: new Set(),
@@ -29,15 +37,15 @@ class InsureeAttachmentPanel extends Component {
   }
 
   initData = () => {
-    let attachments = [];
-    if (!!this.props.edited[`attachments`]) {
-        attachments = this.props.edited[`attachments`] || [];
+    if (!!this.props.edited[`attachment`]) {
+      this.setState({
+        insureeAttachment: this.props.edited[`attachment`]
+      })
     }
-    return attachments;
   };
 
   componentDidMount() {
-    this.setState({ insureeAttachments : this.initData() });
+    this.setState({ insureeAttachments: this.initData() });
   }
 
   delete = (a, i) => {
@@ -72,7 +80,7 @@ class InsureeAttachmentPanel extends Component {
       );
     } else {
       if (!this.props.insuree.attachments) {
-        this.props.claim.attachments = [];
+        this.props.insuree.attachments = [];
       }
       this.props.insuree.attachments.push(attachment);
       var insureeAttachments = [...this.state.insureeAttachments];
@@ -82,7 +90,7 @@ class InsureeAttachmentPanel extends Component {
   };
 
   update = (i) => {
-    let attachment = { insureeUuid: this.state.insureeUuid, ...this.state.insureeAttachments[i] };
+    let attachment = { insureeId: this.state.insureeId, ...this.state.insureeAttachments[i] };
     this.props.updateAttachment(
       attachment,
       formatMessageWithValues(this.props.intl, "insuree", "insuree.InsureeAttachment.update.mutationLabel", {
@@ -132,49 +140,52 @@ class InsureeAttachmentPanel extends Component {
     this.setState({ ...state });
   };
 
-
-  cannotUpdate = (a, i) => i < this.props.insureeAttachments.length - 1 && !!this.props.edited.insureeUuid && !a.id;
-
   render() {
     const {
       intl,
       classes,
       updateAttribute,
       readOnly = false,
-      edited
+      insuree
     } = this.props;
     const { insureeAttachments } = this.state;
 
-    let headers = [
+    var headers = [
       "insureeAttachment.type",
       "insureeAttachment.title",
       "insureeAttachment.date",
       "insureeAttachment.fileName"
     ];
 
-    let itemFormatters = [
+    var itemFormatters = [
       (a, i) => (
+        <Grid item xs={3} className={classes.item}>
           <TextInput
             reset={this.state.reset}
             value={this.state.insureeAttachments[i].type}
             onChange={(v) => this.updateAttachment(i, "type", v)}
           />
-        ),
+        </Grid>
+      ),
       (a, i) => (
+        <Grid item xs={4} className={classes.item}>
           <TextInput
             reset={this.state.reset}
             value={this.state.insureeAttachments[i].title}
             onChange={(v) => this.updateAttachment(i, "title", v)}
           />
-        ),
-      (a, i) =>(
+        </Grid>
+      ),
+      (a, i) => (
+        <Grid item xs={3} className={classes.item}>
           <PublishedComponent
             pubRef="core.DatePicker"
             onChange={(v) => this.updateAttachment(i, "date", v)}
-            value={this.state.insureeAttachments[i].date || null}
+            value={this.state.insureeAttachments[i].date}
             reset={this.state.reset}
           />
-        ),
+        </Grid>
+      ),
       (a, i) => this.formatFileName(a, i),
     ];
     if (!readOnly) {
@@ -197,6 +208,10 @@ class InsureeAttachmentPanel extends Component {
       });
     }
 
+    const handleFieldChange = (fieldName, value) => {
+      this.updateAttribute("attachment", { fieldName: value });
+    };
+
     return (
       <Grid container>
         <Grid item xs={12}>
@@ -204,12 +219,11 @@ class InsureeAttachmentPanel extends Component {
             <Typography className={classes.title}>
               <FormattedMessage module="insuree" id="insuree.InsureeFilePanel.title" />
             </Typography>
-            <Divider />
             <Table
               module="insuree"
+              items={insureeAttachments}
               headers={headers}
               itemFormatters={itemFormatters}
-              items={this.state.insureeAttachments}
             />
           </Paper>
         </Grid>
@@ -218,5 +232,23 @@ class InsureeAttachmentPanel extends Component {
   }
 }
 
+const mapStateToProps = (state) => ({
+  fetchingClaimAttachments: state.insuree.fetchingInsureeAttachments,
+  fetchedClaimAttachments: state.insuree.fetchedInsureeAttachments,
+  errorClaimAttachments: state.insuree.errorInsureeAttachments,
+  claimAttachments: state.insuree.insureeAttachments,
+});
 
-export default withModulesManager(withTheme(withStyles(styles)(InsureeAttachmentPanel)));
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators(
+    {
+      fetchInsureeAttachments,
+    },
+    dispatch,
+  );
+};
+
+
+export default withModulesManager(
+  connect(mapStateToProps, mapDispatchToProps)(injectIntl(withTheme(withStyles(styles)(InsureeAttachmentPanel)))),
+);
