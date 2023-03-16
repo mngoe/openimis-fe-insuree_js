@@ -219,22 +219,12 @@ class AttachmentsDialog extends Component {
         const { open, insureeAttachments } = this.state;
 
         var headers = [
-            "insureeAttachment.type",
             "insureeAttachment.title",
             "insureeAttachment.date",
             "insureeAttachment.fileName"
         ];
 
         var itemFormatters = [
-            (a, i) => this.cannotUpdate(a, i) ? (
-                this.state.insureeAttachments[i].type
-            ) : (
-                <TextInput
-                    reset={this.state.reset}
-                    value={this.state.insureeAttachments[i].type}
-                    onChange={(v) => this.updateAttachment(i, "type", v)}
-                />
-            ),
             (a, i) => this.cannotUpdate(a, i) ? (
                 this.state.claimAttachments[i].title
             ) : (
