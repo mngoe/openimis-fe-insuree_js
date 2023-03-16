@@ -110,16 +110,18 @@ class InsureeMasterPanel extends FormPanel {
                   onChange={(v) => this.updateAttribute("otherNames", v)}
                 />
               </Grid>
-              <Grid item xs={3} className={classes.item}>
-                <TextInput
-                  module="insuree"
-                  label="Insuree.tarvCode"
-                  required={true}
-                  readOnly={readOnly}
-                  value={!!edited && !!edited.tarvCode ? edited.tarvCode : ""}
-                  onChange={(v) => this.updateAttribute("otherNames", v)}
-                />
-              </Grid>
+              {!!rights.includes(RIGHT_VIH) && (
+                <Grid item xs={3} className={classes.item}>
+                  <TextInput
+                    module="insuree"
+                    label="Insuree.tarvCode"
+                    required={true}
+                    readOnly={readOnly}
+                    value={!!edited && !!edited.tarvCode ? edited.tarvCode : ""}
+                    onChange={(v) => this.updateAttribute("otherNames", v)}
+                  />
+                </Grid>
+              )}
               <Grid item xs={8}>
                 <Grid container>
                   <Grid item xs={3} className={classes.item}>
