@@ -62,10 +62,36 @@ function reducer(
     errorCanAddInsuree: null,
     submittingMutation: false,
     mutation: {},
+    fetchingInsureeAttachments: false,
+    fetchedInsureeAttachments: false,
+    errorInsureeAttachments: null,
+    insureeAttachments: null,
   },
   action,
 ) {
   switch (action.type) {
+    case "INSUREE_INSUREE_ATTACHMENTS_REQ":
+      return {
+        ...state,
+        fetchingInsureeAttachments: true,
+        fetchedInsureeAttachments: false,
+        insureeAttachments: null,
+        errorInsureeAttachments: null,
+      };
+    case "INSUREE_INSUREE_ATTACHMENTS_RESP":
+      return {
+        ...state,
+        fetchingInsureeAttachments: false,
+        fetchedInsureeAttachments: true,
+        insureeAttachments: parseData(action.payload.data.claimAttachments),
+        errorInsureeAttachments: formatGraphQLError(action.payload),
+      };
+    case "INSUREE_INSUREE_ATTACHMENTS_ERR":
+      return {
+        ...state,
+        fetchingInsureeAttachments: false,
+        errorInsureeAttachments: formatServerError(action.payload),
+      };
     case "INSUREE_INSUREE_REQ":
       return {
         ...state,
@@ -439,6 +465,12 @@ function reducer(
       return dispatchMutationResp(state, "setFamilyHead", action);
     case "INSUREE_CHANGE_FAMILY_HEAD_RESP":
       return dispatchMutationResp(state, "changeInsureeFamily", action);
+    case "INSUREE_CREATE_INSUREE_ATTACHMENT_RESP":
+      return dispatchMutationResp(state, "createInsureeAttachment", action);
+    case "INSUREE_UPDATE_INSUREE_ATTACHMENT_RESP":
+      return dispatchMutationResp(state, "updateInsureeAttachment", action);
+    case "INSUREE_DELETE_INSUREE_ATTACHMENT_RESP":
+      return dispatchMutationResp(state, "deleteInsureeAttachment", action);
     case "INSUREE_INSUREES_PRINT_RESP":
       return {
         ...state,

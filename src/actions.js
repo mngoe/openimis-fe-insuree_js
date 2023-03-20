@@ -5,7 +5,6 @@ import {
   formatPageQueryWithCount,
   formatJsonField,
   decodeId,
-  formatServerError,
   formatMutation,
   formatGQLString,
 } from "@openimis/fe-core";
@@ -56,6 +55,7 @@ const INSUREE_FULL_PROJECTION = (mm) => [
   "email",
   "phone",
   "healthFacility" + mm.getProjection("location.HealthFacilityPicker.projection"),
+  "attachments{idAttachment,filename,document,title,date,mime}"
 ];
 
 export const INSUREE_PICKER_PROJECTION = ["id", "uuid", "chfId", "lastName", "otherNames"];
@@ -135,12 +135,88 @@ export function selectFamilyMember(member) {
 export function print(selection) {
   return async (dispatch) => {
     try {
-      const response =window.open('../../api/report/beneficiary_card_mauritania/pdf/?insureeids='+selection, "_blank")
+      const response = window.open('../../api/report/beneficiary_card_mauritania/pdf/?insureeids=' + selection, "_blank")
       return response;
     } catch (err) {
       console.error(err);
     }
   }
+}
+
+export function fetchInsureeAttachments(insuree) {
+  const payload = formatPageQuery(
+    "insureeAttachments",
+    [`insuree_id: "${decodeId(insuree.id)}"`],
+    ["id", "type", "title", "date", "filename", "mime"],
+  );
+  return graphql(payload, "INSUREE_INSUREE_ATTACHMENTS");
+}
+
+export function downloadAttachment(attach) {
+  var url = new URL(`${window.location.origin}${baseApiUrl}/insuree/attach`);
+  url.search = new URLSearchParams({ id: attach.idAttachment });
+  return (dispatch) => {
+    return fetch(url)
+      .then((response) => response.blob())
+      .then((blob) => openBlob(blob, attach.filename, attach.mime));
+  };
+}
+
+export function deleteAttachment(attach, clientMutationLabel) {
+  let mutation = formatMutation("deleteInsureeAttachment", `id: "${decodeId(attach.id)}"`, clientMutationLabel);
+  var requestedDateTime = new Date();
+  return graphql(mutation.payload, ["CLAIM_MUTATION_REQ", "INSUREE_DELETE_INSUREE_ATTACHMENT_RESP", "INSUREE_MUTATION_ERR"], {
+    clientMutationId: mutation.clientMutationId,
+    clientMutationLabel,
+    requestedDateTime,
+  });
+}
+
+export function createAttachment(attach, clientMutationLabel) {
+  let payload = formatAttachment(attach);
+  let mutation = formatMutation("createInsureeAttachment", payload, clientMutationLabel);
+  var requestedDateTime = new Date();
+  return graphql(mutation.payload, ["INSUREE_MUTATION_REQ", "INSUREE_CREATE_INSUREE_ATTACHMENT_RESP", "INSUREE_MUTATION_ERR"], {
+    clientMutationId: mutation.clientMutationId,
+    clientMutationLabel,
+    requestedDateTime,
+  });
+}
+
+export function updateAttachment(attach, clientMutationLabel) {
+  let payload = formatAttachment(attach);
+  let mutation = formatMutation("updateInsureeAttachment", payload, clientMutationLabel);
+  var requestedDateTime = new Date();
+  return graphql(mutation.payload, ["INSUREE_MUTATION_REQ", "INSUREE_UPDATE_INSUREE_ATTACHMENT_RESP", "INSUREE_MUTATION_ERR"], {
+    clientMutationId: mutation.clientMutationId,
+    clientMutationLabel,
+    requestedDateTime,
+  });
+}
+
+export function formatAttachments(mm, attachments) {
+  return `[
+    ${attachments
+      .map(
+        (a) => `{
+      ${formatAttachment(a)}
+    }`,
+      )
+      .join("\n")}
+  ]`;
+}
+
+export function formatAttachment(attach) {
+  return `
+    ${!!attach.id ? `id: "${decodeId(attach.id)}"` : ""}
+    ${!!attach.claimUuid ? `insureeId: "${decodeId(attach.insureeId)}"` : ""}
+    ${!!attach.type ? `type: "${formatGQLString(attach.type)}"` : ""}
+    ${!!attach.title ? `title: "${formatGQLString(attach.title)}"` : ""}
+    ${!!attach.date ? `date: "${attach.date}"` : ""}
+    ${!!attach.mime ? `mime: "${attach.mime}"` : ""}
+    ${!!attach.filename ? `filename: "${formatGQLString(attach.filename)}"` : ""}
+    ${!!attach.document ? `document: "${attach.document}"` : ""}
+  `;
 }
 
 export function fetchConfirmationTypes() {
@@ -266,6 +342,10 @@ export function formatInsureeGQL(mm, insuree) {
       : ""
     }
     ${!!insuree.jsonExt ? `jsonExt: ${formatJsonField(insuree.jsonExt)}` : ""}
+    ${!!insuree.attachments && !!insuree.attachments.length
+      ? `attachments: ${formatAttachments(mm, insuree.attachments)}`
+      : ""
+    }
   `;
 }
 

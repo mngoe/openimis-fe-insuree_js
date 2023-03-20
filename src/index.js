@@ -30,6 +30,7 @@ import InsureeFirstServicePointDisplay from "./components/InsureeFirstServicePoi
 import InsureeFirstServicePointPanel from "./components/InsureeFirstServicePointPanel";
 import InsureeAddress from "./components/InsureeAddress";
 import FamilyDisplayPanel from "./components/FamilyDisplayPanel";
+import AttachmentsDialog from "./components/AttachmentsDialog";
 import { familyLabel } from "./utils/utils";
 import messages_en from "./translations/en.json";
 import reducer from "./reducer";
@@ -104,6 +105,7 @@ const DEFAULT_CONFIG = {
     { key: "insuree.InsureeAddress", ref: InsureeAddress },
     { key: "insuree.ProfileLink", ref: InsureeProfileLink },
     { key: "insuree.CappedItemServiceLink", ref: InsureeCappedItemServiceLink },
+    { key: "insuree.AttachmentsDialog", ref: AttachmentsDialog },
   ],
   "core.Router": [
     { path: ROUTE_INSUREE_FAMILIES, component: FamiliesPage },

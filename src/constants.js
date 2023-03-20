@@ -10,6 +10,7 @@ export const RIGHT_FAMILY_DELETE = 101004;
 export const RIGHT_INSUREE = 101101; //101100 in doc ... but in practice...
 export const RIGHT_SEARCH = 101101;
 export const RIGHT_INSUREE_ADD = 101102;
+export const RIGHT_ADD = 111002;
 export const RIGHT_INSUREE_EDIT = 101103;
 export const RIGHT_INSUREE_DELETE = 101104;
 export const RIGHT_PRINT = 111006;
