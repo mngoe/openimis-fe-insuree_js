@@ -13,7 +13,8 @@ import {
     DialogTitle,
     Button,
     IconButton,
-    Divider
+    Divider,
+    Link,
 } from "@material-ui/core";
 import {
     TextInput,
@@ -27,9 +28,7 @@ import {
     ProgressOrError
 } from "@openimis/fe-core";
 import {
-    fetchInsureeAttachments,
     downloadAttachment,
-    deleteAttachment,
     createAttachment,
     updateAttachment,
 } from "../actions";
@@ -45,32 +44,24 @@ class AttachmentsDialog extends Component {
         open: false,
         insureeId: null,
         insureeAttachments: [],
-        attachmentToDelete: null,
         updatedAttachments: new Set(),
         reset: 0,
     }
 
     componentDidUpdate(prevProps, props, snapshot) {
         const { readOnly = false } = this.props;
-        if (!_.isEqual(prevProps.insureeAttachments, this.props.insureeAttachments)) {
-            var insureeAttachments = [...(this.props.insureeAttachments || [])];
+        if (!_.isEqual(prevProps.insuree, this.props.insuree) && !!this.props.insuree && !!this.props.insuree.id) {
+            var insureeAttach = [...(this.props.insuree[`attachments`] || [])];
             if (!this.props.readOnly && this.props.rights.includes(RIGHT_ADD)) {
-                insureeAttachments.push({});
+                insureeAttach.push({});
             }
-            this.setState({ insureeAttachments, updatedAttachments: new Set() });
-        } else if (!_.isEqual(prevProps.insuree, this.props.insuree) && !!this.props.insuree && !!this.props.insuree.id) {
             this.setState(
                 (state, props) => ({
                     open: true,
                     insureeId: props.insuree.id,
-                    insureeAttachments: readOnly ? [] : [{}],
+                    insureeAttachments: [...insureeAttach],
                     updatedAttachments: new Set(),
                 }),
-                (e) => {
-                    if (!!this.props.insuree && !!this.props.insuree.id) {
-                        this.props.fetchInsureeAttachments(this.props.insuree);
-                    }
-                },
             );
         } else if (!_.isEqual(prevProps.insuree, this.props.insuree) && !!this.props.insuree && !this.props.insuree.id) {
             let insureeAttachments = [...(this.props.insuree.attachments || [])];
@@ -79,73 +70,27 @@ class AttachmentsDialog extends Component {
                 this.props.onUpdated();
             }
             this.setState({ open: true, insureeId: null, insureeAttachments, updatedAttachments: new Set() });
-        } else if (prevProps.submittingMutation && !this.props.submittingMutation) {
-            var insureeAttachments = [...this.state.insureeAttachments];
-            if (!!this.state.attachmentToDelete) {
-                insureeAttachments = insureeAttachments.filter((a) => a.id !== this.state.attachmentToDelete.id);
-            } else if (!_.isEqual(_.last(insureeAttachments), {})) {
-                insureeAttachments.push({});
-            }
-            this.setState((state) => ({
-                insureeAttachments,
-                updatedAttachments: new Set(),
-                attachmentToDelete: null,
-                reset: state.reset + 1,
-            }));
-            // called from ClaimForm!
-            // this.props.journalize(this.props.mutation);
-        } else if (
-            prevProps.confirmed !== this.props.confirmed &&
-            !!this.props.confirmed &&
-            !!this.state.attachmentToDelete
-        ) {
-            this.props.deleteAttachment(
-                this.state.attachmentToDelete,
-                formatMessageWithValues(this.props.intl, "insuree", "insuree.InsureeAttachment.delete.mutationLabel", {
-                    file: `${this.state.attachmentToDelete.title} (${this.state.attachmentToDelete.filename})`,
-                }),
-            );
         }
     }
 
     delete = (a, i) => {
-        if (!!a.id) {
-            this.setState({ attachmentToDelete: a }, (e) =>
-                this.props.coreConfirm(
-                    formatMessage(this.props.intl, "insuree", "deleteInsureeAttachment.confirm.title"),
-                    formatMessageWithValues(this.props.intl, "insuree", "deleteInsureeAttachment.confirm.message", {
-                        file: `${a.title} (${a.filename})`,
-                    }),
-                ),
-            );
-        } else {
-            var insureeAttachments = [...this.state.insureeAttachments];
-            insureeAttachments.splice(i, 1);
-            insureeAttachments.pop();
-            this.props.insuree.attachments = [...insureeAttachments];
-            insureeAttachments.push({});
-            this.setState((state) => ({ insureeAttachments, reset: state.reset + 1 }));
-        }
+        var insureeAttachments = [...this.state.insureeAttachments];
+        insureeAttachments.splice(i, 1);
+        insureeAttachments.pop();
+        this.props.insuree.attachments = [...insureeAttachments];
+        insureeAttachments.push({});
+        this.setState((state) => ({ insureeAttachments, reset: state.reset + 1 }));
     };
 
     addAttachment = (document) => {
         let attachment = { ..._.last(this.state.insureeAttachments), document };
-        if (!!this.state.insureeId) {
-            this.props.createAttachment(
-                { ...attachment, insureeId: this.state.insureeId },
-                formatMessageWithValues(this.props.intl, "insuree", "insuree.InsureeAttachment.create.mutationLabel", {
-                    file: `${attachment.title} (${attachment.filename})`
-                }),
-            );
-        } else {
-            if (!this.props.insuree.attachments) {
-                this.props.insuree.attachments = [];
-            }
-            this.props.insuree.attachments.push(attachment);
-            var insureeAttachments = [...this.state.insureeAttachments];
-            insureeAttachments.push({});
-            this.setState({ insureeAttachments });
+        if (!this.props.insuree.attachments) {
+            this.props.insuree.attachments = [];
         }
+        this.props.insuree.attachments.push(attachment);
+        var insureeAttachments = [...this.state.insureeAttachments];
+        insureeAttachments.push({});
+        this.setState({ insureeAttachments });
     };
 
     update = (i) => {
@@ -181,7 +126,7 @@ class AttachmentsDialog extends Component {
     };
 
     formatFileName(a, i) {
-        if (!!a.id)
+        if (!!a.idAttachment)
             return (
                 <Link onClick={(e) => this.download(a)} reset={this.state.reset}>
                     {a.filename || ""}
@@ -204,7 +149,7 @@ class AttachmentsDialog extends Component {
         this.setState({ ...state });
     };
 
-    cannotUpdate = (a, i) => i < this.state.insureeAttachments.length - 1 && !!this.state.insureeId && !a.id;
+    cannotUpdate = (a, i) => i < this.state.insureeAttachments.length - 1 && !!this.state.insureeId && !a.idAttachment;
 
     render() {
         const {
@@ -213,8 +158,6 @@ class AttachmentsDialog extends Component {
             updateAttribute,
             readOnly = false,
             insuree,
-            fetchingInsureeAttachments,
-            errorInsureeAttachments
         } = this.props;
         const { open, insureeAttachments } = this.state;
 
@@ -226,7 +169,7 @@ class AttachmentsDialog extends Component {
 
         var itemFormatters = [
             (a, i) => this.cannotUpdate(a, i) ? (
-                this.state.claimAttachments[i].title
+                this.state.insureeAttachments[i].title
             ) : (
                 <TextInput
                     reset={this.state.reset}
@@ -235,7 +178,7 @@ class AttachmentsDialog extends Component {
                 />
             ),
             (a, i) => this.cannotUpdate(a, i) ? (
-                this.state.claimAttachments[i].date
+                this.state.insureeAttachments[i].date
             ) : (
                 <PublishedComponent
                     pubRef="core.DatePicker"
@@ -273,10 +216,7 @@ class AttachmentsDialog extends Component {
                 </DialogTitle>
                 <Divider />
                 <DialogContent className={classes.dialogContent}>
-                    <ProgressOrError progress={fetchingInsureeAttachments} error={errorInsureeAttachments} />
-                    {!fetchingInsureeAttachments && !errorInsureeAttachments && (
-                        <Table module="insuree" items={insureeAttachments} headers={headers} itemFormatters={itemFormatters} />
-                    )}
+                    <Table module="insuree" items={insureeAttachments} headers={headers} itemFormatters={itemFormatters} />
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={this.onClose} color="primary">
@@ -289,21 +229,16 @@ class AttachmentsDialog extends Component {
 }
 
 const mapStateToProps = (state) => ({
+    rights: !!state.core && !!state.core.user && !!state.core.user.i_user ? state.core.user.i_user.rights : [],
     confirmed: state.core.confirmed,
     submittingMutation: state.insuree.submittingMutation,
     mutation: state.insuree.mutation,
-    fetchingInsureeAttachments: state.insuree.fetchingInsureeAttachments,
-    fetchedInsureeAttachments: state.insuree.fetchedInsureeAttachments,
-    errorInsureeAttachments: state.insuree.errorInsureeAttachments,
-    insureeAttachments: state.insuree.insureeAttachments,
 });
 
 const mapDispatchToProps = (dispatch) => {
     return bindActionCreators(
         {
-            fetchInsureeAttachments,
             downloadAttachment,
-            deleteAttachment,
             createAttachment,
             updateAttachment,
             coreConfirm

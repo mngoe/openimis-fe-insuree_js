@@ -104,12 +104,32 @@ class InsureeForm extends Component {
     this.props.fetchInsureeFull(this.props.modulesManager, this.state.insuree_uuid);
   };
 
+  canSaveDetail = (d) => {
+    if (!d) return false;
+    if (d.filename === null || d.filename === undefined || d.filename === "") return false;
+    if (d.date === null || d.date === undefined || d.date === "") return false;
+    if (d.title === null || d.title === undefined || d.title === "") return false;
+    return true;
+  };
+
   canSave = () => {
     //if (!this.state.insuree.chfId) return false;
+    console.log(this.state.insuree.attachments);
     if (!this.state.insuree.lastName) return false;
     if (!this.state.insuree.otherNames) return false;
     if (!this.state.insuree.dob) return false;
     if (!this.state.insuree.gender) return false;
+    let attachments = [];
+    if (!!this.state.insuree.attachments) {
+      attachments = [...this.state.insuree.attachments];
+      if(attachments.length === 0){
+        return false;
+      }else{
+        if (attachments.filter((a) => !this.canSaveDetail(a)).length) {
+          return false;
+        }
+      }
+    }
     if (!!this.state.insuree.photo && (!this.state.insuree.photo.date || !this.state.insuree.photo.officerId))
       return false;
     return true;

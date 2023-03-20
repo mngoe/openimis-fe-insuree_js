@@ -55,6 +55,7 @@ const INSUREE_FULL_PROJECTION = (mm) => [
   "email",
   "phone",
   "healthFacility" + mm.getProjection("location.HealthFacilityPicker.projection"),
+  "attachments{idAttachment,filename,document,title,date,mime}"
 ];
 
 export const INSUREE_PICKER_PROJECTION = ["id", "uuid", "chfId", "lastName", "otherNames"];
@@ -134,7 +135,7 @@ export function selectFamilyMember(member) {
 export function print(selection) {
   return async (dispatch) => {
     try {
-      const response =window.open('../../api/report/beneficiary_card_mauritania/pdf/?insureeids='+selection, "_blank")
+      const response = window.open('../../api/report/beneficiary_card_mauritania/pdf/?insureeids=' + selection, "_blank")
       return response;
     } catch (err) {
       console.error(err);
@@ -153,7 +154,7 @@ export function fetchInsureeAttachments(insuree) {
 
 export function downloadAttachment(attach) {
   var url = new URL(`${window.location.origin}${baseApiUrl}/insuree/attach`);
-  url.search = new URLSearchParams({ id: decodeId(attach.id) });
+  url.search = new URLSearchParams({ id: attach.idAttachment });
   return (dispatch) => {
     return fetch(url)
       .then((response) => response.blob())
@@ -341,10 +342,9 @@ export function formatInsureeGQL(mm, insuree) {
       : ""
     }
     ${!!insuree.jsonExt ? `jsonExt: ${formatJsonField(insuree.jsonExt)}` : ""}
-    ${
-      !!insuree.attachments && !!insuree.attachments.length
-        ? `attachments: ${formatAttachments(mm, insuree.attachments)}`
-        : ""
+    ${!!insuree.attachments && !!insuree.attachments.length
+      ? `attachments: ${formatAttachments(mm, insuree.attachments)}`
+      : ""
     }
   `;
 }
