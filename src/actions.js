@@ -194,29 +194,24 @@ export function updateAttachment(attach, clientMutationLabel) {
   });
 }
 
-export function formatAttachments(mm, attachments) {
-  return `[
-    ${attachments
-      .map(
-        (a) => `{
-      ${formatAttachment(a)}
-    }`,
-      )
-      .join("\n")}
+export function formatAttachments(attachments) {
+  attachments.pop();
+  return `attachments: [
+    ${attachments.map((a) => formatAttachment(a)).join("\n")}
   ]`;
 }
 
 export function formatAttachment(attach) {
-  return `
+  return `{
     ${!!attach.id ? `id: "${decodeId(attach.id)}"` : ""}
-    ${!!attach.claimUuid ? `insureeId: "${decodeId(attach.insureeId)}"` : ""}
+    ${!!attach.insureeId ? `insureeId: "${decodeId(attach.insureeId)}"` : ""}
     ${!!attach.type ? `type: "${formatGQLString(attach.type)}"` : ""}
     ${!!attach.title ? `title: "${formatGQLString(attach.title)}"` : ""}
     ${!!attach.date ? `date: "${attach.date}"` : ""}
     ${!!attach.mime ? `mime: "${attach.mime}"` : ""}
     ${!!attach.filename ? `filename: "${formatGQLString(attach.filename)}"` : ""}
     ${!!attach.document ? `document: "${attach.document}"` : ""}
-  `;
+  }`;
 }
 
 export function fetchConfirmationTypes() {
@@ -342,10 +337,7 @@ export function formatInsureeGQL(mm, insuree) {
       : ""
     }
     ${!!insuree.jsonExt ? `jsonExt: ${formatJsonField(insuree.jsonExt)}` : ""}
-    ${!!insuree.attachments && !!insuree.attachments.length
-      ? `attachments: ${formatAttachments(mm, insuree.attachments)}`
-      : ""
-    }
+    ${formatAttachments(insuree.attachments)}
   `;
 }
 

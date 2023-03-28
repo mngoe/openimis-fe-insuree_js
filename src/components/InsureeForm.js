@@ -21,6 +21,7 @@ import InsureeMasterPanel from "../components/InsureeMasterPanel";
 
 import { fetchInsureeFull, fetchFamily } from "../actions";
 import { insureeLabel } from "../utils/utils";
+import InsureeAttachmentPanel from "./InsureeAttachmentPanel";
 
 const styles = (theme) => ({
   page: theme.page,
@@ -119,15 +120,13 @@ class InsureeForm extends Component {
     if (!this.state.insuree.otherNames) return false;
     if (!this.state.insuree.dob) return false;
     if (!this.state.insuree.gender) return false;
+    if (!this.state.insuree.attachments) return false;
     let attachments = [];
     if (!!this.state.insuree.attachments) {
       attachments = [...this.state.insuree.attachments];
-      if(attachments.length === 0){
+      if (!this.props.forReview) attachments.pop();
+      if (attachments.length && attachments.filter((a) => !this.canSaveDetail(a)).length) {
         return false;
-      }else{
-        if (attachments.filter((a) => !this.canSaveDetail(a)).length) {
-          return false;
-        }
       }
     }
     if (!!this.state.insuree.photo && (!this.state.insuree.photo.date || !this.state.insuree.photo.officerId))
@@ -171,12 +170,6 @@ class InsureeForm extends Component {
         onlyIfDirty: !readOnly,
       },
     ];
-    if (!!this.insureeAttachments) {
-      actions.push({
-        doIt: (e) => this.setState({ attachmentsInsuree: insuree }),
-        icon: <AttachIcon />,
-      });
-    }
     return (
       <Fragment>
         <Helmet
@@ -189,13 +182,6 @@ class InsureeForm extends Component {
         {((!!fetchedInsuree && !!insuree && insuree.uuid === insuree_uuid) || !insuree_uuid) &&
           ((!!fetchedFamily && !!family && family.uuid === family_uuid) || !family_uuid) && (
             <Fragment>
-              <PublishedComponent
-                pubRef="insuree.AttachmentsDialog"
-                readOnly={!rights.includes(RIGHT_INSUREE) || readOnly}
-                insuree={this.state.attachmentsInsuree}
-                close={(e) => this.setState({ attachmentsInsuree: null })}
-                onUpdated={() => this.setState({ forcedDirty: true })}
-              />
               <Form
                 module="insuree"
                 title="Insuree.title"
@@ -208,7 +194,7 @@ class InsureeForm extends Component {
                 readOnly={readOnly || !!insuree.validityTo}
                 actions={actions}
                 HeadPanel={FamilyDisplayPanel}
-                Panels={[InsureeMasterPanel]}
+                Panels={[InsureeMasterPanel, InsureeAttachmentPanel]}
                 contributedPanelsKey={INSUREE_INSUREE_FORM_CONTRIBUTION_KEY}
                 insuree={this.state.insuree}
                 onEditedChanged={this.onEditedChanged}
