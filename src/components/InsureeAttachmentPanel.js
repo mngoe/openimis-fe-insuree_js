@@ -9,9 +9,7 @@ import {
   formatMessage,
   withModulesManager,
   Table,
-  PublishedComponent,
   TextInput,
-  FormattedMessage
 } from "@openimis/fe-core";
 import { Paper, Box, Link, IconButton } from "@material-ui/core";
 import _ from "lodash";
@@ -30,8 +28,10 @@ class InsureeAttachmentPanel extends Component {
 
   initData = () => {
     let insureeAttachments = [];
-    if (!!this.props.edited[`attachments`]) {
-      insureeAttachments = this.props.edited[`attachments`] || [];
+    if(this.props.edited != undefined){
+      if (!!this.props.edited[`attachments`]) {
+        insureeAttachments = this.props.edited[`attachments`] || [];
+      }
     }
     if (!this.props.forReview && !_.isEqual(insureeAttachments[insureeAttachments.length - 1], {})) {
       insureeAttachments.push({});
@@ -52,7 +52,7 @@ class InsureeAttachmentPanel extends Component {
       this.setState({ insureeAttachments, reset: this.state.reset + 1 });
     } else if (
       prevProps.reset !== this.props.reset ||
-      (!!this.props.edited[`attachments`] &&
+      (!!this.props.edited && !!this.props.edited[`attachments`] &&
         !_.isEqual(prevProps.edited[`attachments`], this.props.edited[`attachments`]))
     ) {
       this.setState({
@@ -133,7 +133,6 @@ class InsureeAttachmentPanel extends Component {
 
     let headers = [
       "insureeAttachment.title",
-      "insureeAttachment.date",
       "insureeAttachment.fileName"
     ];
 
@@ -144,16 +143,6 @@ class InsureeAttachmentPanel extends Component {
           value={i.title}
           onChange={(v) => this._onChange(idx, "title", v)}
         />
-      ),
-      (i, idx) => (
-        <Box minWidth={50}>
-          <PublishedComponent
-            pubRef="core.DatePicker"
-            onChange={(v) => this._onChange(idx, "date", v)}
-            value={i.date}
-            readOnly={!!forReview || readOnly}
-          />
-        </Box>
       ),
       (i, idx) => this.formatFileName(i, idx),
     ];
