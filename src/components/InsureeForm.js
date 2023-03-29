@@ -108,7 +108,6 @@ class InsureeForm extends Component {
   canSaveDetail = (d) => {
     if (!d) return false;
     if (d.filename === null || d.filename === undefined || d.filename === "") return false;
-    if (d.date === null || d.date === undefined || d.date === "") return false;
     if (d.title === null || d.title === undefined || d.title === "") return false;
     return true;
   };

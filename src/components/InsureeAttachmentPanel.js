@@ -9,9 +9,7 @@ import {
   formatMessage,
   withModulesManager,
   Table,
-  PublishedComponent,
   TextInput,
-  FormattedMessage
 } from "@openimis/fe-core";
 import { Paper, Box, Link, IconButton } from "@material-ui/core";
 import _ from "lodash";
@@ -133,7 +131,6 @@ class InsureeAttachmentPanel extends Component {
 
     let headers = [
       "insureeAttachment.title",
-      "insureeAttachment.date",
       "insureeAttachment.fileName"
     ];
 
@@ -144,16 +141,6 @@ class InsureeAttachmentPanel extends Component {
           value={i.title}
           onChange={(v) => this._onChange(idx, "title", v)}
         />
-      ),
-      (i, idx) => (
-        <Box minWidth={50}>
-          <PublishedComponent
-            pubRef="core.DatePicker"
-            onChange={(v) => this._onChange(idx, "date", v)}
-            value={i.date}
-            readOnly={!!forReview || readOnly}
-          />
-        </Box>
       ),
       (i, idx) => this.formatFileName(i, idx),
     ];
