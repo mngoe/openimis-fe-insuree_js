@@ -22,6 +22,7 @@ import FamilyMasterPanel from "./FamilyMasterPanel";
 import { fetchFamily, newFamily, createFamily, fetchFamilyMutation } from "../actions";
 import FamilyInsureesOverview from "./FamilyInsureesOverview";
 import HeadInsureeMasterPanel from "./HeadInsureeMasterPanel";
+import HeadInsureeAttachmentPanel from "./HeadInsureeAttachmentPanel";
 
 import { insureeLabel } from "../utils/utils";
 
@@ -121,13 +122,28 @@ class FamilyForm extends Component {
     }
   };
 
+  canSaveDetail = (d) => {
+    if (!d) return false;
+    if (d.filename === null || d.filename === undefined || d.filename === "") return false;
+    if (d.title === null || d.title === undefined || d.title === "") return false;
+    return true;
+  };
+
   canSave = () => {
     if (!this.state.family.location) return false;
     if (!this.state.family.headInsuree) return false;
-    if (!this.state.family.headInsuree.chfId) return false;
     if (!this.state.family.headInsuree.lastName) return false;
     if (!this.state.family.headInsuree.otherNames) return false;
     if (!this.state.family.headInsuree.dob) return false;
+    if (!this.state.family.headInsuree.attachments) return false;
+    let attachments = [];
+    if (!!this.state.family.headInsuree.attachments) {
+      attachments = [...this.state.family.headInsuree.attachments];
+      if (!this.props.forReview) attachments.pop();
+      if (attachments.length && attachments.filter((a) => !this.canSaveDetail(a)).length) {
+        return false;
+      }
+    }
     if (
       !!this.state.family.headInsuree.photo &&
       (!this.state.family.headInsuree.photo.date || !this.state.family.headInsuree.photo.officerId)
@@ -211,7 +227,7 @@ class FamilyForm extends Component {
             openFamilyButton={openFamilyButton}
             overview={overview}
             HeadPanel={FamilyMasterPanel}
-            Panels={overview ? [FamilyInsureesOverview] : [HeadInsureeMasterPanel]}
+            Panels={overview ? [FamilyInsureesOverview] : [HeadInsureeMasterPanel, HeadInsureeAttachmentPanel]}
             contributedPanelsKey={
               overview ? INSUREE_FAMILY_OVERVIEW_PANELS_CONTRIBUTION_KEY : INSUREE_FAMILY_PANELS_CONTRIBUTION_KEY
             }

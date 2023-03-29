@@ -157,6 +157,7 @@
   "insuree.Insuree.title": "Insuree {label}",
   "insuree.InsureeMasterPanel.title": "Insuree Details",
   "insuree.HeadInsureeMasterPanel.title": "Head Insuree Details",
+  "insuree.HeadInsureeAttachmentPanel.title": "Head Insuree Attachments",
   "insuree.InsureeFirstServicePointPanel.title": "First Service Point",
   "insuree.insureeSummaries": "{count} Insurees Found",
   "insuree.insureeSummaries.openNewTabButton.tooltip": "Open in new tab",
