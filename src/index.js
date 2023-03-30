@@ -29,6 +29,7 @@ import InsureeSummary from "./components/InsureeSummary";
 import InsureeFirstServicePointDisplay from "./components/InsureeFirstServicePointDisplay";
 import InsureeFirstServicePointPanel from "./components/InsureeFirstServicePointPanel";
 import InsureeAddress from "./components/InsureeAddress";
+import AttachmentDialog from "./components/AttachmentDialog";
 import FamilyDisplayPanel from "./components/FamilyDisplayPanel";
 import { familyLabel } from "./utils/utils";
 import messages_en from "./translations/en.json";
@@ -89,6 +90,7 @@ const DEFAULT_CONFIG = {
     { key: "insuree.FamilyTypePicker", ref: FamilyTypePicker },
     { key: "insuree.PhotoStatusPicker", ref: PhotoStatusPicker },
     { key: "insuree.RelationPicker", ref: RelationPicker },
+    { key: "insuree.AttachmentDialog", ref: AttachmentDialog },
     { key: "insuree.InsureeNumberInput", ref: InsureeNumberInput },
 
     { key: "insuree.route.families", ref: ROUTE_INSUREE_FAMILIES },

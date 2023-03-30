@@ -114,7 +114,6 @@ class InsureeForm extends Component {
 
   canSave = () => {
     //if (!this.state.insuree.chfId) return false;
-    console.log(this.state.insuree.attachments);
     if (!this.state.insuree.lastName) return false;
     if (!this.state.insuree.otherNames) return false;
     if (!this.state.insuree.dob) return false;
