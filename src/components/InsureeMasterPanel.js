@@ -198,17 +198,6 @@ class InsureeMasterPanel extends FormPanel {
                   </Grid>
                   <Grid item xs={3} className={classes.item}>
                     <PublishedComponent
-                      pubRef="insuree.EducationPicker"
-                      module="insuree"
-                      value={!!edited && !!edited.education ? edited.education.id : ""}
-                      readOnly={readOnly}
-                      withNull={true}
-                      nullLabel={formatMessage(intl, "insuree", "insuree.Education.none")}
-                      onChange={(v) => this.updateAttribute("education", { id: v })}
-                    />
-                  </Grid>
-                  <Grid item xs={3} className={classes.item}>
-                    <PublishedComponent
                       pubRef="insuree.IdentificationTypePicker"
                       module="insuree"
                       value={!!edited && !!edited.typeOfId ? edited.typeOfId.code : null}
@@ -227,6 +216,17 @@ class InsureeMasterPanel extends FormPanel {
                       onChange={(v) => this.updateAttribute("passport", !!v ? v : null)}
                     />
                   </Grid>
+                  <Grid item xs={4} className={classes.item}>
+                    <PublishedComponent
+                      pubRef="insuree.MembershipPicker"
+                      module="insuree"
+                      value={!!edited && !!edited.membershipgroup ? edited.membershipgroup : null}
+                      readOnly={readOnly}
+                      withNull={true}
+                      nullLabel={formatMessage(intl, "insuree", "Membership.none")}
+                      onChange={(v) => this.updateAttribute("membership", v)}
+                    />
+                  </Grid>
                 </Grid>
               </Grid>
               <Grid item xs={4} className={classes.item}>
@@ -238,18 +238,8 @@ class InsureeMasterPanel extends FormPanel {
                   onChange={(v) => this.updateAttribute("photo", !!v ? v : null)}
                 />
               </Grid>
-              <Contributions
-                {...this.props}
-                updateAttribute={this.updateAttribute}
-                contributionKey={INSUREE_INSUREE_CONTRIBUTION_KEY}
-              />
             </Grid>
           </Paper>
-          <Contributions
-            {...this.props}
-            updateAttribute={this.updateAttribute}
-            contributionKey={INSUREE_INSUREE_PANELS_CONTRIBUTION_KEY}
-          />
         </Grid>
       </Grid>
     );

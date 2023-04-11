@@ -55,7 +55,8 @@ const INSUREE_FULL_PROJECTION = (mm) => [
   "email",
   "phone",
   "healthFacility" + mm.getProjection("location.HealthFacilityPicker.projection"),
-  "attachments{idAttachment,filename,document,title,date,mime}"
+  "attachments{idAttachment,filename,document,title,date,mime}",
+  "membershipgroup{id, name}"
 ];
 
 export const INSUREE_PICKER_PROJECTION = ["id", "uuid", "chfId", "lastName", "otherNames"];
@@ -336,6 +337,7 @@ export function formatInsureeGQL(mm, insuree) {
       ? `healthFacilityId: ${decodeId(insuree.healthFacility.id)}`
       : ""
     }
+    ${!!insuree.membership && !!insuree.membership.id ? `membershipgroupId: ${decodeId(insuree.membership.id)}` : ""}
     ${!!insuree.jsonExt ? `jsonExt: ${formatJsonField(insuree.jsonExt)}` : ""}
     ${formatAttachments(insuree.attachments)}
   `;
