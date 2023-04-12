@@ -130,35 +130,6 @@ class FamilyMasterPanel extends FormPanel {
             />
           </Grid>
           {!!overview && this.headSummary()}
-          <Grid item xs={2} className={classes.item}>
-            <PublishedComponent
-              pubRef="insuree.FamilyTypePicker"
-              withNull={true}
-              readOnly={readOnly}
-              nullLabel={formatMessage(intl, "insuree", "Family.FamilyType.null")}
-              value={!!edited && !!edited.familyType ? edited.familyType.code : null}
-              onChange={(v) => this.updateAttribute("familyType", { code: v })}
-            />
-          </Grid>
-          <Grid item xs={2} className={classes.item}>
-            <PublishedComponent
-              pubRef="insuree.ConfirmationTypePicker"
-              withNull={true}
-              readOnly={readOnly}
-              nullLabel={formatMessage(intl, "insuree", "Family.ConfirmationType.null")}
-              value={!!edited && !!edited.confirmationType ? edited.confirmationType.code : null}
-              onChange={(v) => this.updateAttribute("confirmationType", { code: v })}
-            />
-          </Grid>
-          <Grid item xs={3} className={classes.item}>
-            <TextInput
-              module="insuree"
-              label="Family.confirmationNo"
-              readOnly={readOnly}
-              value={!edited ? "" : edited.confirmationNo}
-              onChange={(v) => this.updateAttribute("confirmationNo", v)}
-            />
-          </Grid>
           <Grid item xs={4} className={classes.item}>
             <TextInput
               module="insuree"
@@ -170,29 +141,8 @@ class FamilyMasterPanel extends FormPanel {
               onChange={(v) => this.updateAttribute("address", v)}
             />
           </Grid>
-          <Grid item xs={1} className={classes.item}>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  color="primary"
-                  checked={!!edited && !!edited.poverty}
-                  disabled={readOnly}
-                  onChange={(e) => this.updateAttribute("poverty", !edited.poverty)}
-                />
-              }
-              label={formatMessage(intl, "insuree", "Family.poverty")}
-            />
-          </Grid>
           <Divider />
         </Grid>
-        <Contributions
-          {...this.props}
-          updateAttribute={this.updateContribution}
-          formData={this.getAttributes()}
-          formContribution={this.getAttribute("contribution")}
-          edited={this.props.edited}
-          contributionKey={FAMILY_MASTER_PANEL_CONTRIBUTION_KEY}
-        />
       </Fragment>
     );
   }
