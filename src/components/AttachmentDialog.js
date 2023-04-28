@@ -41,6 +41,13 @@ class AttachmentDialog extends Component {
     }
   }
 
+  getUrl = (attachment) => {
+    if (attachment?.document) {
+      return `data:image/png;base64,${attachment.document}`;
+    }
+    return null;
+  };
+
   onClose = () => this.setState({ open: false }, (e) => !!this.props.close && this.props.close());
 
 
@@ -56,7 +63,7 @@ class AttachmentDialog extends Component {
         <Divider />
         <DialogContent className={classes.dialogContent}>
           <div>
-            <img src={`/openimis-be/openIMIS/openIMISphone/${attachment.folder}/${attachment.filename}.png`} height={400} width={400} />
+            <img src={this.getUrl(attachment)} height={500} width={500} />
           </div>
         </DialogContent>
         <DialogActions>
