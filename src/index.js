@@ -14,6 +14,7 @@ import InsureeChfIdPicker from "./pickers/InsureeChfIdPicker";
 import InsureeGenderPicker from "./pickers/InsureeGenderPicker";
 import EducationPicker from "./pickers/EducationPicker";
 import ProfessionPicker from "./pickers/ProfessionPicker";
+import MembershipPicker from "./pickers/MembershipPicker";
 import IdentificationTypePicker from "./pickers/IdentificationTypePicker";
 import InsureeMaritalStatusPicker from "./pickers/InsureeMaritalStatusPicker";
 import FamilyPovertyStatusPicker from "./pickers/FamilyPovertyStatusPicker";
@@ -84,6 +85,7 @@ const DEFAULT_CONFIG = {
     { key: "insuree.InsureeMaritalStatusPicker", ref: InsureeMaritalStatusPicker },
     { key: "insuree.EducationPicker", ref: EducationPicker },
     { key: "insuree.ProfessionPicker", ref: ProfessionPicker },
+    { key: "insuree.MembershipPicker", ref: MembershipPicker },
     { key: "insuree.IdentificationTypePicker", ref: IdentificationTypePicker },
     { key: "insuree.FamilyPovertyStatusPicker", ref: FamilyPovertyStatusPicker },
     { key: "insuree.ConfirmationTypePicker", ref: ConfirmationTypePicker },

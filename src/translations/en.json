@@ -240,6 +240,10 @@
   "insuree.InsureeAttachment.delete.mutationLabel": "Deleted attachment {file} from insuree",
   "insuree.InsureeAttachment.create.mutationLabel": "Added attachment {file} to insuree",
   "insuree.InsureeAttachment.update.mutationLabel": "Updated attachment {file} of insuree",
-  "insuree.edit.attachments.title": "Attachments"
+  "insuree.edit.attachments.title": "Attachments",
+  "insuree.Membership.null": "Any",
+  "insuree.Membership.none": "None",
+  "insuree.MembershipPicker.label": "Membership group",
+  "insuree.MembershipPicker.placeholder": "Select a membership group"
 
 }
