@@ -148,47 +148,15 @@ export function fetchInsureeAttachments(insuree) {
   const payload = formatPageQuery(
     "insureeAttachments",
     [`insuree_id: "${decodeId(insuree.id)}"`],
-    ["id", "type", "title", "date", "filename", "mime"],
+    ["idAttachment", "title", "folder", "date", "filename", "mime"],
   );
   return graphql(payload, "INSUREE_INSUREE_ATTACHMENTS");
-}
-
-export function downloadAttachment(attach) {
-  var url = new URL(`${window.location.origin}${baseApiUrl}/insuree/attach`);
-  url.search = new URLSearchParams({ id: attach.idAttachment });
-  return (dispatch) => {
-    return fetch(url)
-      .then((response) => response.blob())
-      .then((blob) => openBlob(blob, attach.filename, attach.mime));
-  };
 }
 
 export function deleteAttachment(attach, clientMutationLabel) {
   let mutation = formatMutation("deleteInsureeAttachment", `id: "${decodeId(attach.id)}"`, clientMutationLabel);
   var requestedDateTime = new Date();
   return graphql(mutation.payload, ["CLAIM_MUTATION_REQ", "INSUREE_DELETE_INSUREE_ATTACHMENT_RESP", "INSUREE_MUTATION_ERR"], {
-    clientMutationId: mutation.clientMutationId,
-    clientMutationLabel,
-    requestedDateTime,
-  });
-}
-
-export function createAttachment(attach, clientMutationLabel) {
-  let payload = formatAttachment(attach);
-  let mutation = formatMutation("createInsureeAttachment", payload, clientMutationLabel);
-  var requestedDateTime = new Date();
-  return graphql(mutation.payload, ["INSUREE_MUTATION_REQ", "INSUREE_CREATE_INSUREE_ATTACHMENT_RESP", "INSUREE_MUTATION_ERR"], {
-    clientMutationId: mutation.clientMutationId,
-    clientMutationLabel,
-    requestedDateTime,
-  });
-}
-
-export function updateAttachment(attach, clientMutationLabel) {
-  let payload = formatAttachment(attach);
-  let mutation = formatMutation("updateInsureeAttachment", payload, clientMutationLabel);
-  var requestedDateTime = new Date();
-  return graphql(mutation.payload, ["INSUREE_MUTATION_REQ", "INSUREE_UPDATE_INSUREE_ATTACHMENT_RESP", "INSUREE_MUTATION_ERR"], {
     clientMutationId: mutation.clientMutationId,
     clientMutationLabel,
     requestedDateTime,
@@ -206,7 +174,6 @@ export function formatAttachment(attach) {
   return `{
     ${!!attach.id ? `id: "${decodeId(attach.id)}"` : ""}
     ${!!attach.insureeId ? `insureeId: "${decodeId(attach.insureeId)}"` : ""}
-    ${!!attach.type ? `type: "${formatGQLString(attach.type)}"` : ""}
     ${!!attach.title ? `title: "${formatGQLString(attach.title)}"` : ""}
     ${!!attach.date ? `date: "${attach.date}"` : ""}
     ${!!attach.mime ? `mime: "${attach.mime}"` : ""}

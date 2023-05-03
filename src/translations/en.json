@@ -236,7 +236,7 @@
   "insureeSummaries.printSelected": "Print Selected",
   "insureeSummaries.printAll": "Print All",
   "insuree.insureeAttachment.action": " ",
-  "insuree.attachments.title": "Attachments of insuree",
+  "insuree.attachments.title": "{filename}",
   "insuree.InsureeAttachment.delete.mutationLabel": "Deleted attachment {file} from insuree",
   "insuree.InsureeAttachment.create.mutationLabel": "Added attachment {file} to insuree",
   "insuree.InsureeAttachment.update.mutationLabel": "Updated attachment {file} of insuree",

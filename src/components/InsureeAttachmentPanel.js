@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import { bindActionCreators } from "redux";
 import { injectIntl } from "react-intl";
 import { connect } from "react-redux";
@@ -10,12 +10,10 @@ import {
   withModulesManager,
   Table,
   TextInput,
+  PublishedComponent
 } from "@openimis/fe-core";
 import { Paper, Box, Link, IconButton } from "@material-ui/core";
 import _ from "lodash";
-import {
-  downloadAttachment,
-} from "../actions";
 
 const styles = (theme) => ({
   paper: theme.paper.paper,
@@ -24,11 +22,12 @@ const styles = (theme) => ({
 class InsureeAttachmentPanel extends Component {
   state = {
     insureeAttachments: [],
+    attachment: null,
   };
 
   initData = () => {
     let insureeAttachments = [];
-    if(this.props.edited != undefined){
+    if (this.props.edited != undefined) {
       if (!!this.props.edited[`attachments`]) {
         insureeAttachments = this.props.edited[`attachments`] || [];
       }
@@ -87,10 +86,6 @@ class InsureeAttachmentPanel extends Component {
     this._onEditedChanged(insureeAttachments);
   };
 
-  download = (i) => {
-    this.props.downloadAttachment(i);
-  };
-
   addAttachment = (document, idx) => {
     this._onChange(idx, 'document', document);
   };
@@ -114,7 +109,7 @@ class InsureeAttachmentPanel extends Component {
   formatFileName(i, idx) {
     if (!!i.idAttachment)
       return (
-        <Link onClick={(e) => this.download(i)}>
+        <Link onClick={(e) => this.setState({ attachment: i })}>
           {i.filename || ""}
         </Link>
       );
@@ -122,7 +117,7 @@ class InsureeAttachmentPanel extends Component {
     return (
       <IconButton variant="contained" component="label">
         <FileIcon />
-        <input type="file" style={{ display: "none" }} onChange={(f) => this.fileSelected(f, idx)} />
+        <input type="file" style={{ display: "none" }} onChange={(f) => this.fileSelected(f, idx)} accept="image/*" />
       </IconButton>
     );
   }
@@ -163,25 +158,23 @@ class InsureeAttachmentPanel extends Component {
 
     return (
       <Paper className={classes.paper}>
-        <Table
-          module="insuree"
-          header={formatMessage(intl, "insuree", `edit.attachments.title`)}
-          headers={headers}
-          itemFormatters={itemFormatters}
-          items={this.state.insureeAttachments}
-        />
+        <Fragment>
+          <PublishedComponent
+            pubRef="insuree.AttachmentDialog"
+            attachment={this.state.attachment}
+            close={(e) => this.setState({ attachment: null })}
+          />
+          <Table
+            module="insuree"
+            header={formatMessage(intl, "insuree", `edit.attachments.title`)}
+            headers={headers}
+            itemFormatters={itemFormatters}
+            items={this.state.insureeAttachments}
+          />
+        </Fragment>
       </Paper>
     );
   }
 }
 
-const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators(
-    {
-      downloadAttachment,
-    },
-    dispatch,
-  );
-};
-
-export default withModulesManager(injectIntl(withTheme(withStyles(styles)(connect(mapDispatchToProps)(InsureeAttachmentPanel)))));
+export default withModulesManager(injectIntl(withTheme(withStyles(styles)(InsureeAttachmentPanel))));
