@@ -39,11 +39,6 @@ class HeadInsureeMasterPanel extends Component {
           title="insuree.HeadInsureeMasterPanel.title"
           actions={actions}
         />
-        <Contributions
-          {...this.props}
-          updateAttribute={this.updateAttribute}
-          contributionKey={INSUREE_HEAD_INSUREE_PANELS_CONTRIBUTION_KEY}
-        />
       </Fragment>
     );
   }

@@ -213,9 +213,9 @@ class FamilyForm extends Component {
             overview={overview}
             HeadPanel={FamilyMasterPanel}
             Panels={overview ? [FamilyInsureesOverview] : [HeadInsureeMasterPanel]}
-            //contributedPanelsKey={
-              //overview ? INSUREE_FAMILY_OVERVIEW_PANELS_CONTRIBUTION_KEY : INSUREE_FAMILY_PANELS_CONTRIBUTION_KEY
-            //}
+            contributedPanelsKey={
+              overview ? INSUREE_FAMILY_OVERVIEW_PANELS_CONTRIBUTION_KEY : INSUREE_FAMILY_PANELS_CONTRIBUTION_KEY
+            }
             family={family}
             insuree={insuree}
             onEditedChanged={this.onEditedChanged}
