@@ -123,9 +123,6 @@ class InsureeOptionsPicker extends Component {
       position
     } = this.props;
 
-    //console.log(insureeAnswers)
-
-
     if (insureeQuestions[position].questionType == "DROPDOWN") {
       return (
         <SelectInput

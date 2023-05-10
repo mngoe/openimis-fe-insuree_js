@@ -54,6 +54,8 @@ const INSUREE_FULL_PROJECTION = (mm) => [
   "email",
   "phone",
   "healthFacility" + mm.getProjection("location.HealthFacilityPicker.projection"),
+  "score",
+  "insureeanswerSet{question{id question altLanguage questionType} insureeAnswer{option optionValue altLanguage}}"
 ];
 
 export const INSUREE_PICKER_PROJECTION = ["id", "uuid", "chfId", "lastName", "otherNames"];
@@ -177,13 +179,13 @@ export function fetchEducations(mm) {
 }
 
 export function fetchQuestions(mm) {
-  const payload = formatQuery("insureeQuestions", null, 
-  [
-    "id", 
-    "question", 
-    "altLanguage",
-    "questionType"
-  ]);
+  const payload = formatQuery("insureeQuestions", null,
+    [
+      "id",
+      "question",
+      "altLanguage",
+      "questionType"
+    ]);
   return graphql(payload, "INSUREE_QUESTIONS");
 }
 
@@ -300,8 +302,9 @@ export function formatAnswers(insureeAnswers) {
 export function formatAnswer(answer) {
   return `{
     ${answer.questionId !== undefined && answer.questionId !== null ? `questionId: ${answer.questionId}` : ""}
-    ${answer.optionId !== undefined && answer.optionId !== null ? `optionId: ${answer.optionId}` : ""}
-    ${answer.optionMark !== undefined && answer.optionMark !== null ? `optionMark: ${answer.optionMark}` : ""}
+    ${answer.optionId !== undefined && answer.optionId !== null ? `answerId: ${answer.optionId}` : ""}
+    ${answer.value !== undefined && answer.value !== null ? `answerId: ${answer.value == true ? 1 : 2}` : ""}
+    ${answer.answer !== undefined && answer.answer !== null ? `answerId: ${answer.answer}` : ""}
   }`;
 }
 

@@ -10,6 +10,7 @@ import {
   TextInput,
   Contributions,
   withModulesManager,
+  NumberInput
 } from "@openimis/fe-core";
 import { bindActionCreators } from "redux";
 import { injectIntl } from "react-intl";
@@ -61,16 +62,17 @@ class InsureeMasterPanel extends FormPanel {
     insureeQuestions.forEach(function (question) {
       if (question.questionType == "DROPDOWN") {
         let opt = [];
+        var optionLab;
         insureeOptions.forEach(function (option) {
           if (question.id == option.questionId.id) {
             opt.push({ value: option.option, label: option.option, id: option.id, mark: option.optionValue });
           }
         });
-        insureeAnswers.push({ questionId: question.id, options: opt });
-      }else if (question.questionType == "TEXT") {
-        insureeAnswers.push({ questionId: question.id})
-      }else if (question.questionType == "CHECKBOX"){
-        insureeAnswers.push({questionId: question.id})
+        insureeAnswers.push({ questionId: question.id, options: opt, optionLabel: optionLab });
+      } else if (question.questionType == "TEXT") {
+        insureeAnswers.push({ questionId: question.id })
+      } else if (question.questionType == "CHECKBOX") {
+        insureeAnswers.push({ questionId: question.id })
       }
     });
 
@@ -297,6 +299,16 @@ class InsureeMasterPanel extends FormPanel {
                   })}
                 </Grid>
               )}
+              {!!edited[`score`] && (
+                <Grid item xs={3} className={classes.item}>
+                  <NumberInput
+                    label="Score"
+                    readOnly={true}
+                    value={edited[`score`]}
+                  />
+                </Grid>
+              )
+              }
               <Contributions
                 {...this.props}
                 updateAttribute={this.updateAttribute}
