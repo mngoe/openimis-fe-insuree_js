@@ -28,7 +28,7 @@ class InsureeOptionsPicker extends Component {
   componentDidMount() {
     setTimeout(() => {
       this.setState({ data: this.initData() });
-    }, Math.floor(Math.random() * 2000));
+    }, Math.floor(Math.random() * 3000));
   }
 
   _updateData = (idx, updates) => {
