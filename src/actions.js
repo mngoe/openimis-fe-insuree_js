@@ -54,8 +54,7 @@ const INSUREE_FULL_PROJECTION = (mm) => [
   "email",
   "phone",
   "healthFacility" + mm.getProjection("location.HealthFacilityPicker.projection"),
-  "score",
-  "insureeanswerSet{question{id question altLanguage questionType} insureeAnswer{option optionValue altLanguage}}"
+  "score"
 ];
 
 export const INSUREE_PICKER_PROJECTION = ["id", "uuid", "chfId", "lastName", "otherNames"];
@@ -189,11 +188,13 @@ export function fetchQuestions(mm) {
   return graphql(payload, "INSUREE_QUESTIONS");
 }
 
-export function fetchInsureeAnswers(mm) {
-  const payload = formatQuery("insureeAnswers", null,
+export function fetchAnswers(mm, uuid) {
+  let payload = formatPageQuery(
+    "insureeAnswers", 
+    [`insureeId_Uuid:"${uuid}"`],
     [
-      "id",
-      "insureeAnswer{questionId{ id } option}"
+      "insureeAnswer",
+      "question{id}"
     ]);
   return graphql(payload, "INSUREE_ANSWERS");
 }

@@ -15,7 +15,7 @@ import {
 import { bindActionCreators } from "redux";
 import { injectIntl } from "react-intl";
 import { connect } from "react-redux";
-import { fetchQuestions, fetchOptions } from "../actions";
+import { fetchQuestions, fetchOptions, fetchAnswers } from "../actions";
 import InsureeOptionsPicker from "../pickers/InsureeOptionsPicker"
 
 const styles = (theme) => ({
@@ -39,6 +39,7 @@ class InsureeMasterPanel extends FormPanel {
   componentDidMount() {
     this.props.fetchOptions(this.props.modulesManager);
     this.props.fetchQuestions(this.props.modulesManager);
+    this.props.fetchAnswers(this.props.modulesManager, this.props.edited_id);
   }
 
 
@@ -49,13 +50,15 @@ class InsureeMasterPanel extends FormPanel {
       intl,
       classes,
       edited,
+      edited_id,
       module = "insuree",
       title = "Insuree.title",
       titleParams = { label: "" },
       readOnly = true,
       actions,
       insureeQuestions,
-      insureeAnswers = [],
+      insureeAnswers,
+      answers = [],
       insureeOptions,
     } = this.props;
 
@@ -63,16 +66,39 @@ class InsureeMasterPanel extends FormPanel {
       if (question.questionType == "DROPDOWN") {
         let opt = [];
         var optionLab;
+        var optionId;
         insureeOptions.forEach(function (option) {
           if (question.id == option.questionId.id) {
             opt.push({ value: option.option, label: option.option, id: option.id, mark: option.optionValue });
           }
+          insureeAnswers.forEach(function (ans) {
+            if (ans.question.id == question.id && ans.insureeAnswer == option.id) {
+              optionLab = option.option;
+              optionId = ans.insureeAnswer;
+            }
+          })
         });
-        insureeAnswers.push({ questionId: question.id, options: opt, optionLabel: optionLab });
+        answers.push({ questionId: question.id, optionId: optionId, options: opt, optionLabel: optionLab });
       } else if (question.questionType == "TEXT") {
-        insureeAnswers.push({ questionId: question.id })
+        var answer;
+        insureeAnswers.forEach(function (ans) {
+          if (ans.question.id == question.id) {
+            answer = ans.insureeAnswer;
+          }
+        })
+        answers.push({ questionId: question.id, answer: answer, value: answer })
       } else if (question.questionType == "CHECKBOX") {
-        insureeAnswers.push({ questionId: question.id })
+        var value;
+        insureeAnswers.forEach(function (ans) {
+          if (ans.question.id == question.id) {
+            if(ans.insureeAnswer == 1){
+              value = true;
+            }else{
+              value = false;
+            }
+          }
+        })
+        answers.push({ questionId: question.id , value: value })
       }
     });
 
@@ -289,7 +315,7 @@ class InsureeMasterPanel extends FormPanel {
                           readOnly={false}
                           position={edx}
                           edited={edited}
-                          insureeAnswers={insureeAnswers}
+                          insureeAnswers={answers}
                           insureeQuestions={insureeQuestions}
                           updateAttribute={this.updateAttribute}
                           onEditedChanged={this.props.onEditedChanged}
@@ -336,10 +362,14 @@ const mapStateToProps = state => ({
   fetchingInsureeOptions: state.insuree.fetchingInsureeOptions,
   fetchedInsureeOptions: state.insuree.fetchedInsureeOptions,
   errorInsureeOptions: state.insuree.errorInsureeOptions,
+  insureeAnswers: state.insuree.insureeAnswers,
+  fetchingInsureeAnswers: state.insuree.fetchingInsureeAnswers,
+  fetchedInsureeAnswers: state.insuree.fetchedInsureeAnswers,
+  errorInsureeAnswers: state.insuree.errorInsureeAnswers
 });
 
 const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({ fetchQuestions, fetchOptions }, dispatch);
+  return bindActionCreators({ fetchQuestions, fetchOptions, fetchAnswers }, dispatch);
 };
 
 

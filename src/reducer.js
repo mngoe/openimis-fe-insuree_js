@@ -47,6 +47,10 @@ function reducer(
     fetchedInsureeQuestions: false,
     insureeQuestions: [],
     errorInsureeQuestions: null,
+    fetchingInsureeAnswers: false,
+    fetchedInsureeAnswers: false,
+    insureeAnswers: [],
+    errorInsureeAnswers: null,
     fetchingInsureeOptions: false,
     fetchedInsureeOptions: false,
     insureeOptions: [],
@@ -393,7 +397,7 @@ function reducer(
         ...state,
         fetchingInsureeAnswers: false,
         fetchedInsureeAnswers: true,
-        insureeAnswers: action.payload.data.insureeAnswers,
+        insureeAnswers: parseData(action.payload.data.insureeAnswers),
         errorInsureeAnswers: formatGraphQLError(action.payload),
       };
     case "INSUREE_ANSWERS_ERR":
