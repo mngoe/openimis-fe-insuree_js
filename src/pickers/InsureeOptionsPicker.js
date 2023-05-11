@@ -28,7 +28,7 @@ class InsureeOptionsPicker extends Component {
   componentDidMount() {
     setTimeout(() => {
       this.setState({ data: this.initData() });
-    }, Math.floor(Math.random() * 300));
+    }, Math.floor(Math.random() * 2000));
   }
 
   _updateData = (idx, updates) => {
@@ -122,6 +122,8 @@ class InsureeOptionsPicker extends Component {
       insureeQuestions,
       position
     } = this.props;
+
+    
 
     if (insureeQuestions[position].questionType == "DROPDOWN") {
       return (
