@@ -9,7 +9,7 @@ import {
   formatGQLString,
 } from "@openimis/fe-core";
 
-const FAMILY_HEAD_PROJECTION = "headInsuree{id,uuid,chfId,lastName,otherNames,email,phone,dob,gender{code}}";
+const FAMILY_HEAD_PROJECTION = "headInsuree{id,uuid,chfId,lastName,otherNames,email,phone,dob,gender{code},score}";
 
 const FAMILY_FULL_PROJECTION = (mm) => [
   "id",

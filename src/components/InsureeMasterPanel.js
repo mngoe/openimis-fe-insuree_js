@@ -327,7 +327,7 @@ class InsureeMasterPanel extends FormPanel {
                   })}
                 </Grid>
               )}
-              {!!edited[`score`] && (
+              {!!edited && !!edited.score && (
                 <Grid item xs={3} className={classes.item}>
                   <NumberInput
                     label="Score"
