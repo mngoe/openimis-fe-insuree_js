@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { Checkbox, FormControlLabel } from "@material-ui/core";
+import { Checkbox, FormControlLabel, Grid } from "@material-ui/core";
 import { injectIntl } from "react-intl";
-import { formatMessage, SelectInput, withModulesManager, NumberInput } from "@openimis/fe-core";
+import { formatMessage, SelectInput, withModulesManager, NumberInput, FormattedMessage } from "@openimis/fe-core";
 import _debounce from "lodash/debounce";
 import _ from "lodash";
 
@@ -20,15 +20,19 @@ class InsureeOptionsPicker extends Component {
     let data = [];
     if (!!this.props.insureeAnswers) {
       data = this.props.insureeAnswers || [];
-      console.log(data);
+      //console.log(data);
     }
     return data;
   };
 
   componentDidMount() {
-    setTimeout(() => {
+    if (!!this.props.insureeId) {
+      setTimeout(() => {
+        this.setState({ data: this.initData() });
+      }, Math.floor(Math.random() * 3000));
+    } else {
       this.setState({ data: this.initData() });
-    }, Math.floor(Math.random() * 3000));
+    }
   }
 
   _updateData = (idx, updates) => {
@@ -73,9 +77,7 @@ class InsureeOptionsPicker extends Component {
   _onChangeItem = (idx, attr, v) => {
     let data = this._updateData(idx, [{ attr, v }]);
     if (data[idx].options) {
-      if (!v) {
-        data[idx].optionLabel = null;
-      } else {
+      if (v) {
         data[idx].options.forEach((e) => {
           if (e.value === v) {
             data[idx].optionId = e.id;
@@ -91,8 +93,7 @@ class InsureeOptionsPicker extends Component {
         } else {
           data[idx].mark = 5;
         }
-      }
-      if (data[idx].answer != '' && data[idx].answer != null) {
+      } else if (data[idx].answer != '' && data[idx].answer != null) {
         data[idx].answer = v;
         data[idx].mark = v;
       }
@@ -100,8 +101,6 @@ class InsureeOptionsPicker extends Component {
     console.log(data);
     this._onEditedChanged(data);
   };
-
-  nullDisplay = this.props.nullLabel || formatMessage(this.props.intl, "insuree", `InsureeGender.null`);
 
   render() {
     const {
@@ -112,18 +111,20 @@ class InsureeOptionsPicker extends Component {
       reset,
       value,
       edited,
+      insureeId,
+      classes,
       updateAttribute,
       onEditedChanged,
       readOnly = false,
-      required = false,
-      withNull = true,
+      required = true,
+      withNull = false,
       withLabel = true,
       insureeAnswers,
       insureeQuestions,
       position
     } = this.props;
 
-    
+
 
     if (insureeQuestions[position].questionType == "DROPDOWN") {
       return (
@@ -147,7 +148,8 @@ class InsureeOptionsPicker extends Component {
               color="primary"
               checked={!!this.state.data[position] && !!this.state.data[position].value}
               disabled={readOnly}
-              onChange={(v) => this._onChangeItem(position, "value", !this.state.data[position] || !this.state.data[position].value)}
+              required={required}
+              onChange={(v) => this._onChangeItem(position, "value", !this.state.data[position].value)}
             />
           }
           label={!!withLabel ? label : null}
@@ -158,6 +160,7 @@ class InsureeOptionsPicker extends Component {
         <NumberInput
           label={label}
           readOnly={readOnly}
+          required={required}
           value={this.state.data[position]?.answer}
           onChange={(v) => this._onChange(position, "answer", v)}
         />

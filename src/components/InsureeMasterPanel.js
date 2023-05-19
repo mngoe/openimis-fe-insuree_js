@@ -32,10 +32,6 @@ const INSUREE_INSUREE_PANELS_CONTRIBUTION_KEY = "insuree.Insuree.panels";
 
 class InsureeMasterPanel extends FormPanel {
 
-  state = {
-    data: [],
-  };
-
   componentDidMount() {
     this.props.fetchOptions(this.props.modulesManager);
     this.props.fetchQuestions(this.props.modulesManager);
@@ -62,7 +58,7 @@ class InsureeMasterPanel extends FormPanel {
       insureeOptions,
     } = this.props;
 
-    console.log(insureeAnswers);
+    //console.log(insureeAnswers);
 
     insureeQuestions.forEach(function (question) {
       if (question.questionType == "DROPDOWN") {
@@ -309,10 +305,11 @@ class InsureeMasterPanel extends FormPanel {
                 <Grid container className={classes.item}>
                   {insureeQuestions.map((e, edx) => {
                     return (
-                      <Grid item xs={4} className={classes.item}>
+                      <Grid item xs={6} className={classes.item}>
                         <InsureeOptionsPicker
                           module="insuree"
                           label={e.question}
+                          insureeId={edited_id}
                           required={true}
                           readOnly={false}
                           position={edx}
