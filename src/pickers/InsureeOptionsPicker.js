@@ -29,7 +29,7 @@ class InsureeOptionsPicker extends Component {
     if (!!this.props.insureeId) {
       setTimeout(() => {
         this.setState({ data: this.initData() });
-      }, Math.floor(Math.random() * 3000));
+      }, Math.floor(Math.random() * 5000));
     } else {
       this.setState({ data: this.initData() });
     }
