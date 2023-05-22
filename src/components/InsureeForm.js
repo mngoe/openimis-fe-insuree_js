@@ -97,8 +97,7 @@ class InsureeForm extends Component {
   };
 
   canSaveAnswer = (a) => {
-    //if (a.optionId === null || a.optionId === undefined || a.optionId === "") return false;
-    //if (a.answer === null || a.answer === undefined || a.answer === "") return false;
+    if (a.optionId === undefined || a.optionId === '') return false;
     return true;
   };
 

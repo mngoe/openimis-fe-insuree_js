@@ -84,7 +84,7 @@ class InsureeMasterPanel extends FormPanel {
             answer = ans.insureeAnswer;
           }
         })
-        answers.push({ questionId: question.id, answer: answer, value: answer })
+        answers.push({ questionId: question.id, answer: answer })
       } else if (question.questionType == "CHECKBOX") {
         var value;
         insureeAnswers.forEach(function (ans) {

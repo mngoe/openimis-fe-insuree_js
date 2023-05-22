@@ -51,17 +51,17 @@ class InsureeOptionsPicker extends Component {
           optionId: d.optionId,
           optionMark: d.optionMark
         })
-      } else if (d.answer != null) {
-        edited[`insureeAnswers`].push({
-          questionId: d.questionId,
-          answer: d.answer,
-          mark: d.answer
-        })
       } else if (d.value != null) {
         edited[`insureeAnswers`].push({
           questionId: d.questionId,
           value: d.value,
           mark: d.mark
+        })
+      } else if (d.answer !== null) {
+        edited[`insureeAnswers`].push({
+          questionId: d.questionId,
+          answer: d.answer,
+          mark: d.answer
         })
       }
     })
@@ -149,7 +149,7 @@ class InsureeOptionsPicker extends Component {
               checked={!!this.state.data[position] && !!this.state.data[position].value}
               disabled={readOnly}
               required={required}
-              onChange={(v) => this._onChangeItem(position, "value", !this.state.data[position].value)}
+              onChange={(v) => this._onChange(position, "value", !this.state.data[position].value)}
             />
           }
           label={!!withLabel ? label : null}
