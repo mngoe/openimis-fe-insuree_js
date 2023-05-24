@@ -6,7 +6,7 @@ import { withTheme, withStyles } from "@material-ui/core/styles";
 import { Fab } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import PrintIcon from "@material-ui/icons/ListAlt";
-import { historyPush, withModulesManager, withHistory, withTooltip, formatMessage,  decodeId } from "@openimis/fe-core";
+import { historyPush, withModulesManager, withHistory, withTooltip, formatMessage, decodeId } from "@openimis/fe-core";
 import InsureeSearcher from "../components/InsureeSearcher";
 import { print } from "../actions";
 
@@ -30,7 +30,7 @@ class InsureesPage extends Component {
   };
 
   printSelected = (selection) => {
-    this.props.print(selection.map((i) =>  decodeId(i.id) ));
+    this.props.print(selection.map((i) => decodeId(i.id)));
   };
 
   canPrintSelected = (selection) =>
@@ -41,14 +41,12 @@ class InsureesPage extends Component {
     const { intl, classes, rights } = this.props;
     const { printParam } = this.state;
     var actions = [];
-    if (rights.includes(RIGHT_PRINT)) {
-      actions.push({
-        label: "insureeSummaries.printSelected",
-        action: this.printSelected,
-        enabled: this.canPrintSelected,
-        icon: <PrintIcon />,
-      });
-    }
+    actions.push({
+      label: "insureeSummaries.printSelected",
+      action: this.printSelected,
+      enabled: this.canPrintSelected,
+      icon: <PrintIcon />,
+    });
     return (
       <div className={classes.page}>
         <InsureeSearcher cacheFiltersKey="insureeInsureesPageFiltersCache" onDoubleClick={this.onDoubleClick} rights={rights} actions={actions} />
