@@ -43,28 +43,7 @@ class InsureeOptionsPicker extends Component {
 
   _onEditedChanged = (data) => {
     let edited = { ...this.props.edited };
-    edited[`insureeAnswers`] = [];
-    data.forEach((d) => {
-      if (d.options != null) {
-        edited[`insureeAnswers`].push({
-          questionId: d.questionId,
-          optionId: d.optionId,
-          optionMark: d.optionMark
-        })
-      } else if (d.answer != null) {
-        edited[`insureeAnswers`].push({
-          questionId: d.questionId,
-          answer: d.answer,
-          mark: d.answer
-        })
-      } else if (d.value != null) {
-        edited[`insureeAnswers`].push({
-          questionId: d.questionId,
-          value: d.value,
-          mark: d.mark
-        })
-      }
-    })
+    edited[`insureeAnswers`] = data;
     console.log(edited)
     this.props.onEditedChanged(edited);
   };
@@ -81,7 +60,7 @@ class InsureeOptionsPicker extends Component {
         data[idx].options.forEach((e) => {
           if (e.value === v) {
             data[idx].optionId = e.id;
-            data[idx].optionMark = e.mark;
+            data[idx].mark = e.mark;
           }
         })
         //data[idx].optionLabel = v;
@@ -162,7 +141,7 @@ class InsureeOptionsPicker extends Component {
           readOnly={readOnly}
           required={required}
           value={this.state.data[position]?.answer}
-          onChange={(v) => this._onChange(position, "answer", v)}
+          onChange={(v) => this._onChangeItem(position, "answer", v)}
         />
       )
     }

@@ -65,6 +65,7 @@ class InsureeMasterPanel extends FormPanel {
         let opt = [];
         var optionLab;
         var optionId;
+        var optionMark;
         insureeOptions.forEach(function (option) {
           if (question.id == option.questionId.id) {
             opt.push({ value: option.option, label: option.option, id: option.id, mark: option.optionValue });
@@ -73,10 +74,11 @@ class InsureeMasterPanel extends FormPanel {
             if (ans.question.id == question.id && ans.insureeAnswer == option.id) {
               optionLab = option.option;
               optionId = ans.insureeAnswer;
+              optionMark = option.optionValue;
             }
           })
         });
-        answers.push({ questionId: question.id, optionId: optionId, options: opt, optionLabel: optionLab });
+        answers.push({ questionId: question.id, optionId: optionId, options: opt, optionLabel: optionLab, mark: optionMark });
       } else if (question.questionType == "TEXT") {
         var answer;
         insureeAnswers.forEach(function (ans) {
@@ -84,19 +86,22 @@ class InsureeMasterPanel extends FormPanel {
             answer = ans.insureeAnswer;
           }
         })
-        answers.push({ questionId: question.id, answer: answer, value: answer })
+        answers.push({ questionId: question.id, answer: answer, mark: answer })
       } else if (question.questionType == "CHECKBOX") {
-        var value;
+        var value = false;
+        var mark = 1;
         insureeAnswers.forEach(function (ans) {
           if (ans.question.id == question.id) {
-            if(ans.insureeAnswer == 1){
+            if (ans.insureeAnswer == 1) {
               value = true;
-            }else{
+              mark = 5
+            } else {
               value = false;
+              mark = 1
             }
           }
         })
-        answers.push({ questionId: question.id , value: value })
+        answers.push({ questionId: question.id, value: value, mark: mark })
       }
     });
 
