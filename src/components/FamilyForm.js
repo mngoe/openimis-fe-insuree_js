@@ -133,6 +133,7 @@ class FamilyForm extends Component {
     if (!this.state.family.headInsuree.lastName) return false;
     if (!this.state.family.headInsuree.otherNames) return false;
     if (!this.state.family.headInsuree.dob) return false;
+    if (!this.state.family.headInsuree.gender || !this.state.family.headInsuree.gender?.code) return false;
     if (!this.state.family.headInsuree.insureeAnswers) return false;
     let insureeAnswers = [];
     if (!!this.state.family.headInsuree.insureeAnswers) {
@@ -229,6 +230,7 @@ class FamilyForm extends Component {
               overview ? INSUREE_FAMILY_OVERVIEW_PANELS_CONTRIBUTION_KEY : INSUREE_FAMILY_PANELS_CONTRIBUTION_KEY
             }
             family={family}
+            maxInsureeScore={modulesManager.cfg[`fe-insuree`].max_insuree_score}
             insuree={insuree}
             onEditedChanged={this.onEditedChanged}
             canSave={this.canSave}
