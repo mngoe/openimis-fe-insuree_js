@@ -135,6 +135,7 @@ class FamilyForm extends Component {
     if (!this.state.family.headInsuree.lastName) return false;
     if (!this.state.family.headInsuree.otherNames) return false;
     if (!this.state.family.headInsuree.dob) return false;
+    if (!this.state.family.headInsuree.gender || !this.state.family.headInsuree.gender?.code) return false;
     if (!this.state.family.headInsuree.attachments) return false;
     let attachments = [];
     if (!!this.state.family.headInsuree.attachments) {

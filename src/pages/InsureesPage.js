@@ -36,7 +36,6 @@ class InsureesPage extends Component {
   canPrintSelected = (selection) =>
     !!selection && selection.length;
 
-
   render() {
     const { intl, classes, rights } = this.props;
     const { printParam } = this.state;
