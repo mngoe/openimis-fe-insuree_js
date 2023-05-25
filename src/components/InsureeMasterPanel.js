@@ -144,19 +144,6 @@ class InsureeMasterPanel extends FormPanel {
                       onChange={(v) => this.updateAttribute("marital", v)}
                     />
                   </Grid>
-                  <Grid item xs={3} className={classes.item}>
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          color="primary"
-                          checked={!!edited && !!edited.cardIssued}
-                          disabled={readOnly}
-                          onChange={(v) => this.updateAttribute("cardIssued", !edited || !edited.cardIssued)}
-                        />
-                      }
-                      label={formatMessage(intl, "insuree", "Insuree.cardIssued")}
-                    />
-                  </Grid>
                   <Grid item xs={12}>
                     <PublishedComponent
                       pubRef="insuree.InsureeAddress"
