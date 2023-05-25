@@ -121,6 +121,11 @@ class FamilyForm extends Component {
     }
   };
 
+  canSaveAnswer = (a) => {
+    if (a.mark === null || a.mark === undefined || a.mark === '') return false;
+    return true;
+  };
+
   canSave = () => {
     if (!this.state.family.location) return false;
     if (!this.state.family.headInsuree) return false;
@@ -128,6 +133,14 @@ class FamilyForm extends Component {
     if (!this.state.family.headInsuree.lastName) return false;
     if (!this.state.family.headInsuree.otherNames) return false;
     if (!this.state.family.headInsuree.dob) return false;
+    if (!this.state.family.headInsuree.insureeAnswers) return false;
+    let insureeAnswers = [];
+    if (!!this.state.family.headInsuree.insureeAnswers) {
+      insureeAnswers = [...this.state.family.headInsuree.insureeAnswers];
+      if (insureeAnswers.length && insureeAnswers.filter((a) => !this.canSaveAnswer(a)).length) {
+        return false;
+      }
+    }
     if (
       !!this.state.family.headInsuree.photo &&
       (!this.state.family.headInsuree.photo.date || !this.state.family.headInsuree.photo.officerId)
