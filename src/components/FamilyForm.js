@@ -230,7 +230,7 @@ class FamilyForm extends Component {
               overview ? INSUREE_FAMILY_OVERVIEW_PANELS_CONTRIBUTION_KEY : INSUREE_FAMILY_PANELS_CONTRIBUTION_KEY
             }
             family={family}
-            maxInsureeScore={modulesManager.cfg[`fe-insuree`].max_insuree_score ? modulesManager.cfg[`fe-insuree`].max_insuree_score : 0}
+            maxInsureeScore={!!modulesManager.cfg && modulesManager.cfg[`fe-insuree`] ? modulesManager.cfg[`fe-insuree`].max_insuree_score : 0}
             insuree={insuree}
             onEditedChanged={this.onEditedChanged}
             canSave={this.canSave}
