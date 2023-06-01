@@ -44,7 +44,7 @@ class InsureeOptionsPicker extends Component {
   _onEditedChanged = (data) => {
     let edited = { ...this.props.edited };
     edited[`insureeAnswers`] = data;
-    console.log(edited)
+    //console.log(edited)
     this.props.onEditedChanged(edited);
   };
 
@@ -77,7 +77,7 @@ class InsureeOptionsPicker extends Component {
         data[idx].mark = v;
       }
     }
-    console.log(data);
+    //console.log(data);
     this._onEditedChanged(data);
   };
 
