@@ -96,11 +96,11 @@ class InsureeOptionsPicker extends Component {
       onEditedChanged,
       readOnly = false,
       required = true,
-      withNull = false,
+      withNull = true,
       withLabel = true,
       insureeAnswers,
       insureeQuestions,
-      position
+      position,
     } = this.props;
 
 

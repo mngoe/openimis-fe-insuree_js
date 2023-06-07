@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react";
+import React from "react";
 import { withTheme, withStyles } from "@material-ui/core/styles";
 import { Paper, Grid, Typography, Divider, Checkbox, FormControlLabel } from "@material-ui/core";
 import {
@@ -55,10 +55,12 @@ class InsureeMasterPanel extends FormPanel {
       insureeQuestions,
       insureeAnswers,
       answers = [],
+      language,
       insureeOptions,
     } = this.props;
 
-    //console.log(insureeAnswers);
+    console.log(insureeOptions);
+    console.log(insureeQuestions);
 
     insureeQuestions.forEach(function (question) {
       if (question.questionType == "DROPDOWN") {
@@ -68,11 +70,19 @@ class InsureeMasterPanel extends FormPanel {
         var optionMark;
         insureeOptions.forEach(function (option) {
           if (question.id == option.questionId.id) {
-            opt.push({ value: option.option, label: option.option, id: option.id, mark: option.optionValue });
+            if (language == "fr") {
+              opt.push({ value: option.option, label: option.option, id: option.id, mark: option.optionValue });
+            } else {
+              opt.push({ value: option.altLanguage, label: option.altLanguage, id: option.id, mark: option.optionValue });
+            }
           }
           insureeAnswers.forEach(function (ans) {
             if (ans.question.id == question.id && ans.insureeAnswer == option.id) {
-              optionLab = option.option;
+              if (language == "fr") {
+                optionLab = option.option;
+              } else {
+                optionLab = option.altLanguage;
+              }
               optionId = ans.insureeAnswer;
               optionMark = option.optionValue;
             }
@@ -313,7 +323,7 @@ class InsureeMasterPanel extends FormPanel {
                       <Grid item xs={6} className={classes.item}>
                         <InsureeOptionsPicker
                           module="insuree"
-                          label={e.question}
+                          label={language == "fr" ? e.question : e.altLanguage}
                           insureeId={edited_id}
                           required={true}
                           readOnly={false}
@@ -358,6 +368,7 @@ class InsureeMasterPanel extends FormPanel {
 }
 
 const mapStateToProps = state => ({
+  language: !!state.core && !!state.core.user && !!state.core.user.i_user ? state.core.user.i_user.language : "en",
   insureeQuestions: state.insuree.insureeQuestions,
   fetchingInsureeQuestions: state.insuree.fetchingInsureeQuestions,
   fetchedInsureeQuestions: state.insuree.fetchedInsureeQuestions,
