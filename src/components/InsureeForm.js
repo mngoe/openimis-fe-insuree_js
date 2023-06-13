@@ -118,7 +118,7 @@ class InsureeForm extends Component {
     if (!this.state.insuree.otherNames) return false;
     if (!this.state.insuree.dob) return false;
     if (!this.state.insuree.gender || !this.state.insuree.gender?.code) return false;
-    if (!this.state.insuree.typeOfId) return false;
+    if (!this.state.insuree.typeOfId || !this.state.insuree.typeOfId?.code) return false;
     if (!this.state.insuree.passport) return false;
     let passport;
     if (!!this.state.insuree.passport) {
