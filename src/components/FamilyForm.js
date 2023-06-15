@@ -128,11 +128,12 @@ class FamilyForm extends Component {
     if (!this.state.family.headInsuree.lastName) return false;
     if (!this.state.family.headInsuree.otherNames) return false;
     if (!this.state.family.headInsuree.dob) return false;
-    if (
-      !!this.state.family.headInsuree.photo &&
-      (!this.state.family.headInsuree.photo.date || !this.state.family.headInsuree.photo.officerId)
-    )
-      return false;
+    if (!this.state.family.headInsuree.gender || !this.state.family.headInsuree.gender?.code) return false;
+    if (!this.state.family.headInsuree.passport) return false;
+    if (!this.state.family.headInsuree.typeOfId) return false;
+    if (!this.state.family?.headInsuree?.photo) return false;
+    if (!this.state.family?.headInsuree?.photo?.photo) return false;
+    if (!this.state.family?.headInsuree?.photo?.officerId) return false;
     return true;
   };
 
