@@ -9,7 +9,7 @@ import {
   formatGQLString,
 } from "@openimis/fe-core";
 
-const FAMILY_HEAD_PROJECTION = "headInsuree{id,uuid,chfId,lastName,otherNames,email,phone,dob,gender{code}}";
+const FAMILY_HEAD_PROJECTION = "headInsuree{id,uuid,chfId,lastName,otherNames,email,phone,dob,gender{code}, passport}";
 
 const FAMILY_FULL_PROJECTION = (mm) => [
   "id",
@@ -105,7 +105,7 @@ export function fetchFamilySummaries(mm, filters) {
     "confirmationNo",
     "validityFrom",
     "validityTo",
-    "headInsuree{id,uuid,chfId,lastName,otherNames,email,phone, dob}",
+    "headInsuree{id,uuid,chfId,lastName,otherNames,email,phone, dob, passport}",
     "location" + mm.getProjection("location.Location.FlatProjection"),
   ];
   const payload = formatPageQueryWithCount("families", filters, projections);

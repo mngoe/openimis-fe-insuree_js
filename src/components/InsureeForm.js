@@ -20,6 +20,7 @@ import InsureeVihMasterPanel from "./InsureeVihMasterPanel";
 
 import { fetchInsureeFull, fetchFamily } from "../actions";
 import { insureeLabel } from "../utils/utils";
+import FamilyVihDisplayPanel from "./FamilyVihDisplayPanel";
 
 const styles = (theme) => ({
   page: theme.page,
@@ -168,8 +169,8 @@ class InsureeForm extends Component {
               add={!!add && !this.state.newInsuree ? this._add : null}
               readOnly={readOnly || !!insuree.validityTo}
               actions={actions}
-              HeadPanel={FamilyDisplayPanel}
-              Panels={this.state.insuree[`passport`] == "655166152" ? [InsureeVihMasterPanel]:[InsureeMasterPanel]}
+              HeadPanel={insuree[`passport`] == "655166152" ? FamilyVihDisplayPanel: FamilyDisplayPanel}
+              Panels={insuree[`passport`] == "655166152" ? [InsureeVihMasterPanel]:[InsureeMasterPanel]}
               contributedPanelsKey={INSUREE_INSUREE_FORM_CONTRIBUTION_KEY}
               insuree={this.state.insuree}
               onEditedChanged={this.onEditedChanged}
