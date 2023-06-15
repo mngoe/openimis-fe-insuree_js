@@ -47,7 +47,7 @@ class InsureePage extends Component {
           family_uuid={family_uuid}
           back={(e) => historyPush(modulesManager, history, "insuree.route.insurees")}
           add={rights.includes(RIGHT_INSUREE_ADD) ? this.add : null}
-          save={rights.includes(RIGHT_INSUREE_EDIT, RIGHT_VIH) ? this.save : null}
+          save={rights.includes(RIGHT_INSUREE_EDIT) ? this.save : null}
         />
       </div>
     );
