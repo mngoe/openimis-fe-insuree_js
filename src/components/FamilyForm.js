@@ -24,6 +24,7 @@ import FamilyInsureesOverview from "./FamilyInsureesOverview";
 import HeadInsureeMasterPanel from "./HeadInsureeMasterPanel";
 
 import { insureeLabel } from "../utils/utils";
+import FamilyVihMasterPanel from "./FamilyVihMasterPanel";
 
 const styles = (theme) => ({
   lockedPage: theme.page.locked,
@@ -212,7 +213,7 @@ class FamilyForm extends Component {
             actions={actions}
             openFamilyButton={openFamilyButton}
             overview={overview}
-            HeadPanel={FamilyMasterPanel}
+            HeadPanel={overview ? family.headInsuree.email == "newhivuser_XM7dw70J0M3N@gmail.com" ? FamilyVihMasterPanel : FamilyMasterPanel : FamilyMasterPanel}
             Panels={overview ? [FamilyInsureesOverview] : [HeadInsureeMasterPanel]}
             contributedPanelsKey={
               overview ? INSUREE_FAMILY_OVERVIEW_PANELS_CONTRIBUTION_KEY : INSUREE_FAMILY_PANELS_CONTRIBUTION_KEY

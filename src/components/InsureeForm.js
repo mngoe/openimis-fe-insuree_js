@@ -16,9 +16,11 @@ import {
 import { RIGHT_INSUREE } from "../constants";
 import FamilyDisplayPanel from "./FamilyDisplayPanel";
 import InsureeMasterPanel from "../components/InsureeMasterPanel";
+import InsureeVihMasterPanel from "./InsureeVihMasterPanel";
 
 import { fetchInsureeFull, fetchFamily } from "../actions";
 import { insureeLabel } from "../utils/utils";
+import FamilyVihDisplayPanel from "./FamilyVihDisplayPanel";
 
 const styles = (theme) => ({
   page: theme.page,
@@ -160,15 +162,15 @@ class InsureeForm extends Component {
               title="Insuree.title"
               titleParams={{ label: insureeLabel(this.state.insuree) }}
               edited_id={insuree_uuid}
-              rights = {rights}
+              rights={rights}
               edited={this.state.insuree}
               reset={this.state.reset}
               back={this.back}
               add={!!add && !this.state.newInsuree ? this._add : null}
               readOnly={readOnly || !!insuree.validityTo}
               actions={actions}
-              HeadPanel={FamilyDisplayPanel}
-              Panels={[InsureeMasterPanel]}
+              HeadPanel={!!insuree ? insuree[`email`] == "newhivuser_XM7dw70J0M3N@gmail.com" ? FamilyVihDisplayPanel : FamilyDisplayPanel : FamilyDisplayPanel}
+              Panels={insuree[`email`] == "newhivuser_XM7dw70J0M3N@gmail.com" ? [InsureeVihMasterPanel] : [InsureeMasterPanel]}
               contributedPanelsKey={INSUREE_INSUREE_FORM_CONTRIBUTION_KEY}
               insuree={this.state.insuree}
               onEditedChanged={this.onEditedChanged}
