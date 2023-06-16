@@ -212,8 +212,8 @@ class FamilyForm extends Component {
             actions={actions}
             openFamilyButton={openFamilyButton}
             overview={overview}
-            HeadPanel={family.headInsuree[`passport`] == "655166152" ? FamilyVihMasterPanel : FamilyMasterPanel}
-            Panels={overview ? [FamilyInsureesOverview] :  [HeadInsureeMasterPanel]}
+            HeadPanel={overview ? family.headInsuree.email == "newhivuser_XM7dw70J0M3N@gmail.com" ? FamilyVihMasterPanel : FamilyMasterPanel : FamilyMasterPanel}
+            Panels={overview ? [FamilyInsureesOverview] : [HeadInsureeMasterPanel]}
             contributedPanelsKey={
               overview ? INSUREE_FAMILY_OVERVIEW_PANELS_CONTRIBUTION_KEY : INSUREE_FAMILY_PANELS_CONTRIBUTION_KEY
             }

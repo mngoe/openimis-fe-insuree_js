@@ -162,15 +162,15 @@ class InsureeForm extends Component {
               title="Insuree.title"
               titleParams={{ label: insureeLabel(this.state.insuree) }}
               edited_id={insuree_uuid}
-              rights = {rights}
+              rights={rights}
               edited={this.state.insuree}
               reset={this.state.reset}
               back={this.back}
               add={!!add && !this.state.newInsuree ? this._add : null}
               readOnly={readOnly || !!insuree.validityTo}
               actions={actions}
-              HeadPanel={insuree[`passport`] == "655166152" ? FamilyVihDisplayPanel: FamilyDisplayPanel}
-              Panels={insuree[`passport`] == "655166152" ? [InsureeVihMasterPanel]:[InsureeMasterPanel]}
+              HeadPanel={!!insuree ? insuree[`email`] == "newhivuser_XM7dw70J0M3N@gmail.com" ? FamilyVihDisplayPanel : FamilyDisplayPanel : FamilyDisplayPanel}
+              Panels={insuree[`email`] == "newhivuser_XM7dw70J0M3N@gmail.com" ? [InsureeVihMasterPanel] : [InsureeMasterPanel]}
               contributedPanelsKey={INSUREE_INSUREE_FORM_CONTRIBUTION_KEY}
               insuree={this.state.insuree}
               onEditedChanged={this.onEditedChanged}
