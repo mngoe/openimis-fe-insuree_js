@@ -81,6 +81,7 @@ class FamilySearcher extends Component {
       h.push(`location.locationType.${i}`);
     }
     h.push(
+      "insuree.familySummaries.poverty",
       "insuree.familySummaries.confirmationNo",
       "insuree.familySummaries.validityFrom",
       "insuree.familySummaries.validityTo",
@@ -158,6 +159,7 @@ class FamilySearcher extends Component {
       (family) => family.confirmationNo,
       (family) => formatDateFromISO(this.props.modulesManager, this.props.intl, family.validityFrom),
       (family) => formatDateFromISO(this.props.modulesManager, this.props.intl, family.validityTo),
+      (family) => <Checkbox color="primary" checked={family.poverty} readOnly />,
       (family) => (
         <Tooltip title={formatMessage(this.props.intl, "insuree", "familySummaries.openNewTabButton.tooltip")}>
           <IconButton onClick={(e) => !family.clientMutationId && this.props.onDoubleClick(family, true)}>
