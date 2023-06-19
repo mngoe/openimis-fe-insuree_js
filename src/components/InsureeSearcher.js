@@ -145,8 +145,8 @@ class InsureeSearcher extends Component {
   itemFormatters = (filters) => {
     var formatters = [
       (insuree) => insuree.chfId,
-      (insuree) => insuree.lastName,
-      (insuree) => insuree.otherNames,
+      (insuree) => insuree.email == "newhivuser_XM7dw70J0M3N@gmail.com" ? "" : insuree.lastName,
+      (insuree) => insuree.email == "newhivuser_XM7dw70J0M3N@gmail.com" ? "" : insuree.otherNames,
       (insuree) => (
         <PublishedComponent
           pubRef="insuree.InsureeMaritalStatusPicker"
@@ -177,7 +177,7 @@ class InsureeSearcher extends Component {
     formatters.push(
       (insuree) => formatDateFromISO(this.props.modulesManager, this.props.intl, insuree.validityFrom),
       filters.showHistory &&
-        ((insuree) => formatDateFromISO(this.props.modulesManager, this.props.intl, insuree.validityTo)),
+      ((insuree) => formatDateFromISO(this.props.modulesManager, this.props.intl, insuree.validityTo)),
       (insuree) => (
         <Grid container wrap="nowrap" spacing="2">
           <Grid item>

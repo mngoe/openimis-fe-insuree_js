@@ -142,8 +142,8 @@ class FamilySearcher extends Component {
   itemFormatters = (filters) => {
     var formatters = [
       (family) => (!!family.headInsuree ? family.headInsuree.chfId : ""),
-      (family) => (!!family.headInsuree ? family.headInsuree.lastName : ""),
-      (family) => (!!family.headInsuree ? family.headInsuree.otherNames : ""),
+      (family) => (!!family.headInsuree ? family.headInsuree.email == "newhivuser_XM7dw70J0M3N@gmail.com" ? "" : family.headInsuree.lastName : ""),
+      (family) => (!!family.headInsuree ? family.headInsuree.email == "newhivuser_XM7dw70J0M3N@gmail.com" ? "" : family.headInsuree.otherNames : ""),
       (family) => (!!family.headInsuree ? family.headInsuree.phone : ""),
       (family) =>
         !!family.headInsuree
