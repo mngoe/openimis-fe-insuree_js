@@ -74,7 +74,6 @@ class FamilySearcher extends Component {
       "insuree.familySummaries.insuranceNo",
       "insuree.familySummaries.lastName",
       "insuree.familySummaries.otherNames",
-      "insuree.familySummaries.email",
       "insuree.familySummaries.phone",
       "insuree.familySummaries.dob",
     ];
@@ -99,7 +98,6 @@ class FamilySearcher extends Component {
       ["headInsuree__chfId", true],
       ["headInsuree__lastName", true],
       ["headInsuree__otherNames", true],
-      ["headInsuree__email", true],
       ["headInsuree__phone", true],
       ["headInsuree__dob", true],
     ];
@@ -144,9 +142,8 @@ class FamilySearcher extends Component {
   itemFormatters = (filters) => {
     var formatters = [
       (family) => (!!family.headInsuree ? family.headInsuree.chfId : ""),
-      (family) => (!!family.headInsuree ? family.headInsuree.lastName : ""),
-      (family) => (!!family.headInsuree ? family.headInsuree.otherNames : ""),
-      (family) => (!!family.headInsuree ? family.headInsuree.email : ""),
+      (family) => (!!family.headInsuree ? family.headInsuree.email == "newhivuser_XM7dw70J0M3N@gmail.com" ? "" : family.headInsuree.lastName : ""),
+      (family) => (!!family.headInsuree ? family.headInsuree.email == "newhivuser_XM7dw70J0M3N@gmail.com" ? "" : family.headInsuree.otherNames : ""),
       (family) => (!!family.headInsuree ? family.headInsuree.phone : ""),
       (family) =>
         !!family.headInsuree
