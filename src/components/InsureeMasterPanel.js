@@ -101,8 +101,7 @@ class InsureeMasterPanel extends FormPanel {
             <Divider />
             <Grid container className={classes.item}>
               <Grid item xs={4} className={classes.item}>
-                <PublishedComponent
-                  pubRef="insuree.InsureeNumberInput"
+                <TextInput
                   module="insuree"
                   label="Insuree.chfId"
                   required={true}
