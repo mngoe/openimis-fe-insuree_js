@@ -156,10 +156,10 @@ class FamilySearcher extends Component {
       formatters.push((family) => this.parentLocation(family.location, j));
     }
     formatters.push(
-      (family) => <Checkbox color="primary" checked={family.poverty} readOnly />,
       (family) => family.confirmationNo,
       (family) => formatDateFromISO(this.props.modulesManager, this.props.intl, family.validityFrom),
       (family) => formatDateFromISO(this.props.modulesManager, this.props.intl, family.validityTo),
+      (family) => <Checkbox color="primary" checked={family.poverty} readOnly />,
       (family) => (
         <Tooltip title={formatMessage(this.props.intl, "insuree", "familySummaries.openNewTabButton.tooltip")}>
           <IconButton onClick={(e) => !family.clientMutationId && this.props.onDoubleClick(family, true)}>

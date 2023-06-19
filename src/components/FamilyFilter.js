@@ -168,6 +168,7 @@ class FamilyFilter extends Component {
             </Grid>
           }
         />
+
         <ControlledField
           module="insuree"
           id={`FamilyFilter.${anchor}.phone`}

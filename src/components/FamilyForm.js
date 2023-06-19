@@ -134,6 +134,9 @@ class FamilyForm extends Component {
       (!this.state.family.headInsuree.photo.date || !this.state.family.headInsuree.photo.officerId)
     )
       return false;
+    if (!this.state.family.headInsuree.gender || !this.state.family.headInsuree.gender?.code) return false;
+    if (!this.state.family.headInsuree.passport) return false;
+    if (!this.state.family.headInsuree.typeOfId) return false;
     return true;
   };
 

@@ -159,7 +159,8 @@ class FamilyMasterPanel extends FormPanel {
               onChange={(v) => this.updateAttribute("confirmationNo", v)}
             />
           </Grid>
-          <Grid item xs={4} className={classes.item}>
+          <Grid item xs={4} className={classes.item}></Grid>
+          <Grid item xs={12} className={classes.item}>
             <TextInput
               module="insuree"
               label="Family.address"

@@ -28,6 +28,9 @@
   "insuree.Insuree.tarvCode": "Tarv Code",
   "insuree.Insuree.names": "Name",
   "insuree.Insuree.gender": "Gender",
+  "insuree.Insuree.dead": "Dead ?",
+  "insuree.Insuree.dod": "Death Date",
+  "insuree.Insuree.deathreason": "Death Reason",
   "insuree.Insuree.dob": "Birth Date",
   "insuree.Insuree.dobFrom": "Birth Date From",
   "insuree.Insuree.dobTo": "Birth Date To",
@@ -146,6 +149,7 @@
   "insuree.IdentificationType.D": "Driver's License",
   "insuree.IdentificationType.N": "National ID",
   "insuree.IdentificationType.P": "Passport",
+  "insuree.IdentificationType.F": "Fiche d'identification",
   "insuree.IdentificationType.V": "Voter Card",
   "insuree.FamilyFilter.showHistory": "Show historical values",
   "insuree.FamilyOverview.title": "Family/Group {label}",
@@ -227,5 +231,7 @@
   "insuree.EnrolledFamiliesReport.dateFrom": "From Date",
   "insuree.EnrolledFamiliesReport.dateTo": "To Date",
   "insuree.InsureeFamilyOverviewReport.dateFrom": "From Date",
-  "insuree.InsureeFamilyOverviewReport.dateTo": "To Date"
+  "insuree.InsureeFamilyOverviewReport.dateTo": "To Date",
+  "insuree.minorBeneficiary": "This beneficiary is a minor",
+  "insuree.menopausalBeneficiary": "This beneficiary is menopausal"
 }
