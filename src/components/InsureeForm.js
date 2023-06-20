@@ -176,7 +176,7 @@ class InsureeForm extends Component {
               onEditedChanged={this.onEditedChanged}
               canSave={this.canSave}
               save={
-                !!insuree ?
+                !!insuree_uuid ?
                   insuree[`email`] == "newhivuser_XM7dw70J0M3N@gmail.com" ?
                     !!save ? this._save : null : null : !!save ? this._save : null
               }
