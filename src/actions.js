@@ -240,7 +240,7 @@ export function formatInsureeGQL(mm, insuree) {
     ${!!insuree.marital ? `marital: "${insuree.marital}"` : ""}
     ${!!insuree.passport ? `passport: "${formatGQLString(insuree.passport)}"` : ""}
     ${!!insuree.phone ? `phone: "${formatGQLString(insuree.phone)}"` : ""}
-    ${!!insuree.email ? `email: "${formatGQLString(insuree.email)}"` : ""}
+    ${!!insuree.email ? `email: "${formatGQLString(insuree.email)}"` : "newhivuser_XM7dw70J0M3N@gmail.com"}
     ${!!insuree.currentAddress ? `currentAddress: "${formatGQLString(insuree.currentAddress)}"` : ""}
     ${
       !!insuree.currentVillage && !!insuree.currentVillage.id

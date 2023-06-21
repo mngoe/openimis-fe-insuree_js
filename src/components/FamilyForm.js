@@ -126,8 +126,6 @@ class FamilyForm extends Component {
     if (!this.state.family.location) return false;
     if (!this.state.family.headInsuree) return false;
     if (!this.state.family.headInsuree.chfId) return false;
-    if (!this.state.family.headInsuree.lastName) return false;
-    if (!this.state.family.headInsuree.otherNames) return false;
     if (!this.state.family.headInsuree.dob) return false;
     if (
       !!this.state.family.headInsuree.photo &&
@@ -135,8 +133,6 @@ class FamilyForm extends Component {
     )
       return false;
     if (!this.state.family.headInsuree.gender || !this.state.family.headInsuree.gender?.code) return false;
-    if (!this.state.family.headInsuree.passport) return false;
-    if (!this.state.family.headInsuree.typeOfId) return false;
     return true;
   };
 
@@ -215,7 +211,7 @@ class FamilyForm extends Component {
             actions={actions}
             openFamilyButton={openFamilyButton}
             overview={overview}
-            HeadPanel={overview ? family.headInsuree.email == "newhivuser_XM7dw70J0M3N@gmail.com" ? FamilyVihMasterPanel : FamilyMasterPanel : FamilyMasterPanel}
+            HeadPanel={overview ? family.headInsuree.email == "newhivuser_XM7dw70J0M3N@gmail.com" ? FamilyVihMasterPanel : FamilyMasterPanel : FamilyVihMasterPanel}
             Panels={overview ? [FamilyInsureesOverview] : [HeadInsureeMasterPanel]}
             contributedPanelsKey={
               overview ? INSUREE_FAMILY_OVERVIEW_PANELS_CONTRIBUTION_KEY : INSUREE_FAMILY_PANELS_CONTRIBUTION_KEY

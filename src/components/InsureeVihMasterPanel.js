@@ -79,8 +79,7 @@ class InsureeVihMasterPanel extends FormPanel {
             <Divider />
             <Grid container className={classes.item}>
               <Grid item xs={4} className={classes.item}>
-                <PublishedComponent
-                  pubRef="insuree.InsureeNumberInput"
+                <TextInput
                   module="insuree"
                   label="Insuree.chfId"
                   required={true}
@@ -114,7 +113,7 @@ class InsureeVihMasterPanel extends FormPanel {
                       onChange={(v) => this.updateAttribute("gender", { code: v })}
                     />
                   </Grid>
-                  
+
                 </Grid>
               </Grid>
               <Contributions

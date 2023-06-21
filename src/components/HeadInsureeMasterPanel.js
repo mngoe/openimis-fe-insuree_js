@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from "react";
-import InsureeMasterPanel from "./InsureeMasterPanel";
+import InsureeVihMasterPanel from "./InsureeVihMasterPanel";
 import { injectIntl } from "react-intl";
 import { Contributions, PublishedComponent, formatMessage } from "@openimis/fe-core";
 import { PersonAdd as AddExistingIcon } from "@material-ui/icons";
@@ -32,7 +32,7 @@ class HeadInsureeMasterPanel extends Component {
     ];
     return (
       <Fragment>
-        <InsureeMasterPanel
+        <InsureeVihMasterPanel
           {...this.props}
           edited={!!edited ? edited.headInsuree : null}
           onEditedChanged={this.onEditedChanged}

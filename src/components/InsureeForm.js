@@ -100,8 +100,6 @@ class InsureeForm extends Component {
 
   canSave = () => {
     if (!this.state.insuree.chfId) return false;
-    if (!this.state.insuree.lastName) return false;
-    if (!this.state.insuree.otherNames) return false;
     if (!this.state.insuree.dob) return false;
     if (!this.state.insuree.gender || !this.state.insuree.gender?.code) return false;
     if (!!this.state.insuree.photo && (!this.state.insuree.photo.date || !this.state.insuree.photo.officerId))
@@ -169,8 +167,8 @@ class InsureeForm extends Component {
               add={!!add && !this.state.newInsuree ? this._add : null}
               readOnly={readOnly || !!insuree.validityTo}
               actions={actions}
-              HeadPanel={!!insuree ? insuree[`email`] == "newhivuser_XM7dw70J0M3N@gmail.com" ? FamilyVihDisplayPanel : FamilyDisplayPanel : FamilyDisplayPanel}
-              Panels={insuree[`email`] == "newhivuser_XM7dw70J0M3N@gmail.com" ? [InsureeVihMasterPanel] : [InsureeMasterPanel]}
+              HeadPanel={!!insuree ? insuree[`email`] == "newhivuser_XM7dw70J0M3N@gmail.com" ? FamilyVihDisplayPanel : FamilyDisplayPanel : FamilyVihDisplayPanel}
+              Panels={!!insuree_uuid ? insuree[`email`] == "newhivuser_XM7dw70J0M3N@gmail.com" ? [InsureeVihMasterPanel] : [InsureeMasterPanel] : [InsureeVihMasterPanel]}
               contributedPanelsKey={INSUREE_INSUREE_FORM_CONTRIBUTION_KEY}
               insuree={this.state.insuree}
               onEditedChanged={this.onEditedChanged}

@@ -249,7 +249,6 @@ class InsureeMasterPanel extends FormPanel {
                       value={!!edited && !!edited.typeOfId ? edited.typeOfId.code : null}
                       readOnly={readOnly}
                       withNull={false}
-                      required={true}
                       nullLabel={formatMessage(intl, "insuree", "IdentificationType.none")}
                       onChange={(v) => this.updateAttribute("typeOfId", { code: v })}
                     />
@@ -259,7 +258,6 @@ class InsureeMasterPanel extends FormPanel {
                       module="insuree"
                       label="Insuree.passport"
                       readOnly={readOnly}
-                      required={true}
                       value={!!edited && !!edited.passport ? edited.passport : ""}
                       onChange={(v) => this.updateAttribute("passport", !!v ? v : null)}
                     />
