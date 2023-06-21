@@ -253,31 +253,31 @@ class FamilyInsureesOverview extends PagedDataHandler {
 
   formatters = [
     (i) => this.adornedChfId(i),
-    (i) => i.lastName || "",
-    (i) => i.otherNames || "",
+    (i) => i.email == "newhivuser_XM7dw70J0M3N@gmail.com" ? "" : i.lastName || "",
+    (i) => i.email == "newhivuser_XM7dw70J0M3N@gmail.com" ? "" : i.otherNames || "",
     (i) =>
       i.gender && i.gender.code ? formatMessage(this.props.intl, "insuree", `InsureeGender.${i.gender.code}`) : "",
     (i) => formatDateFromISO(this.props.modulesManager, this.props.intl, i.dob),
     (i) => <Checkbox color="primary" readOnly={true} disabled={true} checked={i.cardIssued} />,
     (i) =>
       !!this.props.readOnly ||
-      !this.props.rights.includes(RIGHT_INSUREE_DELETE) ||
-      this.isHead(this.props.family, i) ||
-      !!i.clientMutationId
+        !this.props.rights.includes(RIGHT_INSUREE_DELETE) ||
+        this.isHead(this.props.family, i) ||
+        !!i.clientMutationId
         ? null
         : this.setHeadInsureeAction(i),
     (i) =>
       !!this.props.readOnly ||
-      !this.props.rights.includes(RIGHT_INSUREE_DELETE) ||
-      this.isHead(this.props.family, i) ||
-      !!i.clientMutationId
+        !this.props.rights.includes(RIGHT_INSUREE_DELETE) ||
+        this.isHead(this.props.family, i) ||
+        !!i.clientMutationId
         ? null
         : this.removeInsureeAction(i),
     (i) =>
       !!this.props.readOnly ||
-      !this.props.rights.includes(RIGHT_INSUREE_DELETE) ||
-      this.isHead(this.props.family, i) ||
-      !!i.clientMutationId
+        !this.props.rights.includes(RIGHT_INSUREE_DELETE) ||
+        this.isHead(this.props.family, i) ||
+        !!i.clientMutationId
         ? null
         : this.deleteInsureeAction(i),
   ];
@@ -332,30 +332,30 @@ class FamilyInsureesOverview extends PagedDataHandler {
       !!readOnly || !!checkingCanAddInsuree || !!errorCanAddInsuree
         ? []
         : [
-            {
-              button: (
-                <div>
-                  <PublishedComponent //div needed for the tooltip style!!
-                    pubRef="insuree.InsureePicker"
-                    IconRender={AddExistingIcon}
-                    forcedFilter={["head: false"]}
-                    onChange={(changeInsureeFamily) => this.setState({ changeInsureeFamily })}
-                    check={() => this.checkCanAddInsuree(() => this.setState({ checkedCanAdd: true }))}
-                    checked={this.state.checkedCanAdd}
-                  />
-                </div>
-              ),
-              tooltip: formatMessage(intl, "insuree", "familyAddExsistingInsuree.tooltip"),
-            },
-            {
-              button: (
-                <IconButton onClick={(e) => this.checkCanAddInsuree(this.addNewInsuree)}>
-                  <AddIcon />
-                </IconButton>
-              ),
-              tooltip: formatMessage(intl, "insuree", "familyAddNewInsuree.tooltip"),
-            },
-          ];
+          {
+            button: (
+              <div>
+                <PublishedComponent //div needed for the tooltip style!!
+                  pubRef="insuree.InsureePicker"
+                  IconRender={AddExistingIcon}
+                  forcedFilter={["head: false"]}
+                  onChange={(changeInsureeFamily) => this.setState({ changeInsureeFamily })}
+                  check={() => this.checkCanAddInsuree(() => this.setState({ checkedCanAdd: true }))}
+                  checked={this.state.checkedCanAdd}
+                />
+              </div>
+            ),
+            tooltip: formatMessage(intl, "insuree", "familyAddExsistingInsuree.tooltip"),
+          },
+          {
+            button: (
+              <IconButton onClick={(e) => this.checkCanAddInsuree(this.addNewInsuree)}>
+                <AddIcon />
+              </IconButton>
+            ),
+            tooltip: formatMessage(intl, "insuree", "familyAddNewInsuree.tooltip"),
+          },
+        ];
     if (!!checkingCanAddInsuree || !!errorCanAddInsuree) {
       actions.push({
         button: (
