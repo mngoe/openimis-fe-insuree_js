@@ -253,8 +253,8 @@ class FamilyInsureesOverview extends PagedDataHandler {
 
   formatters = [
     (i) => this.adornedChfId(i),
-    (i) => { i.email == "newhivuser_XM7dw70J0M3N@gmail.com" ? "" : i.lastName || "" },
-    (i) => { i.email == "newhivuser_XM7dw70J0M3N@gmail.com" ? "" : i.otherNames || "" },
+    (i) => i.email == "newhivuser_XM7dw70J0M3N@gmail.com" ? "" : i.lastName ,
+    (i) => i.email == "newhivuser_XM7dw70J0M3N@gmail.com" ? "" : i.otherNames,
     (i) =>
       i.gender && i.gender.code ? formatMessage(this.props.intl, "insuree", `InsureeGender.${i.gender.code}`) : "",
     (i) => formatDateFromISO(this.props.modulesManager, this.props.intl, i.dob),

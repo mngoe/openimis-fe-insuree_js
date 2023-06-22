@@ -115,7 +115,7 @@ export function fetchFamilySummaries(mm, filters) {
 }
 
 export function fetchFamilyMembers(mm, filters) {
-  let projections = ["uuid", "chfId", "otherNames", "lastName", "head", "phone", "gender{code}", "dob", "cardIssued"];
+  let projections = ["uuid", "chfId", "otherNames", "lastName", "head", "phone", "gender{code}", "dob", "cardIssued", "email"];
   const payload = formatPageQueryWithCount("familyMembers", filters, projections);
   return graphql(payload, "INSUREE_FAMILY_MEMBERS");
 }
