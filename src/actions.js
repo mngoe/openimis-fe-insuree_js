@@ -26,7 +26,7 @@ const FAMILY_FULL_PROJECTION = (mm) => [
   "clientMutationId",
 ];
 
-export const FAMILY_PICKER_PROJECTION = ["id", "uuid", "headInsuree{id chfId uuid lastName otherNames}"];
+export const FAMILY_PICKER_PROJECTION = ["id", "uuid", "headInsuree{id chfId uuid lastName otherNames email}"];
 
 const INSUREE_FULL_PROJECTION = (mm) => [
   "id",
@@ -240,7 +240,7 @@ export function formatInsureeGQL(mm, insuree) {
     ${!!insuree.marital ? `marital: "${insuree.marital}"` : ""}
     ${!!insuree.passport ? `passport: "${formatGQLString(insuree.passport)}"` : ""}
     ${!!insuree.phone ? `phone: "${formatGQLString(insuree.phone)}"` : ""}
-    ${!!insuree.email ? `email: "${formatGQLString(insuree.email)}"` : "newhivuser_XM7dw70J0M3N@gmail.com"}
+    ${!!insuree.email ? `email: "${formatGQLString(insuree.email)}"` : `email: "newhivuser_XM7dw70J0M3N@gmail.com"`}
     ${!!insuree.currentAddress ? `currentAddress: "${formatGQLString(insuree.currentAddress)}"` : ""}
     ${
       !!insuree.currentVillage && !!insuree.currentVillage.id

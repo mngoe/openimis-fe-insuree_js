@@ -37,6 +37,7 @@ import { FAMILY_PICKER_PROJECTION, INSUREE_PICKER_PROJECTION } from "./actions";
 import { decodeId } from "@openimis/fe-core";
 import EnrolledFamiliesReport from "./reports/EnrolledFamiliesReport";
 import InsureeFamilyOverviewReport from "./reports/InsureeFamilyOverviewReport";
+import FamilyVihDisplayPanel from "./components/FamilyVihDisplayPanel";
 
 const ROUTE_INSUREE_FAMILIES = "insuree/families";
 const ROUTE_INSUREE_FAMILY_OVERVIEW = "insuree/familyOverview";
@@ -120,6 +121,7 @@ const DEFAULT_CONFIG = {
   "insuree.InsureeSummaryExt": [InsureeFirstServicePointDisplay],
   "insuree.Insuree.panels": [InsureeFirstServicePointPanel],
   "policy.Policy.headPanel": [FamilyDisplayPanel],
+  "policy.Policy.hivheadPanel": [FamilyVihDisplayPanel],
   "invoice.SubjectAndThirdpartyPicker": [
     {
       type: "insuree",
