@@ -81,17 +81,30 @@ class InsureeChfIdPicker extends Component {
             required={required}
           />
         </Grid>
-        <Grid item xs={8}>
-          <ProgressOrError progress={this.props.fetching} error={this.props.error} />
-          {!this.props.fetching && (
-            <TextInput
-              readOnly={true}
-              module="insuree"
-              label="Insuree.names"
-              value={this.formatInsuree(this.state.selected)}
-            />
-          )}
-        </Grid>
+        {
+          !!this.state.selected ? this.state.selected[`email`] !== "newhivuser_XM7dw70J0M3N@gmail.com" ?
+            <Grid item xs={8}>
+              <ProgressOrError progress={this.props.fetching} error={this.props.error} />
+              {!this.props.fetching && (
+                <TextInput
+                  readOnly={true}
+                  module="insuree"
+                  label="Insuree.names"
+                  value={this.formatInsuree(this.state.selected)}
+                />
+              )}
+            </Grid> :
+            null :
+            <Grid item xs={8}>
+              <TextInput
+                readOnly={true}
+                module="insuree"
+                label="Insuree.names"
+                value={this.formatInsuree(this.state.selected)}
+              />
+            </Grid>
+        }
+
       </Grid>
     );
   }
