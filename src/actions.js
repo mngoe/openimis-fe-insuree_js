@@ -78,6 +78,7 @@ export function fetchInsuree(mm, chfid) {
       "otherNames",
       "dob",
       "age",
+      "email",
       "validityFrom",
       "validityTo",
       "gender{code}",
