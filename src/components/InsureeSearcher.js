@@ -18,7 +18,7 @@ import {
   decodeId
 } from "@openimis/fe-core";
 import EnquiryDialog from "./EnquiryDialog";
-import { RIGHT_INSUREE_DELETE, RIGHT_PRINT } from "../constants";
+import { RIGHT_INSUREE_DELETE, RIGHT_PRINT, INSUREE_MARITAL_STATUS } from "../constants";
 import { fetchInsureeSummaries, deleteInsuree, print } from "../actions";
 
 import InsureeFilter from "./InsureeFilter";
@@ -64,12 +64,16 @@ class InsureeSearcher extends Component {
     let prms = Object.keys(state.filters)
       .filter((f) => !!state.filters[f]["filter"])
       .map((f) => state.filters[f]["filter"]);
-    prms.push(`first: ${state.pageSize}`);
+    if (!state.beforeCursor && !state.afterCursor) {
+      prms.push(`first: ${state.pageSize}`);
+    }
     if (!!state.afterCursor) {
       prms.push(`after: "${state.afterCursor}"`);
+      prms.push(`first: ${state.pageSize}`);
     }
     if (!!state.beforeCursor) {
       prms.push(`before: "${state.beforeCursor}"`);
+      prms.push(`last: ${state.pageSize}`);
     }
     if (!!state.orderBy) {
       prms.push(`orderBy: ["${state.orderBy}"]`);
@@ -153,7 +157,7 @@ class InsureeSearcher extends Component {
           pubRef="insuree.InsureeMaritalStatusPicker"
           withLabel={false}
           readOnly={true}
-          value={insuree.marital}
+          value={insuree.marital || INSUREE_MARITAL_STATUS[0]}
         />
       ),
       (insuree) => (
@@ -178,7 +182,7 @@ class InsureeSearcher extends Component {
     formatters.push(
       (insuree) => formatDateFromISO(this.props.modulesManager, this.props.intl, insuree.validityFrom),
       filters.showHistory &&
-        ((insuree) => formatDateFromISO(this.props.modulesManager, this.props.intl, insuree.validityTo)),
+      ((insuree) => formatDateFromISO(this.props.modulesManager, this.props.intl, insuree.validityTo)),
       (insuree) => (
         <Grid container wrap="nowrap" spacing="2">
           <Grid item>
@@ -252,7 +256,7 @@ class InsureeSearcher extends Component {
       actions
     } = this.props;
 
-    let count = insureesPageInfo.totalCount;
+    let count = insureesPageInfo.totalCount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
     return (
       <Fragment>

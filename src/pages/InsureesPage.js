@@ -6,7 +6,15 @@ import { withTheme, withStyles } from "@material-ui/core/styles";
 import { Fab } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import PrintIcon from "@material-ui/icons/ListAlt";
-import { historyPush, withModulesManager, withHistory, withTooltip, formatMessage, decodeId } from "@openimis/fe-core";
+import {
+  historyPush,
+  withModulesManager,
+  withHistory,
+  withTooltip,
+  formatMessage,
+  decodeId,
+  clearCurrentPaginationPage,
+} from "@openimis/fe-core";
 import InsureeSearcher from "../components/InsureeSearcher";
 import { print } from "../actions";
 
@@ -35,6 +43,21 @@ class InsureesPage extends Component {
 
   canPrintSelected = (selection) =>
     !!selection && selection.length;
+
+  componentDidMount = () => {
+    const moduleName = "insuree";
+    const { module } = this.props;
+    if (module !== moduleName) this.props.clearCurrentPaginationPage();
+  };
+
+  componentWillUnmount = () => {
+    const { location, history } = this.props;
+    const {
+      location: { pathname },
+    } = history;
+    const urlPath = location.pathname;
+    if (!pathname.includes(urlPath)) this.props.clearCurrentPaginationPage();
+  };
 
   render() {
     const { intl, classes, rights } = this.props;
@@ -65,18 +88,13 @@ class InsureesPage extends Component {
 
 const mapStateToProps = (state) => ({
   rights: !!state.core && !!state.core.user && !!state.core.user.i_user ? state.core.user.i_user.rights : [],
+  module: state.core?.savedPagination?.module,
 });
 
-const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators(
-    {
-      print
-    },
-    dispatch,
-  );
-};
-
+const mapDispatchToProps = (dispatch) => bindActionCreators({ clearCurrentPaginationPage, print }, dispatch);
 
 export default injectIntl(
-  withModulesManager(withHistory(connect(mapStateToProps, mapDispatchToProps)(withTheme(withStyles(styles)(InsureesPage))))),
+  withModulesManager(
+    withHistory(connect(mapStateToProps, mapDispatchToProps)(withTheme(withStyles(styles)(InsureesPage)))),
+  ),
 );

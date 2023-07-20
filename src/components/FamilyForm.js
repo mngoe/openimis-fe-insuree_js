@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import { injectIntl } from "react-intl";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -132,6 +132,7 @@ class FamilyForm extends Component {
   canSave = () => {
     if (!this.state.family.location) return false;
     if (!this.state.family.headInsuree) return false;
+    //if (!this.state.family.headInsuree.chfId) return false;
     if (!this.state.family.headInsuree.lastName) return false;
     if (!this.state.family.headInsuree.otherNames) return false;
     if (!this.state.family.headInsuree.dob) return false;
@@ -245,6 +246,7 @@ class FamilyForm extends Component {
             canSave={this.canSave}
             save={!!save ? this._save : null}
             onActionToConfirm={this.onActionToConfirm}
+            openDirty={save}
           />
         )}
       </div>
@@ -263,6 +265,7 @@ const mapStateToProps = (state, props) => ({
   insuree: state.insuree.insuree,
   confirmed: state.core.confirmed,
   state: state,
+  isChfIdValid: state.insuree?.validationFields?.insureeNumber?.isValid,
 });
 
 const mapDispatchToProps = (dispatch) => {
