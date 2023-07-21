@@ -58,9 +58,7 @@ class InsureeMasterPanel extends FormPanel {
       language,
       insureeOptions,
     } = this.props;
-
-    console.log(insureeOptions);
-    console.log(insureeQuestions);
+    
 
     insureeQuestions.forEach(function (question) {
       if (question.questionType == "DROPDOWN") {

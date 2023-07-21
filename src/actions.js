@@ -83,6 +83,7 @@ export function fetchInsuree(mm, chfid) {
       "photo{folder,filename,photo}",
       "gender{code, gender, altLanguage}",
       "healthFacility" + mm.getProjection("location.HealthFacilityPicker.projection"),
+      "score"
     ],
   );
   return graphql(payload, "INSUREE_INSUREE");
