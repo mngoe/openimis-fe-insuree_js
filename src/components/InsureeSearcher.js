@@ -86,6 +86,8 @@ class InsureeSearcher extends Component {
       "insuree.insureeSummaries.insuranceNo",
       "insuree.insureeSummaries.lastName",
       "insuree.insureeSummaries.otherNames",
+      "insuree.insureeSummaries.lastNameArab",
+      "insuree.insureeSummaries.otherNamesArab",
       "insuree.insureeSummaries.maritalStatus",
       "insuree.insureeSummaries.gender",
       "insuree.insureeSummaries.email",
@@ -152,6 +154,8 @@ class InsureeSearcher extends Component {
       (insuree) => insuree.chfId,
       (insuree) => insuree.lastName,
       (insuree) => insuree.otherNames,
+      (insuree) => insuree.lastNameArab,
+      (insuree) => insuree.otherNamesArab,
       (insuree) => (
         <PublishedComponent
           pubRef="insuree.InsureeMaritalStatusPicker"

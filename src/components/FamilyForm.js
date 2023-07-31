@@ -135,6 +135,8 @@ class FamilyForm extends Component {
     //if (!this.state.family.headInsuree.chfId) return false;
     if (!this.state.family.headInsuree.lastName) return false;
     if (!this.state.family.headInsuree.otherNames) return false;
+    if (!this.state.family.headInsuree.lastNameArab) return false;
+    if (!this.state.family.headInsuree.otherNamesArab) return false;
     if (!this.state.family.headInsuree.dob) return false;
     if (!this.state.family.headInsuree.typeOfId || !this.state.family.headInsuree.typeOfId?.code) return false;
     if (!this.state.family.headInsuree.passport) return false;

@@ -76,40 +76,62 @@ class InsureeMasterPanel extends FormPanel {
             </Grid>
             <Divider />
             <Grid container className={classes.item}>
-              {!!edited && !!edited.chfId && (
+              <Grid container className={classes.item}>
+                {!!edited && !!edited.chfId && (
+                  <Grid item xs={4} className={classes.item}>
+                    <PublishedComponent
+                      pubRef="insuree.InsureeNumberInput"
+                      module="insuree"
+                      label="Insuree.chfId"
+                      required={false}
+                      readOnly={readOnly}
+                      value={edited?.chfId}
+                      new_insuree={!edited?.id}
+                      edited_id={edited_id}
+                      onChange={(v) => this.updateAttribute("chfId", v)}
+                    />
+                  </Grid>
+                )}
                 <Grid item xs={4} className={classes.item}>
-                  <PublishedComponent
-                    pubRef="insuree.InsureeNumberInput"
+                  <TextInput
                     module="insuree"
-                    label="Insuree.chfId"
-                    required={false}
+                    label="Insuree.lastName"
+                    required={true}
                     readOnly={readOnly}
-                    value={edited?.chfId}
-                    new_insuree={!edited?.id}
-                    edited_id={edited_id}
-                    onChange={(v) => this.updateAttribute("chfId", v)}
+                    value={!!edited && !!edited.lastName ? edited.lastName : ""}
+                    onChange={(v) => this.updateAttribute("lastName", v)}
                   />
                 </Grid>
-              )}
-              <Grid item xs={4} className={classes.item}>
-                <TextInput
-                  module="insuree"
-                  label="Insuree.lastName"
-                  required={true}
-                  readOnly={readOnly}
-                  value={!!edited && !!edited.lastName ? edited.lastName : ""}
-                  onChange={(v) => this.updateAttribute("lastName", v)}
-                />
-              </Grid>
-              <Grid item xs={4} className={classes.item}>
-                <TextInput
-                  module="insuree"
-                  label="Insuree.otherNames"
-                  required={true}
-                  readOnly={readOnly}
-                  value={!!edited && !!edited.otherNames ? edited.otherNames : ""}
-                  onChange={(v) => this.updateAttribute("otherNames", v)}
-                />
+                <Grid item xs={4} className={classes.item}>
+                  <TextInput
+                    module="insuree"
+                    label="Insuree.otherNames"
+                    required={true}
+                    readOnly={readOnly}
+                    value={!!edited && !!edited.otherNames ? edited.otherNames : ""}
+                    onChange={(v) => this.updateAttribute("otherNames", v)}
+                  />
+                </Grid>
+                <Grid item xs={4} className={classes.item}>
+                  <TextInput
+                    module="insuree"
+                    label="Insuree.lastNameArab"
+                    required={true}
+                    readOnly={readOnly}
+                    value={!!edited && !!edited.lastNameArab ? edited.lastNameArab : ""}
+                    onChange={(v) => this.updateAttribute("lastNameArab", v)}
+                  />
+                </Grid>
+                <Grid item xs={4} className={classes.item}>
+                  <TextInput
+                    module="insuree"
+                    label="Insuree.otherNamesArab"
+                    required={true}
+                    readOnly={readOnly}
+                    value={!!edited && !!edited.otherNamesArab ? edited.otherNamesArab : ""}
+                    onChange={(v) => this.updateAttribute("otherNamesArab", v)}
+                  />
+                </Grid>
               </Grid>
               <Grid item xs={8}>
                 <Grid container>

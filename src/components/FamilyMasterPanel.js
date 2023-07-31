@@ -54,6 +54,22 @@ class FamilyMasterPanel extends FormPanel {
             value={!edited || !edited.headInsuree ? "" : edited.headInsuree.otherNames}
           />
         </Grid>
+        <Grid item xs={3} className={classes.item}>
+          <TextInput
+            module="insuree"
+            label="Family.headInsuree.lastNameArab"
+            readOnly={true}
+            value={!edited || !edited.headInsuree ? "" : edited.headInsuree.lastNameArab}
+          />
+        </Grid>
+        <Grid item xs={3} className={classes.item}>
+          <TextInput
+            module="insuree"
+            label="Family.headInsuree.otherNamesArab"
+            readOnly={true}
+            value={!edited || !edited.headInsuree ? "" : edited.headInsuree.otherNamesArab}
+          />
+        </Grid>
         <Grid item xs={2} className={classes.item}>
           <PublishedComponent
             pubRef="core.DatePicker"

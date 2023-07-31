@@ -78,6 +78,8 @@ class FamilySearcher extends Component {
       "insuree.familySummaries.insuranceNo",
       "insuree.familySummaries.lastName",
       "insuree.familySummaries.otherNames",
+      "insuree.familySummaries.lastNameArab",
+      "insuree.familySummaries.otherNamesArab",
       "insuree.familySummaries.email",
       "insuree.familySummaries.phone",
       "insuree.familySummaries.dob",
@@ -150,6 +152,8 @@ class FamilySearcher extends Component {
       (family) => (!!family.headInsuree ? family.headInsuree.chfId : ""),
       (family) => (!!family.headInsuree ? family.headInsuree.lastName : ""),
       (family) => (!!family.headInsuree ? family.headInsuree.otherNames : ""),
+      (family) => (!!family.headInsuree ? family.headInsuree.lastNameArab : ""),
+      (family) => (!!family.headInsuree ? family.headInsuree.otherNamesArab : ""),
       (family) => (!!family.headInsuree ? family.headInsuree.email : ""),
       (family) => (!!family.headInsuree ? family.headInsuree.phone : ""),
       (family) =>
