@@ -272,6 +272,8 @@ export function fetchInsureeSummaries(mm, filters) {
     "chfId",
     "otherNames",
     "lastName",
+    "otherNamesArab",
+    "lastNameArab",
     "phone",
     "gender{code}",
     "dob",
