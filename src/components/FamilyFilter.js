@@ -144,6 +144,52 @@ class FamilyFilter extends Component {
         />
         <ControlledField
           module="insuree"
+          id={`FamilyFilter.${anchor}.lastNameArab`}
+          field={
+            <Grid item xs={2} className={classes.item}>
+              <TextInput
+                module="insuree"
+                label={`Family.${anchor}.lastNameArab`}
+                name={`${anchor}_lastNameArab`}
+                value={this._filterValue(`${anchor}.lastNameArab`)}
+                onChange={(v) =>
+                  this.debouncedOnChangeFilters([
+                    {
+                      id: `${anchor}.lastNameArab`,
+                      value: v,
+                      filter: !!v ? `${anchor}_LastName_Icontains: "${v}"` : null,
+                    },
+                  ])
+                }
+              />
+            </Grid>
+          }
+        />
+        <ControlledField
+          module="insuree"
+          id={`FamilyFilter.${anchor}.givenNameArab`}
+          field={
+            <Grid item xs={2} className={classes.item}>
+              <TextInput
+                module="insuree"
+                label={`Family.${anchor}.otherNamesArab`}
+                name={`${anchor}_givenNameArab`}
+                value={this._filterValue(`${anchor}.givenNameArab`)}
+                onChange={(v) =>
+                  this.debouncedOnChangeFilters([
+                    {
+                      id: `${anchor}.givenNameArab`,
+                      value: v,
+                      filter: !!v ? `${anchor}_OtherNamesArab_Icontains: "${v}"` : null,
+                    },
+                  ])
+                }
+              />
+            </Grid>
+          }
+        />
+        <ControlledField
+          module="insuree"
           id={`InsureeFilter.${anchor}.gender`}
           field={
             <Grid item xs={1} className={classes.item}>

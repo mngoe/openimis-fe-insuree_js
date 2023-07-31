@@ -105,6 +105,8 @@ class FamilySearcher extends Component {
       ["headInsuree__chfId", true],
       ["headInsuree__lastName", true],
       ["headInsuree__otherNames", true],
+      ["headInsuree__lastNameArab", true],
+      ["headInsuree__otherNamesArab", true],
       ["headInsuree__email", true],
       ["headInsuree__phone", true],
       ["headInsuree__dob", true],

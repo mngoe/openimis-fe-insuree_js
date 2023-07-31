@@ -106,6 +106,8 @@ class InsureeSearcher extends Component {
       ["chfId", true],
       ["lastName", true],
       ["otherNames", true],
+      ["lastNameArab", true],
+      ["otherNamesArab", true],
       ["marital", true],
       ["gender__code", true],
       ["email", true],

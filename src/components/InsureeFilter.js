@@ -152,6 +152,52 @@ class InsureeFilter extends Component {
             </Grid>
           }
         />
+        <ControlledField
+          module="insuree"
+          id="InsureeFilter.lastNameArab"
+          field={
+            <Grid item xs={3} className={classes.item}>
+              <TextInput
+                module="insuree"
+                label="Insuree.lastNameArab"
+                name="lastNameArab"
+                value={this._filterValue("lastNameArab")}
+                onChange={(v) =>
+                  this.debouncedOnChangeFilter([
+                    {
+                      id: "lastNameArab",
+                      value: v,
+                      filter: `lastNameArab_Icontains: "${v}"`,
+                    },
+                  ])
+                }
+              />
+            </Grid>
+          }
+        />
+        <ControlledField
+          module="insuree"
+          id="InsureeFilter.givenNameArab"
+          field={
+            <Grid item xs={3} className={classes.item}>
+              <TextInput
+                module="insuree"
+                label="Insuree.otherNamesArab"
+                name="givenNameArab"
+                value={this._filterValue("givenNameArab")}
+                onChange={(v) =>
+                  this.debouncedOnChangeFilter([
+                    {
+                      id: "givenName",
+                      value: v,
+                      filter: `otherNamesArab_Icontains: "${v}"`,
+                    },
+                  ])
+                }
+              />
+            </Grid>
+          }
+        />
         <Grid item xs={3}>
           <Grid container>
             <ControlledField
