@@ -10,7 +10,7 @@ import {
   graphqlWithVariables,
 } from "@openimis/fe-core";
 
-const FAMILY_HEAD_PROJECTION = "headInsuree{id,uuid,chfId,lastName,otherNames,lastNameArab,otherNamesArab,email,phone,dob,gender{code}}";
+const FAMILY_HEAD_PROJECTION = "headInsuree{id,uuid,chfId,lastName,arabOtherNames,arabLastName,arabOtherNames,email,phone,dob,gender{code}}";
 export const baseApiUrl = "/api";
 
 const FAMILY_FULL_PROJECTION = (mm) => [
@@ -36,8 +36,8 @@ const INSUREE_FULL_PROJECTION = (mm) => [
   "chfId",
   "lastName",
   "otherNames",
-  "lastNameArab",
-  "otherNamesArab",
+  "arabLastName",
+  "arabOtherNames",
   "dob",
   "age",
   "validityFrom",
@@ -79,8 +79,8 @@ export function fetchInsuree(mm, chfid) {
       "chfId",
       "lastName",
       "otherNames",
-      "lastNameArab",
-      "otherNamesArab",
+      "arabLastName",
+      "arabOtherNames",
       "dob",
       "age",
       "validityFrom",
@@ -119,7 +119,7 @@ export function fetchFamilySummaries(mm, filters) {
     "confirmationNo",
     "validityFrom",
     "validityTo",
-    "headInsuree{id,uuid,chfId,lastName,otherNames,lastNameArab,otherNamesArab, email,phone, dob}",
+    "headInsuree{id,uuid,chfId,lastName,otherNames,arabLastName,arabOtherNames, email,phone, dob}",
     "location" + mm.getProjection("location.Location.FlatProjection"),
   ];
   const payload = formatPageQueryWithCount("families", filters, projections);
@@ -127,7 +127,7 @@ export function fetchFamilySummaries(mm, filters) {
 }
 
 export function fetchFamilyMembers(mm, filters) {
-  let projections = ["uuid", "chfId", "otherNames", "lastName", "otherNamesArab", "lastNameArab", "head", "phone", "gender{code}", "dob", "cardIssued"];
+  let projections = ["uuid", "chfId", "otherNames", "lastName", "arabOtherNames", "arabLastName", "head", "phone", "gender{code}", "dob", "cardIssued"];
   const payload = formatPageQueryWithCount("familyMembers", filters, projections);
   return graphql(payload, "INSUREE_FAMILY_MEMBERS");
 }
@@ -272,8 +272,8 @@ export function fetchInsureeSummaries(mm, filters) {
     "chfId",
     "otherNames",
     "lastName",
-    "otherNamesArab",
-    "lastNameArab",
+    "arabOtherNames",
+    "arabLastName",
     "phone",
     "gender{code}",
     "dob",
@@ -303,8 +303,8 @@ export function formatInsureeGQL(mm, insuree) {
     ${!!insuree.chfId ? `chfId: "${formatGQLString(insuree.chfId)}"` : ""}
     ${!!insuree.lastName ? `lastName: "${formatGQLString(insuree.lastName)}"` : ""}
     ${!!insuree.otherNames ? `otherNames: "${formatGQLString(insuree.otherNames)}"` : ""}
-    ${!!insuree.lastNameArab ? `lastNameArab: "${formatGQLString(insuree.lastNameArab)}"` : ""}
-    ${!!insuree.otherNamesArab ? `otherNamesArab: "${formatGQLString(insuree.otherNamesArab)}"` : ""}
+    ${!!insuree.arabLastName ? `arabLastName: "${formatGQLString(insuree.arabLastName)}"` : ""}
+    ${!!insuree.arabOtherNames ? `arabOtherNames: "${formatGQLString(insuree.arabOtherNames)}"` : ""}
     ${!!insuree.gender && !!insuree.gender.code ? `genderId: "${insuree.gender.code}"` : ""}
     ${!!insuree.dob ? `dob: "${insuree.dob}"` : ""}
     head: ${!!insuree.head}

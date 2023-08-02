@@ -118,8 +118,8 @@ class InsureeMasterPanel extends FormPanel {
                     label="Insuree.lastNameArab"
                     required={true}
                     readOnly={readOnly}
-                    value={!!edited && !!edited.lastNameArab ? edited.lastNameArab : ""}
-                    onChange={(v) => this.updateAttribute("lastNameArab", v)}
+                    value={!!edited && !!edited.arabLastName ? edited.arabLastName : ""}
+                    onChange={(v) => this.updateAttribute("arabLastName", v)}
                   />
                 </Grid>
                 <Grid item xs={4} className={classes.item}>
@@ -128,8 +128,8 @@ class InsureeMasterPanel extends FormPanel {
                     label="Insuree.otherNamesArab"
                     required={true}
                     readOnly={readOnly}
-                    value={!!edited && !!edited.otherNamesArab ? edited.otherNamesArab : ""}
-                    onChange={(v) => this.updateAttribute("otherNamesArab", v)}
+                    value={!!edited && !!edited.arabOtherNames ? edited.arabOtherNames : ""}
+                    onChange={(v) => this.updateAttribute("arabOtherNames", v)}
                   />
                 </Grid>
               </Grid>

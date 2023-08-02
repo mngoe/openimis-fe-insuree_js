@@ -160,14 +160,14 @@ class InsureeFilter extends Component {
               <TextInput
                 module="insuree"
                 label="Insuree.lastNameArab"
-                name="lastNameArab"
-                value={this._filterValue("lastNameArab")}
+                name="arabLastName"
+                value={this._filterValue("arabLastName")}
                 onChange={(v) =>
                   this.debouncedOnChangeFilter([
                     {
-                      id: "lastNameArab",
+                      id: "arabLastName",
                       value: v,
-                      filter: `lastNameArab_Icontains: "${v}"`,
+                      filter: `arabLastName_Icontains: "${v}"`,
                     },
                   ])
                 }
@@ -183,14 +183,14 @@ class InsureeFilter extends Component {
               <TextInput
                 module="insuree"
                 label="Insuree.otherNamesArab"
-                name="givenNameArab"
-                value={this._filterValue("givenNameArab")}
+                name="arabGivenName"
+                value={this._filterValue("arabGivenName")}
                 onChange={(v) =>
                   this.debouncedOnChangeFilter([
                     {
-                      id: "givenName",
+                      id: "arabGivenName",
                       value: v,
-                      filter: `otherNamesArab_Icontains: "${v}"`,
+                      filter: `arabOtherNames_Icontains: "${v}"`,
                     },
                   ])
                 }
