@@ -151,13 +151,13 @@ class FamilyFilter extends Component {
                 module="insuree"
                 label={`Family.${anchor}.lastNameArab`}
                 name={`${anchor}_lastNameArab`}
-                value={this._filterValue(`${anchor}.lastNameArab`)}
+                value={this._filterValue(`${anchor}.arabLastName`)}
                 onChange={(v) =>
                   this.debouncedOnChangeFilters([
                     {
-                      id: `${anchor}.lastNameArab`,
+                      id: `${anchor}.arabLastName`,
                       value: v,
-                      filter: !!v ? `${anchor}_LastName_Icontains: "${v}"` : null,
+                      filter: !!v ? `${anchor}_ArabLastName_Icontains: "${v}"` : null,
                     },
                   ])
                 }
@@ -174,13 +174,13 @@ class FamilyFilter extends Component {
                 module="insuree"
                 label={`Family.${anchor}.otherNamesArab`}
                 name={`${anchor}_givenNameArab`}
-                value={this._filterValue(`${anchor}.givenNameArab`)}
+                value={this._filterValue(`${anchor}.arabGivenName`)}
                 onChange={(v) =>
                   this.debouncedOnChangeFilters([
                     {
-                      id: `${anchor}.givenNameArab`,
+                      id: `${anchor}.arabGivenName`,
                       value: v,
-                      filter: !!v ? `${anchor}_OtherNamesArab_Icontains: "${v}"` : null,
+                      filter: !!v ? `${anchor}_ArabOtherNames_Icontains: "${v}"` : null,
                     },
                   ])
                 }

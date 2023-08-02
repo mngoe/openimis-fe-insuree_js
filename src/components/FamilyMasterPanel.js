@@ -59,7 +59,7 @@ class FamilyMasterPanel extends FormPanel {
             module="insuree"
             label="Family.headInsuree.lastNameArab"
             readOnly={true}
-            value={!edited || !edited.headInsuree ? "" : edited.headInsuree.lastNameArab}
+            value={!edited || !edited.headInsuree ? "" : edited.headInsuree.arabLastName}
           />
         </Grid>
         <Grid item xs={3} className={classes.item}>
@@ -67,7 +67,7 @@ class FamilyMasterPanel extends FormPanel {
             module="insuree"
             label="Family.headInsuree.otherNamesArab"
             readOnly={true}
-            value={!edited || !edited.headInsuree ? "" : edited.headInsuree.otherNamesArab}
+            value={!edited || !edited.headInsuree ? "" : edited.headInsuree.arabOtherNames}
           />
         </Grid>
         <Grid item xs={2} className={classes.item}>
