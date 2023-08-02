@@ -28,6 +28,7 @@
   "insuree.Insuree.lastNameArab": "Arab Last Name",
   "insuree.Insuree.otherNamesArab": "Arab Given Names",
   "insuree.Insuree.names": "Name",
+  "insuree.Insuree.arabNames": " Arab Name",
   "insuree.Insuree.gender": "Gender",
   "insuree.Insuree.dob": "Birth Date",
   "insuree.Insuree.dobFrom": "Birth Date From",

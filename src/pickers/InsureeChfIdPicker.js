@@ -17,7 +17,7 @@ class InsureeChfIdPicker extends Component {
 
   constructor(props) {
     super(props);
-    this.chfIdMaxLength = props.modulesManager.getConf("fe-insuree", "insureeForm.chfIdMaxLength", 12);
+    this.chfIdMaxLength = props.modulesManager.getConf("fe-insuree", "insureeForm.chfIdMaxLength", 20);
   }
 
   componentDidMount() {
@@ -63,6 +63,11 @@ class InsureeChfIdPicker extends Component {
     return `${insuree.otherNames} ${insuree.lastName}`;
   }
 
+  formatArabInsuree(insuree) {
+    if (!insuree) return null;
+    return `${insuree.arabOtherNames} ${insuree.arabLastName}`;
+  }
+
   render() {
     const { readOnly = false, required = false } = this.props;
     return (
@@ -81,7 +86,7 @@ class InsureeChfIdPicker extends Component {
             required={required}
           />
         </Grid>
-        <Grid item xs={8}>
+        <Grid item xs={4}>
           <ProgressOrError progress={this.props.fetching} error={this.props.error} />
           {!this.props.fetching && (
             <TextInput
@@ -89,6 +94,17 @@ class InsureeChfIdPicker extends Component {
               module="insuree"
               label="Insuree.names"
               value={this.formatInsuree(this.state.selected)}
+            />
+          )}
+        </Grid>
+        <Grid item xs={4}>
+          <ProgressOrError progress={this.props.fetching} error={this.props.error} />
+          {!this.props.fetching && (
+            <TextInput
+              readOnly={true}
+              module="insuree"
+              label="Insuree.arabNames"
+              value={this.formatArabInsuree(this.state.selected)}
             />
           )}
         </Grid>
