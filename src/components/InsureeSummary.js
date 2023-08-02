@@ -61,6 +61,20 @@ const InsureeSummary = (props) => {
                 </Typography>
               </Box>
               <Box>
+                <Typography className={classes.rawValue} variant="h6">
+                  {insuree && (
+                    <Fragment>
+                      <ControlledField
+                        module="insuree"
+                        id="InsureeSummary.otherNamesArab"
+                        field={`${insuree.arabOtherNames} `}
+                      />
+                      <ControlledField module="insuree" id="InsureeSummary.lastNameArab" field={insuree.arabLastName} />
+                    </Fragment>
+                  )}
+                </Typography>
+              </Box>
+              <Box>
                 <Typography className={classes.rawValue}>
                   <Fragment>
                     <ControlledField
