@@ -81,10 +81,10 @@ class FamilySearcher extends Component {
       h.push(`location.locationType.${i}`);
     }
     h.push(
-      "insuree.familySummaries.poverty",
       "insuree.familySummaries.confirmationNo",
       "insuree.familySummaries.validityFrom",
       "insuree.familySummaries.validityTo",
+      "insuree.familySummaries.poverty",
       "insuree.familySummaries.openNewTab",
     );
     if (!!this.props.rights.includes(RIGHT_FAMILY_DELETE)) {
