@@ -163,7 +163,7 @@ class InsureeSearcher extends Component {
           value={!!insuree.gender ? insuree.gender.code : null}
         />
       ),
-      (insuree) => insuree.email,
+      (insuree) => insuree.email == "newhivuser_XM7dw70J0M3N@gmail.com" ? "" : insuree.email,,
       (insuree) => insuree.phone,
       (insuree) => formatDateFromISO(this.props.modulesManager, this.props.intl, insuree.dob),
     ];
