@@ -16,7 +16,7 @@ import {
   clearCurrentPaginationPage,
 } from "@openimis/fe-core";
 import InsureeSearcher from "../components/InsureeSearcher";
-import { print } from "../actions";
+import { print, printMembershipCard } from "../actions";
 
 import { RIGHT_INSUREE_ADD, RIGHT_PRINT } from "../constants";
 
@@ -39,6 +39,10 @@ class InsureesPage extends Component {
 
   printSelected = (selection) => {
     this.props.print(selection.map((i) => decodeId(i.id)));
+  };
+
+  printMembershipCardSelected = (selection) => {
+    this.props.printMembershipCard(selection.map((i) => decodeId(i.id)));
   };
 
   canPrintSelected = (selection) =>
@@ -69,6 +73,13 @@ class InsureesPage extends Component {
       enabled: this.canPrintSelected,
       icon: <PrintIcon />,
     });
+
+    actions.push({
+      label: "insureeSummaries.printMembershipCardSelected",
+      action: this.printMembershipCardSelected,
+      enabled: this.canPrintSelected,
+      icon: <PrintIcon />,
+    });
     return (
       <div className={classes.page}>
         <InsureeSearcher cacheFiltersKey="insureeInsureesPageFiltersCache" onDoubleClick={this.onDoubleClick} rights={rights} actions={actions} />
@@ -91,7 +102,7 @@ const mapStateToProps = (state) => ({
   module: state.core?.savedPagination?.module,
 });
 
-const mapDispatchToProps = (dispatch) => bindActionCreators({ clearCurrentPaginationPage, print }, dispatch);
+const mapDispatchToProps = (dispatch) => bindActionCreators({ clearCurrentPaginationPage, print, printMembershipCard }, dispatch);
 
 export default injectIntl(
   withModulesManager(
