@@ -255,5 +255,6 @@
   "insuree.Membership.none": "None",
   "insuree.MembershipPicker.label": "Membership group",
   "insuree.MembershipPicker.placeholder": "Select a membership group",
-  "insuree.InsureeMissingPhotoReport.officer": "Officer"
+  "insuree.InsureeMissingPhotoReport.officer": "Officer",
+  "insureeSummaries.printMembershipCardSelected": "Print Membership Card Selected"
 }
