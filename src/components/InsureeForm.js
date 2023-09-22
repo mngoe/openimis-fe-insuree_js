@@ -145,6 +145,14 @@ class InsureeForm extends Component {
     });
   };
 
+  doesInsureeChange = () => {
+    const { insuree } = this.props;
+    if (_.isEqual(insuree, this.state.insuree)) {
+      return false;
+    }
+    return true;
+  };
+
   canSaveDetail = (d) => {
     if (!d) return false;
     if (d.filename === null || d.filename === undefined || d.filename === "") return false;
@@ -153,6 +161,8 @@ class InsureeForm extends Component {
   };
 
   canSave = () => {
+    const doesInsureeChange = this.doesInsureeChange();
+    if (!doesInsureeChange) return false;
     //if (!this.state.insuree.chfId) return false;
     if (!this.state.insuree.lastName) return false;
     if (!this.state.insuree.otherNames) return false;
