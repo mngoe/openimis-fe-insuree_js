@@ -1,6 +1,6 @@
 import React from "react";
 import { withTheme, withStyles } from "@material-ui/core/styles";
-import { Paper, Grid, Typography, Divider, Checkbox, FormControlLabel } from "@material-ui/core";
+import { Paper, Grid, Typography, Divider, Checkbox, FormControlLabel, InputAdornment } from "@material-ui/core";
 import {
   formatMessage,
   withTooltip,
@@ -11,8 +11,17 @@ import {
   Contributions,
   withModulesManager,
 } from "@openimis/fe-core";
+import clsx from "clsx";
+import CheckOutlinedIcon from "@material-ui/icons/CheckOutlined";
+import ErrorOutlineOutlinedIcon from "@material-ui/icons/ErrorOutlineOutlined";
 
 const styles = (theme) => ({
+  validIcon: {
+    color: "green",
+  },
+  invalidIcon: {
+    color: theme.palette.error.main,
+  },
   paper: theme.paper.paper,
   tableTitle: theme.table.title,
   item: theme.paper.item,
@@ -244,6 +253,17 @@ class InsureeMasterPanel extends FormPanel {
                       readOnly={readOnly}
                       value={!!edited && !!edited.passport ? edited.passport : ""}
                       onChange={(v) => this.updateAttribute("passport", !!v ? v : null)}
+                      endAdornment={
+                        <InputAdornment position="end" className={clsx(
+                          !!edited.passport && edited.passport.length === 10 && classes.validIcon, 
+                          !!edited.passport && edited.passport.length !== 10 && classes.invalidIcon)
+                          }>
+                          <>
+                            {!!edited.passport && edited.passport.length === 10 && <CheckOutlinedIcon size={20} />}
+                            {!!edited.passport && edited.passport.length !== 10 && <ErrorOutlineOutlinedIcon size={20}/>}
+                          </>
+                        </InputAdornment>
+                      }
                     />
                   </Grid>
                   <Grid item xs={4} className={classes.item}>
