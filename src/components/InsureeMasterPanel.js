@@ -255,12 +255,12 @@ class InsureeMasterPanel extends FormPanel {
                       onChange={(v) => this.updateAttribute("passport", !!v ? v : null)}
                       endAdornment={
                         <InputAdornment position="end" className={clsx(
-                          !!edited.passport && edited.passport.length === 10 && classes.validIcon, 
-                          !!edited.passport && edited.passport.length !== 10 && classes.invalidIcon)
+                          !!edited && !!edited.passport && edited.passport.length === 10 && classes.validIcon, 
+                          !!edited && !!edited.passport && edited.passport.length !== 10 && classes.invalidIcon)
                           }>
                           <>
-                            {!!edited.passport && edited.passport.length === 10 && <CheckOutlinedIcon size={20} />}
-                            {!!edited.passport && edited.passport.length !== 10 && <ErrorOutlineOutlinedIcon size={20}/>}
+                            {!!edited && !!edited.passport && edited.passport.length === 10 && <CheckOutlinedIcon size={20} />}
+                            {!!edited && !!edited.passport && edited.passport.length !== 10 && <ErrorOutlineOutlinedIcon size={20}/>}
                           </>
                         </InputAdornment>
                       }
