@@ -256,5 +256,8 @@
   "insuree.MembershipPicker.label": "Membership group",
   "insuree.MembershipPicker.placeholder": "Select a membership group",
   "insuree.InsureeMissingPhotoReport.officer": "Officer",
-  "insureeSummaries.printMembershipCardSelected": "Print Membership Card Selected"
+  "insureeSummaries.printMembershipCardSelected": "Print Membership Card Selected",
+  "insuree.Passport.none": "Enter the id number",
+  "insuree.Passport.min": "Id number should be of minimum 10 characters length",
+  "insuree.Passport.required": "Id number is required"
 }

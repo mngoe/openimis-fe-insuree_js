@@ -177,14 +177,31 @@ class InsureeForm extends Component {
       passport = this.state.insuree.passport;
       if (!(passport.length === 10)) return false;
     }
-    if (!this.state.insuree.attachments) return false;
-    let attachments = [];
-    if (!!this.state.insuree.attachments) {
-      attachments = [...this.state.insuree.attachments];
-      if (!this.props.forReview) attachments.pop();
-      if (attachments.length && attachments.filter((a) => !this.canSaveDetail(a)).length) {
-        return false;
+
+    if (this.state.insuree.attachments !== undefined) {
+      if (this.props.forReview) {
+        if (this.state.insuree.attachments.length && this.state.insuree.attachments.filter((a) => !this.canSaveDetail(a)).length) {
+          return false;
+        }
+      } else {
+        if (this.state.insuree.attachments.length && this.state.insuree.attachments.filter((a) => !this.canSaveDetail(a)).length - 1) {
+          return false;
+        }
       }
+    } else {
+      return false;
+    }
+
+    if (!this.props.forReview) {
+      let attachments = [];
+      if (!!this.state.insuree.attachments) {
+        attachments = [...this.state.insuree.attachments];
+        if (!this.props.forReview) attachments.pop();
+        if (attachments.length && attachments.filter((a) => !this.canSaveDetail(a)).length) {
+          return false;
+        }
+      }
+      if (!attachments.length) return false;
     }
     if (this.state.lockNew) return false;
     if (!!this.state.insuree.photo && (!this.state.insuree.photo.date || !this.state.insuree.photo.officerId))
@@ -218,7 +235,7 @@ class InsureeForm extends Component {
       readOnly = false,
       classes,
       add,
-      save,
+      save
     } = this.props;
     const { insuree, clientMutationId } = this.state;
     if (!rights.includes(RIGHT_INSUREE)) return null;
