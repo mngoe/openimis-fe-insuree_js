@@ -27,8 +27,10 @@ class InsureeAttachmentPanel extends Component {
 
   initData = () => {
     let insureeAttachments = [];
-    if (!!this.props.edited[`attachments`]) {
-      insureeAttachments = this.props.edited[`attachments`] || [];
+    if (this.props.edited != undefined) {
+      if (!!this.props.edited[`attachments`]) {
+        insureeAttachments = this.props.edited[`attachments`] || [];
+      }
     }
     if (!this.props.forReview && !_.isEqual(insureeAttachments[insureeAttachments.length - 1], {})) {
       insureeAttachments.push({});
