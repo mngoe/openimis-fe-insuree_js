@@ -243,7 +243,7 @@
   "insuree.insureeAttachment.title": "Title",
   "insuree.insureeAttachment.date": "Date",
   "insuree.insureeAttachment.fileName": "File",
-  "insureeSummaries.printSelected": "Print Selected",
+  "insureeSummaries.rightCertificate": "Print certificate of right",
   "insureeSummaries.printAll": "Print All",
   "insuree.insureeAttachment.action": " ",
   "insuree.attachments.title": "{filename}",

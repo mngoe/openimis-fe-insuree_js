@@ -68,14 +68,14 @@ class InsureesPage extends Component {
     const { printParam } = this.state;
     var actions = [];
     actions.push({
-      label: "insureeSummaries.printSelected",
+      label: "insureeSummaries.printMembershipCardSelected",
       action: this.printSelected,
       enabled: this.canPrintSelected,
       icon: <PrintIcon />,
     });
 
     actions.push({
-      label: "insureeSummaries.printMembershipCardSelected",
+      label: "insureeSummaries.rightCertificate",
       action: this.printMembershipCardSelected,
       enabled: this.canPrintSelected,
       icon: <PrintIcon />,
