@@ -82,6 +82,7 @@ class InsureeAttachmentPanel extends Component {
 
   _onDelete = (idx) => {
     const insureeAttachments = [...this.state.insureeAttachments];
+    insureeAttachments[idx].title = '';
     insureeAttachments.splice(idx, 1);
     this._onEditedChanged(insureeAttachments);
   };

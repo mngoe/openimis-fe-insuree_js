@@ -46,7 +46,6 @@ const InsureeNumberInput = (props) => {
       readOnly={readOnly}
       required={required}
       label={label}
-      readOnly = {true}
       placeholder={placeholder}
       value={value}
       inputProps={{ maxLength: numberMaxLength }}
