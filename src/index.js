@@ -29,6 +29,8 @@ import InsureeSummary from "./components/InsureeSummary";
 import InsureeFirstServicePointDisplay from "./components/InsureeFirstServicePointDisplay";
 import InsureeFirstServicePointPanel from "./components/InsureeFirstServicePointPanel";
 import InsureeAddress from "./components/InsureeAddress";
+import InsureeStatusPicker from "./pickers/InsureeStatusPicker";
+import InsureeStatusReasonPicker from "./pickers/InsureeStatusReasonPicker";
 import FamilyDisplayPanel from "./components/FamilyDisplayPanel";
 import { familyLabel } from "./utils/utils";
 import messages_en from "./translations/en.json";
@@ -84,6 +86,8 @@ const DEFAULT_CONFIG = {
     { key: "insuree.InsureeMaritalStatusPicker", ref: InsureeMaritalStatusPicker },
     { key: "insuree.EducationPicker", ref: EducationPicker },
     { key: "insuree.ProfessionPicker", ref: ProfessionPicker },
+    { key: "insuree.InsureeStatusPicker", ref: InsureeStatusPicker },
+    { key: "insuree.InsureeStatusReasonPicker", ref: InsureeStatusReasonPicker },
     { key: "insuree.IdentificationTypePicker", ref: IdentificationTypePicker },
     { key: "insuree.FamilyPovertyStatusPicker", ref: FamilyPovertyStatusPicker },
     { key: "insuree.ConfirmationTypePicker", ref: ConfirmationTypePicker },

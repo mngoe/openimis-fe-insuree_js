@@ -14,3 +14,10 @@ export const RIGHT_INSUREE_EDIT = 101103;
 export const RIGHT_INSUREE_DELETE = 101104;
 export const RIGHT_INSUREE_ENQUIRE = 101105;
 export const RIGHT_VIH = 10119;
+export const EMPTY_STRING = "";
+export const MODULE_NAME = "insuree";
+
+export const INSUREE_ACTIVE_STRING = "AC";
+export const INSUREE_INACTIVE_STRING = "IN";
+export const INSUREE_DEAD_STRING = "DE";
+export const INSUREE_STATUS = [INSUREE_ACTIVE_STRING, INSUREE_INACTIVE_STRING, INSUREE_DEAD_STRING];

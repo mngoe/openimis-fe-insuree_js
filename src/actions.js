@@ -8,8 +8,10 @@ import {
   formatMutation,
   formatGQLString,
 } from "@openimis/fe-core";
+import { INSUREE_ACTIVE_STRING } from "./constants";
 
 const FAMILY_HEAD_PROJECTION = "headInsuree{id,uuid,chfId,lastName,otherNames,email,phone,dob,gender{code}}";
+
 
 const FAMILY_FULL_PROJECTION = (mm) => [
   "id",
@@ -53,6 +55,7 @@ const INSUREE_FULL_PROJECTION = (mm) => [
   "head",
   "email",
   "phone",
+  "status",
   "dead",
   "dod",
   "deathReason",
@@ -83,6 +86,7 @@ export function fetchInsuree(mm, chfid) {
       "validityTo",
       "gender{code}",
       `family{id}`,
+      "status",
       "photo{folder,filename,photo}",
       "gender{code, gender, altLanguage}",
       "healthFacility" + mm.getProjection("location.HealthFacilityPicker.projection"),
@@ -208,6 +212,7 @@ export function fetchInsureeSummaries(mm, filters) {
     "phone",
     "gender{code}",
     "dob",
+    "status",
     "marital",
     "family{uuid,location" + mm.getProjection("location.Location.FlatProjection") + "}",
     "currentVillage" + mm.getProjection("location.Location.FlatProjection"),
@@ -257,6 +262,17 @@ export function formatInsureeGQL(mm, insuree) {
     ${!!insuree.typeOfId && !!insuree.typeOfId.code ? `typeOfIdId: "${insuree.typeOfId.code}"` : ""}
     ${!!insuree.family && !!insuree.family.id ? `familyId: ${decodeId(insuree.family.id)}` : ""}
     ${!!insuree.relationship && !!insuree.relationship.id ? `relationshipId: ${insuree.relationship.id}` : ""}
+    ${!!insuree.status ? `status: "${insuree.status}"` : ""}
+    ${
+      !!insuree.statusDate && !!insuree.statusDate !== INSUREE_ACTIVE_STRING
+        ? `statusDate: "${insuree.statusDate}"`
+        : ""
+    }
+    ${
+      !!insuree.statusReason && !!insuree.statusDate !== INSUREE_ACTIVE_STRING
+        ? `statusReason: "${insuree.statusReason.code}"`
+        : ""
+    }
     ${
       !!insuree.healthFacility && !!insuree.healthFacility.id
         ? `healthFacilityId: ${decodeId(insuree.healthFacility.id)}`
@@ -269,7 +285,7 @@ export function formatInsureeGQL(mm, insuree) {
 export function formatFamilyGQL(mm, family) {
   let headInsuree = family.headInsuree;
   headInsuree["head"] = true;
-  return `  
+  return `
     ${family.uuid !== undefined && family.uuid !== null ? `uuid: "${family.uuid}"` : ""}
     headInsuree: {${formatInsureeGQL(mm, headInsuree)}}
     ${!!family.location ? `locationId: ${decodeId(family.location.id)}` : ""}
