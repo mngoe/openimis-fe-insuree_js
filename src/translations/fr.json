@@ -1,0 +1,11 @@
+{
+
+  "insuree.Insuree.status": "Statut",
+  "insuree.Insuree.status.null": "Tout",
+  "insuree.Insuree.status.AC": "Actif",
+  "insuree.Insuree.status.DE": "Mort",
+  "insuree.Insuree.status.IN": "Inactif",
+  "insuree.Insuree.statusDate": "Date du statut",
+  "insuree.Insuree.statusReason": "Raison",
+  "insuree.InsureeReasonPicker.placeholder": "Recherche de  Raison…"
+}

@@ -29,7 +29,7 @@ const InsureeStatusReasonPicker = (props) => {
     variables,
     { skip: true },
   );
-
+  console.log("data ", data, error, isLoading)
   return (
     <Autocomplete
       multiple={multiple}
