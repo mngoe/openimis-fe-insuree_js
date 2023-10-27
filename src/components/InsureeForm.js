@@ -100,11 +100,12 @@ class InsureeForm extends Component {
   };
 
   canSave = () => {
-    // if (!this.state.insuree.chfId) return false;
-    // if (!this.state.insuree.dob) return false;
-    // if (!this.state.insuree.gender || !this.state.insuree.gender?.code) return false;
-    // if (!!this.state.insuree.photo && (!this.state.insuree.photo.date || !this.state.insuree.photo.officerId))
-    //   return false;
+    if (!this.state.insuree.chfId) return false;
+    if (!this.state.insuree.dob) return false;
+    if (!this.state.insuree.gender || !this.state.insuree.gender?.code) return false;
+    if (!!this.state.insuree.photo && (!this.state.insuree.photo.date || !this.state.insuree.photo.officerId)) return false;
+    if(!this.state.insuree.status) return false;
+    if((!!this.state.insuree.status && !this.state.insuree.statusDate) || (!!this.state.insuree.status && !this.state.insuree.statusReason)  ) return false;
     return true;
   };
 
@@ -137,7 +138,7 @@ class InsureeForm extends Component {
       save,
     } = this.props;
     const { insuree } = this.state;
-    console.log('fille moi les propos la ', this.props)
+    console.log('fille moi les propos la ', this.state)
     console.log('insuree ', this.state.newInsuree)
     if (!rights.includes(RIGHT_INSUREE)) return null;
     let actions = [

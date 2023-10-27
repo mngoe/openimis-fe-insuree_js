@@ -234,6 +234,7 @@ function formatInsureePhoto(photo) {
 }
 
 export function formatInsureeGQL(mm, insuree) {
+  console.log("insuree values", insuree)
   return `
     ${insuree.uuid !== undefined && insuree.uuid !== null ? `uuid: "${insuree.uuid}"` : ""}
     ${!!insuree.chfId ? `chfId: "${formatGQLString(insuree.chfId)}"` : ""}
@@ -341,6 +342,7 @@ export function deleteFamily(mm, family, deleteMembers, clientMutationLabel) {
 }
 
 export function createInsuree(mm, insuree, clientMutationLabel) {
+  console.log('formated insuree', formatInsureeGQL(mm, insuree))
   let mutation = formatMutation("createInsuree", formatInsureeGQL(mm, insuree), clientMutationLabel);
   var requestedDateTime = new Date();
   return graphql(mutation.payload, ["INSUREE_MUTATION_REQ", "INSUREE_CREATE_INSUREE_RESP", "INSUREE_MUTATION_ERR"], {
