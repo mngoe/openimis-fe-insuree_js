@@ -39,7 +39,6 @@ class InsureeForm extends Component {
   _newInsuree() {
     let insuree = {};
     insuree.jsonExt = {};
-    insuree.status = "AC"
     return insuree;
   }
 
