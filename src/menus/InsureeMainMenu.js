@@ -34,7 +34,7 @@ class InsureeMainMenu extends Component {
       entries.push({
         text: formatMessage(this.props.intl, "insuree", "menu.insurees"),
         icon: <Person />,
-        route: "/" + modulesManager.getRef("policy.route.policies"),
+        route: "/" + modulesManager.getRef("insuree.route.insurees"),
       });
     }
     entries.push(
