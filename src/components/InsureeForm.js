@@ -137,7 +137,8 @@ class InsureeForm extends Component {
       save,
     } = this.props;
     const { insuree } = this.state;
-    console.log('insuree ', insuree)
+    console.log('fille moi les propos la ', this.props)
+    console.log('insuree ', this.state.newInsuree)
     if (!rights.includes(RIGHT_INSUREE)) return null;
     let actions = [
       {
@@ -166,7 +167,7 @@ class InsureeForm extends Component {
               edited={this.state.insuree}
               reset={this.state.reset}
               back={this.back}
-              add={ this._add}
+              add={!!add && !this.state.newInsuree ? this._add : null}
               readOnly={readOnly || !!insuree.validityTo}
               actions={actions}
               HeadPanel={!!insuree ? insuree[`email`] == "newhivuser_XM7dw70J0M3N@gmail.com" ? FamilyVihDisplayPanel : FamilyDisplayPanel : FamilyVihDisplayPanel}
