@@ -138,8 +138,6 @@ class InsureeForm extends Component {
       save,
     } = this.props;
     const { insuree } = this.state;
-    console.log('fille moi les propos la ', this.state)
-    console.log('insuree ', this.state.newInsuree)
     if (!rights.includes(RIGHT_INSUREE)) return null;
     let actions = [
       {
