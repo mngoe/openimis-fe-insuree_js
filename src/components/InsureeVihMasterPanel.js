@@ -39,7 +39,6 @@ class InsureeVihMasterPanel extends FormPanel {
       actions,
     } = this.props;
     const isInsureeStatusRequired = modulesManager.getConf("fe-insuree", "insureeForm.isInsureeStatusRequired", false);
-    console.log("edited ", edited)
     return (
       <Grid container>
         <Grid item xs={12}>
