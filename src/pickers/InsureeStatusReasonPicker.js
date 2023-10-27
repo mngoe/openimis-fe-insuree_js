@@ -5,14 +5,14 @@ import _debounce from "lodash/debounce";
 const InsureeStatusReasonPicker = (props) => {
   const { onChange, readOnly, required, value, filterOptions, filterSelectedOptions, multiple, extraFragment, edited } =
     props;
-
+console.log("props = ", props)
   const modulesManager = useModulesManager();
   const { formatMessage } = useTranslations("insuree", modulesManager);
   const [variables, setVariables] = useState({});
 
   const { isLoading, data, error } = useGraphqlQuery(
     `
-    query InsureeStatusReasonPicker ($search: String, $statusType: String) {
+    query InsureeStatusReasonPicker ($search: String, $statusType: InsureeStatusReasonStatusType) {
         insureeStatusReasons(str: $search, statusType: $statusType, first: 20) {
         edges {
             node {

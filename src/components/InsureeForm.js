@@ -39,6 +39,7 @@ class InsureeForm extends Component {
   _newInsuree() {
     let insuree = {};
     insuree.jsonExt = {};
+    insuree.status = "AC"
     return insuree;
   }
 
@@ -99,11 +100,11 @@ class InsureeForm extends Component {
   };
 
   canSave = () => {
-    if (!this.state.insuree.chfId) return false;
-    if (!this.state.insuree.dob) return false;
-    if (!this.state.insuree.gender || !this.state.insuree.gender?.code) return false;
-    if (!!this.state.insuree.photo && (!this.state.insuree.photo.date || !this.state.insuree.photo.officerId))
-      return false;
+    // if (!this.state.insuree.chfId) return false;
+    // if (!this.state.insuree.dob) return false;
+    // if (!this.state.insuree.gender || !this.state.insuree.gender?.code) return false;
+    // if (!!this.state.insuree.photo && (!this.state.insuree.photo.date || !this.state.insuree.photo.officerId))
+    //   return false;
     return true;
   };
 
@@ -136,6 +137,7 @@ class InsureeForm extends Component {
       save,
     } = this.props;
     const { insuree } = this.state;
+    console.log('insuree ', insuree)
     if (!rights.includes(RIGHT_INSUREE)) return null;
     let actions = [
       {
@@ -164,7 +166,7 @@ class InsureeForm extends Component {
               edited={this.state.insuree}
               reset={this.state.reset}
               back={this.back}
-              add={!!add && !this.state.newInsuree ? this._add : null}
+              add={ this._add}
               readOnly={readOnly || !!insuree.validityTo}
               actions={actions}
               HeadPanel={!!insuree ? insuree[`email`] == "newhivuser_XM7dw70J0M3N@gmail.com" ? FamilyVihDisplayPanel : FamilyDisplayPanel : FamilyVihDisplayPanel}
