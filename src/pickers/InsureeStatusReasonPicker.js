@@ -5,7 +5,6 @@ import _debounce from "lodash/debounce";
 const InsureeStatusReasonPicker = (props) => {
   const { onChange, readOnly, required, value, filterOptions, filterSelectedOptions, multiple, extraFragment, edited } =
     props;
-console.log("props = ", props)
   const modulesManager = useModulesManager();
   const { formatMessage } = useTranslations("insuree", modulesManager);
   const [variables, setVariables] = useState({});
@@ -29,7 +28,6 @@ console.log("props = ", props)
     variables,
     { skip: true },
   );
-  console.log("data ", data, error, isLoading)
   return (
     <Autocomplete
       multiple={multiple}

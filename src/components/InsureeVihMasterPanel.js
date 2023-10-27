@@ -11,7 +11,7 @@ import {
   Contributions,
   withModulesManager,
 } from "@openimis/fe-core";
-import { RIGHT_VIH } from "../constants";
+import { RIGHT_VIH , INSUREE_ACTIVE_STRING} from "../constants";
 
 const styles = (theme) => ({
   paper: theme.paper.paper,
@@ -35,9 +35,11 @@ class InsureeVihMasterPanel extends FormPanel {
       title = "Insuree.title",
       titleParams = { label: "" },
       readOnly = true,
+      modulesManager,
       actions,
     } = this.props;
-
+    const isInsureeStatusRequired = modulesManager.getConf("fe-insuree", "insureeForm.isInsureeStatusRequired", false);
+    console.log("edited ", edited)
     return (
       <Grid container>
         <Grid item xs={12}>
@@ -89,7 +91,7 @@ class InsureeVihMasterPanel extends FormPanel {
                   onChange={(v) => this.updateAttribute("chfId", v)}
                 />
               </Grid>
-              <Grid item xs={8}>
+              <Grid item xs={12}>
                 <Grid container>
                   <Grid item xs={3} className={classes.item}>
                     <PublishedComponent
@@ -113,7 +115,47 @@ class InsureeVihMasterPanel extends FormPanel {
                       onChange={(v) => this.updateAttribute("gender", { code: v })}
                     />
                   </Grid>
-
+                  <Grid item xs={3} className={classes.item}>
+                    <PublishedComponent
+                      pubRef="insuree.InsureeStatusPicker"
+                      label="Insuree.status"
+                      value={edited?.status}
+                      module="insuree"
+                      readOnly={readOnly}
+                      onChange={(v) => {
+                        this.updateAttributes({ "status": v, "statusReason": null });
+                      }}
+                      required={isInsureeStatusRequired}
+                    />
+                  </Grid>
+                  {!!edited?.status && edited?.status !== INSUREE_ACTIVE_STRING && (
+                    <Grid item xs={3} className={classes.item}>
+                      <PublishedComponent
+                        pubRef="core.DatePicker"
+                        label="Insuree.statusDate"
+                        value={edited?.statusDate}
+                        module="insuree"
+                        readOnly={readOnly}
+                        required={true}
+                        onChange={(v) => this.updateAttribute("statusDate", v)}
+                      />
+                    </Grid>
+                  )}
+                  {!!edited?.status && edited?.status !== INSUREE_ACTIVE_STRING && (
+                    <Grid item xs={3} className={classes.item}>
+                      <PublishedComponent
+                        pubRef="insuree.InsureeStatusReasonPicker"
+                        label="Insuree.statusReason"
+                        value={edited?.statusReason}
+                        module="insuree"
+                        readOnly={readOnly}
+                        withNull={false}
+                        statusType={edited.status}
+                        required={true}
+                        onChange={(v) => this.updateAttribute("statusReason", v)}
+                      />
+                    </Grid>
+                  )}
                 </Grid>
               </Grid>
               <Contributions
