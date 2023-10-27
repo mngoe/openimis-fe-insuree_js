@@ -10,6 +10,10 @@ const INSUREE_MAIN_MENU_CONTRIBUTION_KEY = "insuree.MainMenu";
 class InsureeMainMenu extends Component {
   render() {
     const { modulesManager, rights } = this.props;
+    let contribs =  this.props.modulesManager
+    .getContribs(INSUREE_MAIN_MENU_CONTRIBUTION_KEY)
+    .filter((c) => !c.filter || c.filter(rights))
+    contribs.splice(contribs.length -1)
     let entries = [];
     if (rights.includes(RIGHT_FAMILY_ADD)) {
       entries.push({
@@ -34,10 +38,8 @@ class InsureeMainMenu extends Component {
       });
     }
     entries.push(
-      ...this.props.modulesManager
-        .getContribs(INSUREE_MAIN_MENU_CONTRIBUTION_KEY)
-        .filter((c) => !c.filter || c.filter(rights)),
-    );
+     ...contribs
+      );
 
     if (!entries.length) return null;
     return (
