@@ -104,7 +104,7 @@ class InsureeForm extends Component {
     if (!this.state.insuree.gender || !this.state.insuree.gender?.code) return false;
     if (!!this.state.insuree.photo && (!this.state.insuree.photo.date || !this.state.insuree.photo.officerId)) return false;
     if(!this.state.insuree.status) return false;
-    if((!!this.state.insuree.status && !this.state.insuree.statusDate) || (!!this.state.insuree.status && !this.state.insuree.statusReason)  ) return false;
+    // if((!!this.state.insuree.status && !this.state.insuree.statusDate) || (!!this.state.insuree.status && !this.state.insuree.statusReason)  ) return false;
     return true;
   };
 
