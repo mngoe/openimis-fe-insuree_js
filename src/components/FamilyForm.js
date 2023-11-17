@@ -154,6 +154,7 @@ class FamilyForm extends Component {
       if (attachments.length && attachments.filter((a) => !this.canSaveDetail(a)).length) {
         return false;
       }
+      if (!attachments.length) return false;
     }
     if (
       !!this.state.family.headInsuree.photo &&
