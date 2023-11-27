@@ -11,6 +11,15 @@ import {
 
 const FAMILY_HEAD_PROJECTION = "headInsuree{id,uuid,chfId,lastName,otherNames,email,phone,dob,gender{code}}";
 
+const USER_SUMMARY_PROJECTION = [
+  "id",
+  "username",
+  "officer{id,dob,phone,lastName,otherNames,email}",
+  "iUser{id,phone,lastName,otherNames,email,roles{id,name}}",
+  "claimAdmin{id,phone,lastName,otherNames,emailId,dob}",
+  "clientMutationId",
+];
+
 const FAMILY_FULL_PROJECTION = (mm) => [
   "id",
   "uuid",
@@ -269,7 +278,7 @@ export function formatInsureeGQL(mm, insuree) {
 export function formatFamilyGQL(mm, family) {
   let headInsuree = family.headInsuree;
   headInsuree["head"] = true;
-  return `  
+  return `
     ${family.uuid !== undefined && family.uuid !== null ? `uuid: "${family.uuid}"` : ""}
     headInsuree: {${formatInsureeGQL(mm, headInsuree)}}
     ${!!family.location ? `locationId: ${decodeId(family.location.id)}` : ""}
@@ -408,5 +417,98 @@ export function changeFamily(mm, family_uuid, insuree, cancelPolicies, clientMut
       familyUuid: family_uuid,
       insureeUuid: insuree.uuid,
     },
+  );
+}
+
+export function fetchUsersSummaries(mm, filters) {
+  const payload = formatPageQueryWithCount("users", filters, USER_SUMMARY_PROJECTION);
+  return graphql(payload, "ADMIN_USERS_SUMMARIES");
+}
+export function fetchUser(mm, userId, clientMutationId) {
+  const filters = [];
+  if (userId) {
+    filters.push(`id: "${userId}"`);
+  } else if (clientMutationId) {
+    filters.push(`clientMutationId: "${clientMutationId}"`);
+  }
+  return graphql(
+    `
+    {
+      users(${filters.join(" ")}) {
+        pageInfo { hasNextPage, hasPreviousPage, startCursor, endCursor}
+        edges {
+          node {
+            clientMutationId
+            id
+            username
+            officer {
+              id
+              hasLogin
+              phone
+              dob
+              lastName
+              otherNames
+              address
+              substitutionOfficer { id lastName otherNames code }
+              worksTo
+              officerVillages {
+                id
+                location {
+                  id
+                  name
+                  code
+                  uuid
+                  parent {
+                    id
+                    name
+                    code
+                    uuid
+                  }
+                }
+              }
+              location {
+                id
+                name
+                uuid
+                code
+                parent {
+                  id
+                  name
+                  uuid
+                  code
+                }
+              }
+            }
+            iUser {
+              id
+              phone
+              languageId
+              lastName
+              otherNames
+              roles { id name }
+              programSet { edges{node{id idProgram nameProgram validityDateFrom}}}
+              healthFacility ${mm.getProjection("location.HealthFacilityPicker.projection")}
+              validityFrom
+              validityTo
+              email
+              districts: userdistrictSet { location { id name code uuid parent { id code uuid name }}}
+            }
+            claimAdmin{
+              id
+              hasLogin
+              emailId
+              phone
+              dob
+              lastName
+              otherNames
+              healthFacility ${mm.getProjection("location.HealthFacilityPicker.projection")}
+
+            }
+          }
+        }
+      }
+    }
+  `,
+    "ADMIN_USER_OVERVIEW",
   );
 }
