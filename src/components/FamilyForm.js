@@ -19,7 +19,7 @@ import {
 import { RIGHT_FAMILY, RIGHT_FAMILY_EDIT } from "../constants";
 import FamilyMasterPanel from "./FamilyMasterPanel";
 
-import { fetchFamily, newFamily, createFamily, fetchFamilyMutation } from "../actions";
+import { fetchFamily, newFamily, createFamily, fetchFamilyMutation, fetchUser } from "../actions";
 import FamilyInsureesOverview from "./FamilyInsureesOverview";
 import HeadInsureeMasterPanel from "./HeadInsureeMasterPanel";
 
@@ -50,6 +50,9 @@ class FamilyForm extends Component {
   }
 
   componentDidMount() {
+    if(this.props.userId){
+      this.props.fetchUser(this.props.modulesManager, this.props.userId);
+    }
     if (this.props.family_uuid) {
       this.setState(
         (state, props) => ({ family_uuid: props.family_uuid }),
@@ -133,6 +136,10 @@ class FamilyForm extends Component {
     )
       return false;
     if (!this.state.family.headInsuree.gender || !this.state.family.headInsuree.gender?.code) return false;
+    if(!this.props.user) return false
+    if(!this.props.user.location) return false
+    if(this.props.user && this.props.user.location && this.props.user.location.parent.name != "Est")
+      return false
     return true;
   };
 
@@ -243,11 +250,14 @@ const mapStateToProps = (state, props) => ({
   insuree: state.insuree.insuree,
   confirmed: state.core.confirmed,
   state: state,
+  userId: state.core.user.id,
+  user: state.admin.user,
+  admin: state.core.user
 });
 
 const mapDispatchToProps = (dispatch) => {
   return bindActionCreators(
-    { fetchFamilyMutation, fetchFamily, newFamily, createFamily, journalize, coreConfirm },
+    { fetchUser, fetchFamilyMutation, fetchFamily, newFamily, createFamily, journalize, coreConfirm },
     dispatch,
   );
 };
