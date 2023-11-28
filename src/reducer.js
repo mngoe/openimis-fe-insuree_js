@@ -416,6 +416,15 @@ function reducer(
         fetchingIdentificationTypes: false,
         errorIdentificationTypes: formatServerError(action.payload),
       };
+    case "LOCATION_USER_HEALTH_FACILITY_FULL_PATH_RESP":
+      var userHealthFacilityFullPath = parseData(action.payload.data.healthFacilities)[0];
+      return {
+        ...state,
+        userHealthFacilityFullPath,
+        userHealthFacilityLocationStr: userHealthFacilityFullPath?.location
+          ? userHealthFacilityFullPath.location
+          : null,
+      };
     case "INSUREE_MUTATION_REQ":
       return dispatchMutationReq(state, action);
     case "INSUREE_MUTATION_ERR":
