@@ -19,7 +19,7 @@ import {
 import { RIGHT_FAMILY, RIGHT_FAMILY_EDIT } from "../constants";
 import FamilyMasterPanel from "./FamilyMasterPanel";
 
-import { fetchFamily, newFamily, createFamily, fetchFamilyMutation } from "../actions";
+import { fetchFamily, newFamily, createFamily, fetchFamilyMutation,  fetchUserHealthFacilityFullPath } from "../actions";
 import FamilyInsureesOverview from "./FamilyInsureesOverview";
 import HeadInsureeMasterPanel from "./HeadInsureeMasterPanel";
 
@@ -50,6 +50,10 @@ class FamilyForm extends Component {
   }
 
   componentDidMount() {
+
+    if (this.props.admin.health_facility_id && !this.props.userHealthFacilityFullPath) {
+      this.props.fetchUserHealthFacilityFullPath(this.props.modulesManager, this.props.admin.health_facility_id);
+    }
     if (this.props.family_uuid) {
       this.setState(
         (state, props) => ({ family_uuid: props.family_uuid }),
@@ -133,6 +137,10 @@ class FamilyForm extends Component {
     )
       return false;
     if (!this.state.family.headInsuree.gender || !this.state.family.headInsuree.gender?.code) return false;
+    if(!this.props.userHealthFacilityFullPath) return false
+    if(!this.props.userHealthFacilityFullPath.location) return false
+    if(this.props.userHealthFacilityFullPath && this.props.userHealthFacilityFullPath.location && this.props.userHealthFacilityFullPath.location.parent.name != "Est")
+      return false
     return true;
   };
 
@@ -243,11 +251,13 @@ const mapStateToProps = (state, props) => ({
   insuree: state.insuree.insuree,
   confirmed: state.core.confirmed,
   state: state,
+  admin: state.core.user,
+  userHealthFacilityFullPath: state.loc.userHealthFacilityFullPath,
 });
 
 const mapDispatchToProps = (dispatch) => {
   return bindActionCreators(
-    { fetchFamilyMutation, fetchFamily, newFamily, createFamily, journalize, coreConfirm },
+    { fetchFamilyMutation, fetchFamily, newFamily, createFamily, fetchUserHealthFacilityFullPath, journalize, coreConfirm },
     dispatch,
   );
 };

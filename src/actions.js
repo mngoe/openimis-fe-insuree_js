@@ -11,6 +11,15 @@ import {
 
 const FAMILY_HEAD_PROJECTION = "headInsuree{id,uuid,chfId,lastName,otherNames,email,phone,dob,gender{code}}";
 
+const USER_SUMMARY_PROJECTION = [
+  "id",
+  "username",
+  "officer{id,dob,phone,lastName,otherNames,email}",
+  "iUser{id,phone,lastName,otherNames,email,roles{id,name}}",
+  "claimAdmin{id,phone,lastName,otherNames,emailId,dob}",
+  "clientMutationId",
+];
+
 const FAMILY_FULL_PROJECTION = (mm) => [
   "id",
   "uuid",
@@ -269,7 +278,7 @@ export function formatInsureeGQL(mm, insuree) {
 export function formatFamilyGQL(mm, family) {
   let headInsuree = family.headInsuree;
   headInsuree["head"] = true;
-  return `  
+  return `
     ${family.uuid !== undefined && family.uuid !== null ? `uuid: "${family.uuid}"` : ""}
     headInsuree: {${formatInsureeGQL(mm, headInsuree)}}
     ${!!family.location ? `locationId: ${decodeId(family.location.id)}` : ""}
@@ -409,4 +418,8 @@ export function changeFamily(mm, family_uuid, insuree, cancelPolicies, clientMut
       insureeUuid: insuree.uuid,
     },
   );
+}
+
+export function fetchUserHealthFacilityFullPath(mm, id) {
+  return healthFacilityFullPath("LOCATION_USER_HEALTH_FACILITY_FULL_PATH", mm, id);
 }
