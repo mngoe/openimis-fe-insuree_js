@@ -18,7 +18,7 @@ import FamilyDisplayPanel from "./FamilyDisplayPanel";
 import InsureeMasterPanel from "../components/InsureeMasterPanel";
 import InsureeVihMasterPanel from "./InsureeVihMasterPanel";
 
-import { fetchInsureeFull, fetchFamily } from "../actions";
+import { fetchInsureeFull, fetchFamily, fetchUserHealthFacilityFullPath } from "../actions";
 import { insureeLabel } from "../utils/utils";
 import FamilyVihDisplayPanel from "./FamilyVihDisplayPanel";
 
@@ -43,6 +43,9 @@ class InsureeForm extends Component {
   }
 
   componentDidMount() {
+    if (this.props.admin.health_facility_id && !this.props.userHealthFacilityFullPath) {
+      this.props.fetchUserHealthFacilityFullPath(this.props.modulesManager, this.props.admin.health_facility_id);
+    }
     if (!!this.props.insuree_uuid) {
       this.setState(
         (state, props) => ({ insuree_uuid: props.insuree_uuid }),
@@ -104,6 +107,10 @@ class InsureeForm extends Component {
     if (!this.state.insuree.gender || !this.state.insuree.gender?.code) return false;
     if (!!this.state.insuree.photo && (!this.state.insuree.photo.date || !this.state.insuree.photo.officerId))
       return false;
+    if (!this.props.userHealthFacilityFullPath) return false
+    if (!this.props.userHealthFacilityFullPath.location) return false
+    if (this.props.userHealthFacilityFullPath && this.props.userHealthFacilityFullPath.location && this.props.userHealthFacilityFullPath.location.parent.name != "Est")
+      return false
     return true;
   };
 
@@ -197,11 +204,13 @@ const mapStateToProps = (state, props) => ({
   family: state.insuree.family,
   submittingMutation: state.insuree.submittingMutation,
   mutation: state.insuree.mutation,
+  admin: state.core.user,
+  userHealthFacilityFullPath: state.loc.userHealthFacilityFullPath,
 });
 
 export default withHistory(
   withModulesManager(
-    connect(mapStateToProps, { fetchInsureeFull, fetchFamily, journalize })(
+    connect(mapStateToProps, { fetchUserHealthFacilityFullPath,fetchInsureeFull, fetchFamily, journalize })(
       injectIntl(withTheme(withStyles(styles)(InsureeForm))),
     ),
   ),
