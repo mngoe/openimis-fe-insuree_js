@@ -248,7 +248,6 @@ class InsureeSearcher extends Component {
     } = this.props;
 
     let count = insureesPageInfo.totalCount;
-
     return (
       <Fragment>
         <EnquiryDialog open={this.state.open} chfid={this.state.chfid} onClose={this.handleClose} />
@@ -277,6 +276,7 @@ class InsureeSearcher extends Component {
           rowLocked={this.rowLocked}
           onDoubleClick={(i) => !i.clientMutationId && onDoubleClick(i)}
           reset={this.state.reset}
+          canFetch = {false}
         />
       </Fragment>
     );
