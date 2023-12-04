@@ -226,6 +226,7 @@ class FamilySearcher extends Component {
           reset={this.state.reset}
           actions={[]}
           actionsContributionKey={actionsContributionKey}
+          canFetch = {false}
         />
       </Fragment>
     );
