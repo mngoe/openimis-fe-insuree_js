@@ -39,7 +39,7 @@ class FamilyFilter extends Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    document.addEventListener('keydown', this.debouncedHandleEnter);
+    document.addEventListener('keydown', this.props.handleEnter);
     if (
       prevProps.filters["showHistory"] !== this.props.filters["showHistory"] &&
       !!this.props.filters["showHistory"] &&
@@ -53,10 +53,6 @@ class FamilyFilter extends Component {
     this.props.onChangeFilters,
     this.props.modulesManager.getConf("fe-insuree", "debounceTime", 800),
   );
-  debouncedHandleEnter = _debounce(
-    this.props.handleEnter,
-    this.props.modulesManager.getConf("fe-insuree", "debounceTime", 800)
-  )
 
   _filterValue = (k) => {
     const { filters } = this.props;
