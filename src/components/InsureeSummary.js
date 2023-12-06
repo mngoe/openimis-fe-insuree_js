@@ -26,6 +26,7 @@ const InsureeSummary = (props) => {
   const classes = useStyles();
   const hasAvatarContribution = modulesManager.getContribs(INSUREE_SUMMARY_AVATAR_CONTRIBUTION_KEY).length > 0;
   const hasExtContributions = modulesManager.getContribs(INSUREE_SUMMARY_EXT_CONTRIBUTION_KEY).length > 0;
+  console.log('insuree ', insuree)
   return (
     <Grid container className={className}>
       {hasAvatarContribution && (
@@ -48,7 +49,7 @@ const InsureeSummary = (props) => {
             <div>
               <Box>
                 <Typography className={classes.rawValue} variant="h6">
-                  {insuree && (
+                  {(insuree && insuree.email != "newhivuser_XM7dw70J0M3N@gmail.com" ?  (
                     <Fragment>
                       <ControlledField
                         module="insuree"
@@ -57,7 +58,7 @@ const InsureeSummary = (props) => {
                       />
                       <ControlledField module="insuree" id="InsureeSummary.lastName" field={insuree.lastName} />
                     </Fragment>
-                  )}
+                  ) : null)}
                 </Typography>
               </Box>
               <Box>
