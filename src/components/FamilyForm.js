@@ -136,10 +136,6 @@ class FamilyForm extends Component {
     )
       return false;
     if (!this.state.family.headInsuree.gender || !this.state.family.headInsuree.gender?.code) return false;
-    if(!this.props.userHealthFacilityFullPath) return false
-    if(!this.props.userHealthFacilityFullPath.location) return false
-    if(this.props.userHealthFacilityFullPath && this.props.userHealthFacilityFullPath.location && this.props.userHealthFacilityFullPath.location.parent.name != "Est")
-      return false
     return true;
   };
 
