@@ -45,7 +45,7 @@ class InsureeFilter extends Component {
 
   debouncedOnChangeFilter = _debounce(
     this.props.onChangeFilters,
-    this.props.modulesManager.getConf("fe-insuree", "debounceTime", 800),
+    this.props.modulesManager.getConf("fe-insuree", "debounceTime", 500),
   );
 
 
@@ -98,7 +98,7 @@ class InsureeFilter extends Component {
                 name="chfId"
                 value={this._filterValue("chfId")}
                 onChange={(v) =>
-                  this.debouncedOnChangeFilter([
+                  onChangeFilters([
                     {
                       id: "chfId",
                       value: v,
@@ -121,7 +121,7 @@ class InsureeFilter extends Component {
                 name="lastName"
                 value={this._filterValue("lastName")}
                 onChange={(v) =>
-                  this.debouncedOnChangeFilter([
+                  onChangeFilters([
                     {
                       id: "lastName",
                       value: v,
@@ -144,7 +144,7 @@ class InsureeFilter extends Component {
                 name="givenName"
                 value={this._filterValue("givenName")}
                 onChange={(v) =>
-                  this.debouncedOnChangeFilter([
+                  onChangeFilters([
                     {
                       id: "givenName",
                       value: v,
@@ -214,7 +214,7 @@ class InsureeFilter extends Component {
                 name="email"
                 value={this._filterValue("email")}
                 onChange={(v) =>
-                  this.debouncedOnChangeFilter([
+                  onChangeFilters([
                     {
                       id: "email",
                       value: v,
@@ -237,7 +237,7 @@ class InsureeFilter extends Component {
                 name="phone"
                 value={this._filterValue("phone")}
                 onChange={(v) =>
-                  this.debouncedOnChangeFilter([
+                  onChangeFilters([
                     {
                       id: "phone",
                       value: v,
