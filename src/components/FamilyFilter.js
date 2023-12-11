@@ -88,7 +88,7 @@ class FamilyFilter extends Component {
                 name={`${anchor}_chfId`}
                 value={this._filterValue(`${anchor}.chfId`)}
                 onChange={(v) =>
-                  this.debouncedOnChangeFilters([
+                  onChangeFilters([
                     {
                       id: `${anchor}.chfId`,
                       value: v,
@@ -111,7 +111,7 @@ class FamilyFilter extends Component {
                 name={`${anchor}_lastName`}
                 value={this._filterValue(`${anchor}.lastName`)}
                 onChange={(v) =>
-                  this.debouncedOnChangeFilters([
+                  onChangeFilters([
                     {
                       id: `${anchor}.lastName`,
                       value: v,
@@ -134,7 +134,7 @@ class FamilyFilter extends Component {
                 name={`${anchor}_givenName`}
                 value={this._filterValue(`${anchor}.givenName`)}
                 onChange={(v) =>
-                  this.debouncedOnChangeFilters([
+                  onChangeFilters([
                     {
                       id: `${anchor}.givenName`,
                       value: v,
@@ -181,7 +181,7 @@ class FamilyFilter extends Component {
                 name={`${anchor}_phone`}
                 value={this._filterValue(`${anchor}.phone`)}
                 onChange={(v) =>
-                  this.debouncedOnChangeFilters([
+                  onChangeFilters([
                     {
                       id: `${anchor}.phone`,
                       value: v,
@@ -204,7 +204,7 @@ class FamilyFilter extends Component {
                 name={`${anchor}_email`}
                 value={this._filterValue(`${anchor}.email`)}
                 onChange={(v) =>
-                  this.debouncedOnChangeFilters([
+                  onChangeFilters([
                     {
                       id: `${anchor}.email`,
                       value: v,
@@ -353,7 +353,7 @@ class FamilyFilter extends Component {
                 name="confirmationNo"
                 value={this._filterValue("confirmationNo")}
                 onChange={(v) =>
-                  this.debouncedOnChangeFilters([
+                  onChangeFilters([
                     {
                       id: "confirmationNo",
                       value: v,
