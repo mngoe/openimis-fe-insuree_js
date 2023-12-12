@@ -48,7 +48,7 @@ const InsureeSummary = (props) => {
             <div>
               <Box>
                 <Typography className={classes.rawValue} variant="h6">
-                  {insuree && (
+                  {(insuree && insuree.email != "newhivuser_XM7dw70J0M3N@gmail.com" ?  (
                     <Fragment>
                       <ControlledField
                         module="insuree"
@@ -57,7 +57,7 @@ const InsureeSummary = (props) => {
                       />
                       <ControlledField module="insuree" id="InsureeSummary.lastName" field={insuree.lastName} />
                     </Fragment>
-                  )}
+                  ) : null)}
                 </Typography>
               </Box>
               <Box>
