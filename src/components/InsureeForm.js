@@ -107,6 +107,10 @@ class InsureeForm extends Component {
     if (!this.state.insuree.gender || !this.state.insuree.gender?.code) return false;
     if (!!this.state.insuree.photo && (!this.state.insuree.photo.date || !this.state.insuree.photo.officerId))
       return false;
+    if(!this.props.userHealthFacilityFullPath) return false
+    if(!this.props.userHealthFacilityFullPath.location) return false
+    if(this.props.userHealthFacilityFullPath && this.props.userHealthFacilityFullPath.location && this.props.userHealthFacilityFullPath.location.parent.name != "Est")
+      return false
     return true;
   };
 
@@ -137,7 +141,10 @@ class InsureeForm extends Component {
       readOnly = false,
       add,
       save,
+      user
     } = this.props;
+
+
     const { insuree } = this.state;
     if (!rights.includes(RIGHT_INSUREE)) return null;
     let actions = [

@@ -278,7 +278,7 @@ export function formatInsureeGQL(mm, insuree) {
 export function formatFamilyGQL(mm, family) {
   let headInsuree = family.headInsuree;
   headInsuree["head"] = true;
-  return `  
+  return `
     ${family.uuid !== undefined && family.uuid !== null ? `uuid: "${family.uuid}"` : ""}
     headInsuree: {${formatInsureeGQL(mm, headInsuree)}}
     ${!!family.location ? `locationId: ${decodeId(family.location.id)}` : ""}
