@@ -137,7 +137,10 @@ class InsureeForm extends Component {
       readOnly = false,
       add,
       save,
+      user
     } = this.props;
+
+
     const { insuree } = this.state;
     if (!rights.includes(RIGHT_INSUREE)) return null;
     let actions = [
