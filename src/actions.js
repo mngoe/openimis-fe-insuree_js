@@ -35,7 +35,7 @@ const FAMILY_FULL_PROJECTION = (mm) => [
   "clientMutationId",
 ];
 
-export const FAMILY_PICKER_PROJECTION = ["id", "uuid", "headInsuree{id chfId uuid lastName otherNames email}"];
+export const FAMILY_PICKER_PROJECTION = ["id", "uuid", "headInsuree{id chfId uuid lastName otherNames email gender{code}}"];
 
 const INSUREE_FULL_PROJECTION = (mm) => [
   "id",
