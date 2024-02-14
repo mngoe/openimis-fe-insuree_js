@@ -216,7 +216,7 @@ class FamilySearcher extends Component {
           fetch={this.fetch}
           rowIdentifier={this.rowIdentifier}
           filtersToQueryParams={this.filtersToQueryParams}
-          defaultOrderBy="-validityFrom"
+          defaultOrderBy="-id"
           headers={this.headers}
           itemFormatters={this.itemFormatters}
           sorts={this.sorts}
