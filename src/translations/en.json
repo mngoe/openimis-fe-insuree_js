@@ -255,5 +255,18 @@
   "insuree.FamilyMembersTable.InsuranceNo": "Insurance No.",
   "insuree.FamilyMembersTable.memberName": "Family Member",
   "insuree.FamilyMembersTable.phone": "Phone",
-  "insuree.FamilyMembersTable.noMembers": "Family not registered."
+  "insuree.FamilyMembersTable.noMembers": "Family not registered.",
+  "insuree.familySummaries.includeHeadOfFamily": "Include Head of Family",
+  "insuree.familySummaries.RemoveSubFamily": "Remove Subfamily",
+  "insuree.Insuree.otherHousehold": "Other Household",
+  "insuree.Insuree.professionalSituation": "Professional situation/ Employer",
+  "insuree.PaymentMethodPicker": "Payment Method",
+  "insuree.PaymentMethodPicker.MO": "Mobile Money",
+  "insuree.PaymentMethodPicker.PB": "Bank Debit",
+  "insuree.PaymentMethodPicker.TP": "Third-party payment",
+  "insuree.Insuree.accountDetails": "Account details",
+  "insuree.Payment.none": "None",
+  "insuree.InsureeMaritalStatus.P": "Polygamy",
+  "insuree.IncomeLevel.label": "Income level",
+  "insuree.Family.families": "{count} Sub Familie(s)"
 }

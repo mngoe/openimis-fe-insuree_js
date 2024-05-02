@@ -12,35 +12,37 @@ import {
 import { INSUREE_ACTIVE_STRING } from "./constants";
 
 //NOTE: Fetching all INSUREE_FULL_PROJECTION fields except family.
-const FAMILY_HEAD_PROJECTION = (mm) => [
-  "id",
-  "uuid",
-  "chfId",
-  "lastName,marital",
-  "otherNames",
-  "dob",
-  "age",
-  "validityFrom",
-  "validityTo",
-  `photo{id,uuid,date,folder,filename,officerId,photo}`,
-  "gender{code, gender}",
-  "education{id}",
-  "profession{id}",
-  "marital",
-  "cardIssued",
-  "currentVillage" + mm.getProjection("location.Location.FlatProjection"),
-  "currentAddress",
-  "typeOfId{code}",
-  "passport",
-  "relationship{id}",
-  "head",
-  "status",
-  "statusDate",
-  "statusReason{code,insureeStatusReason}",
-  "email",
-  "phone",
-  "healthFacility" + mm.getProjection("location.HealthFacilityPicker.projection"),
-];
+// const FAMILY_HEAD_PROJECTION = (mm) => [
+//   "id",
+//   "uuid",
+//   "chfId",
+//   "lastName,marital",
+//   "otherNames",
+//   "dob",
+//   "age",
+//   "validityFrom",
+//   "validityTo",
+//   `photo{id,uuid,date,folder,filename,officerId,photo}`,
+//   "gender{code, gender}",
+//   "education{id}",
+//   "profession{id}",
+//   "marital",
+//   "cardIssued",
+//   "currentVillage" + mm.getProjection("location.Location.FlatProjection"),
+//   "currentAddress",
+//   "typeOfId{code}",
+//   "passport",
+//   "relationship{id}",
+//   "head",
+//   "status",
+//   "statusDate",
+//   "statusReason{code,insureeStatusReason}",
+//   "email",
+//   "phone",
+//   "healthFacility" + mm.getProjection("location.HealthFacilityPicker.projection"),
+// ];
+
+const FAMILY_HEAD_PROJECTION = "headInsuree{id,uuid,chfId,lastName,marital,otherNames,email,phone,dob,gender{code}}";
 export const baseApiUrl =  "/api";
 
 const FAMILY_FULL_PROJECTION = (mm) => [
@@ -48,16 +50,17 @@ const FAMILY_FULL_PROJECTION = (mm) => [
   "uuid",
   "poverty",
   "confirmationNo",
-  "confirmationType{code, isConfirmationNumberRequired}",
+  "confirmationType{code}",
   "familyType{code}",
   "address",
   "parent{id}",
   "validityFrom",
   "validityTo",
-  `headInsuree{${FAMILY_HEAD_PROJECTION(mm).join(",")}}`,
+  FAMILY_HEAD_PROJECTION,
   "location" + mm.getProjection("location.Location.FlatProjection"),
   "clientMutationId",
 ];
+
 
 export const FAMILY_PICKER_PROJECTION = ["id", "uuid", "headInsuree{id chfId uuid lastName otherNames}"];
 
@@ -146,6 +149,11 @@ export function clearInsuree() {
     dispatch({ type: "INSUREE_INSUREE_CLEAR" });
   };
 }
+export function clearSubFamily() {
+  return (dispatch) => {
+    dispatch({ type: "INSUREE_SUB_FAMILY_CLEAR" });
+  };
+}
 
 export function fetchFamilySummaries(mm, filters) {
   let projections = [
@@ -184,10 +192,8 @@ export function fetchSubFamily(mm, filters) {
     "location" + mm.getProjection("location.Location.FlatProjection"),
     "clientMutationId",] ;
   const payload = formatPageQueryWithCount("families", filters, projections);
-  console.log("subfamily ", payload)
   return graphql(payload, "INSUREE_SUB_FAMILY");
 }
-
 export function checkCanAddInsuree(family) {
   let filters = [`familyId:${decodeId(family.id)}`];
   const payload = formatQuery("canAddInsuree", filters, null);
