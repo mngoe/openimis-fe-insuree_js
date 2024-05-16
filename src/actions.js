@@ -215,6 +215,17 @@ export function fetchFamilyMutation(mm, clientMutationId) {
   return graphql(payload, "INSUREE_INSUREE");
 }
 
+export function print(selection) {
+  return async (dispatch) => {
+    try {
+      const response = window.open('../../api/report/carte_amg/pdf/?insureeids=' + selection, "_blank")
+      return response;
+    } catch (err) {
+      console.error(err);
+    }
+  }
+}
+
 export function fetchInsureeMutation(mm, clientMutationId) {
   let payload = formatPageQuery(
     "mutationLogs",

@@ -5,6 +5,7 @@ import { injectIntl } from "react-intl";
 import { withTheme, withStyles } from "@material-ui/core/styles";
 import { Fab } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
+import PrintIcon from "@material-ui/icons/ListAlt";
 import {
   historyPush,
   withModulesManager,
@@ -12,9 +13,10 @@ import {
   withTooltip,
   formatMessage,
   clearCurrentPaginationPage,
+  decodeId,
 } from "@openimis/fe-core";
 import InsureeSearcher from "../components/InsureeSearcher";
-
+import { print } from "../actions";
 import { RIGHT_INSUREE_ADD } from "../constants";
 
 const styles = (theme) => ({
@@ -30,6 +32,11 @@ class InsureesPage extends Component {
   onAdd = () => {
     historyPush(this.props.modulesManager, this.props.history, "insuree.route.insuree");
   };
+  printSelected = (selection) => {
+    this.props.print(selection.map((i) => decodeId(i.id)));
+  };
+  canPrintSelected = (selection) =>
+  !!selection && selection.length;
 
   componentDidMount = () => {
     const moduleName = "insuree";
@@ -48,9 +55,16 @@ class InsureesPage extends Component {
 
   render() {
     const { intl, classes, rights } = this.props;
+    var actions = [];
+    actions.push({
+      label: "insureeSummaries.printSelected",
+      action: this.printSelected,
+      enabled: this.canPrintSelected,
+      icon: <PrintIcon />,
+    });
     return (
       <div className={classes.page}>
-        <InsureeSearcher cacheFiltersKey="insureeInsureesPageFiltersCache" onDoubleClick={this.onDoubleClick} />
+        <InsureeSearcher cacheFiltersKey="insureeInsureesPageFiltersCache" onDoubleClick={this.onDoubleClick} actions={actions} />
         {rights.includes(RIGHT_INSUREE_ADD) &&
           withTooltip(
             <div className={classes.fab}>
@@ -70,7 +84,7 @@ const mapStateToProps = (state) => ({
   module: state.core?.savedPagination?.module,
 });
 
-const mapDispatchToProps = (dispatch) => bindActionCreators({ clearCurrentPaginationPage }, dispatch);
+const mapDispatchToProps = (dispatch) => bindActionCreators({ clearCurrentPaginationPage, print }, dispatch);
 
 export default injectIntl(
   withModulesManager(

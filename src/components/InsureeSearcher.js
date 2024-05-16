@@ -25,6 +25,7 @@ import {
   Searcher,
   PublishedComponent,
   downloadExport,
+  decodeId
 } from "@openimis/fe-core";
 import EnquiryDialog from "./EnquiryDialog";
 import { RIGHT_INSUREE_DELETE, INSUREE_MARITAL_STATUS, DEFAULT } from "../constants";
@@ -282,6 +283,7 @@ class InsureeSearcher extends Component {
   rowDisabled = (selection, i) => !!i.validityTo;
   rowLocked = (selection, i) => !!i.clientMutationId;
 
+
   render() {
     const {
       intl,
@@ -295,6 +297,7 @@ class InsureeSearcher extends Component {
       onDoubleClick,
       errorWorkersExport,
       downloadWorkers,
+      actions,
     } = this.props;
     const { failedExport } = this.state;
 
@@ -327,6 +330,7 @@ class InsureeSearcher extends Component {
           sorts={this.sorts}
           rowDisabled={this.rowDisabled}
           rowLocked={this.rowLocked}
+          actions={actions}
           onDoubleClick={(i) => !i.clientMutationId && onDoubleClick(i)}
           reset={this.state.reset}
           exportable={this.isWorker}
@@ -339,6 +343,8 @@ class InsureeSearcher extends Component {
           }}
           exportFieldLabel={formatMessage(intl, "insuree", "workers.export")}
           chooseExportableColumns
+          withSelection="multiple"
+          
         />
         {failedExport && (
           <Dialog open={failedExport} fullWidth maxWidth="sm">
