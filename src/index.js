@@ -4,7 +4,7 @@ import InsureePage from "./pages/InsureePage";
 import FamilyPage from "./pages/FamilyPage";
 import { CappedItemServicePage } from "./pages/CappedItemServicePage";
 import InsureesPage from "./pages/InsureesPage";
-import { ProfilePage } from "./pages/ProfilePage";
+import ProfilePage from "./pages/ProfilePage";
 import FamilyOverviewPage from "./pages/FamilyOverviewPage";
 import Enquiry from "./components/Enquiry";
 import InsureeOfficerPicker from "./pickers/InsureeOfficerPicker";
@@ -16,10 +16,13 @@ import EducationPicker from "./pickers/EducationPicker";
 import ProfessionPicker from "./pickers/ProfessionPicker";
 import IdentificationTypePicker from "./pickers/IdentificationTypePicker";
 import InsureeMaritalStatusPicker from "./pickers/InsureeMaritalStatusPicker";
+import InsureeStatusPicker from "./pickers/InsureeStatusPicker";
+import InsureeStatusReasonPicker from "./pickers/InsureeStatusReasonPicker";
 import FamilyPovertyStatusPicker from "./pickers/FamilyPovertyStatusPicker";
 import ConfirmationTypePicker from "./pickers/ConfirmationTypePicker";
 import FamilyTypePicker from "./pickers/FamilyTypePicker";
 import PhotoStatusPicker from "./pickers/PhotoStatusPicker";
+import FamilyStatusPicker from "./pickers/FamilyStatusPicker";
 import RelationPicker from "./pickers/RelationPicker";
 import InsureeNumberInput from "./pickers/InsureeNumberInput";
 import InsureeAvatar from "./components/InsureeAvatar";
@@ -43,6 +46,7 @@ import InsureePendingEnrollmentReport from "./reports/InsureePendingEnrollmentRe
 const ROUTE_INSUREE_FAMILIES = "insuree/families";
 const ROUTE_INSUREE_FAMILY_OVERVIEW = "insuree/families/familyOverview";
 const ROUTE_INSUREE_FAMILY = "insuree/family";
+const ROUTE_INSUREE_PROFILE = "insuree/profile";
 const ROUTE_INSUREE_INSUREES = "insuree/insurees";
 const ROUTE_INSUREE_INSUREE = "insuree/insurees/insuree";
 
@@ -55,7 +59,7 @@ const DEFAULT_CONFIG = {
       component: InsureeMissingPhotoReport,
       isValid: (values) => true,
       getParams: (values) => {
-        const params = {}
+        const params = {};
         if (values.officer) {
           params.officerId = decodeId(values.officer.id);
         }
@@ -73,7 +77,7 @@ const DEFAULT_CONFIG = {
         dateFrom: values.dateFrom,
         dateTo: values.dateTo,
         officerId: decodeId(values.officer.id),
-        locationId: decodeId(values.location.id)
+        locationId: decodeId(values.location.id),
       }),
     },
     {
@@ -101,6 +105,8 @@ const DEFAULT_CONFIG = {
     { key: "insuree.InsureeOfficerPicker.projection", ref: ["id", "uuid", "code", "lastName", "otherNames"] },
     { key: "insuree.InsureePicker", ref: InsureePicker },
     { key: "insuree.InsureeChfIdPicker", ref: InsureeChfIdPicker },
+    { key: "insuree.InsureeStatusPicker", ref: InsureeStatusPicker },
+    { key: "insuree.InsureeStatusReasonPicker", ref: InsureeStatusReasonPicker },
     { key: "insuree.InsureePicker.projection", ref: INSUREE_PICKER_PROJECTION },
     { key: "insuree.InsureePicker.sort", ref: "insuree__last_name" },
     { key: "insuree.FamilyPicker", ref: FamilyPicker },
@@ -116,6 +122,7 @@ const DEFAULT_CONFIG = {
     { key: "insuree.ConfirmationTypePicker", ref: ConfirmationTypePicker },
     { key: "insuree.FamilyTypePicker", ref: FamilyTypePicker },
     { key: "insuree.PhotoStatusPicker", ref: PhotoStatusPicker },
+    { key: "insuree.FamilyStatusPicker", ref: FamilyStatusPicker },
     { key: "insuree.RelationPicker", ref: RelationPicker },
     { key: "insuree.InsureeNumberInput", ref: InsureeNumberInput },
 
@@ -124,6 +131,7 @@ const DEFAULT_CONFIG = {
     { key: "insuree.route.family", ref: ROUTE_INSUREE_FAMILY },
     { key: "insuree.route.insurees", ref: ROUTE_INSUREE_INSUREES },
     { key: "insuree.route.insuree", ref: ROUTE_INSUREE_INSUREE },
+    { key: "insuree.route.insureeProfile", ref: ROUTE_INSUREE_PROFILE },
 
     { key: "insuree.Avatar", ref: InsureeAvatar },
     { key: "insuree.Summary", ref: InsureeSummary },
@@ -140,7 +148,7 @@ const DEFAULT_CONFIG = {
     { path: ROUTE_INSUREE_INSUREES, component: InsureesPage },
     { path: ROUTE_INSUREE_INSUREE + "/:insuree_uuid?/:family_uuid?", component: InsureePage },
     { path: "insuree/cappedItemService", component: CappedItemServicePage },
-    { path: "insuree/profile", component: ProfilePage },
+    { path: ROUTE_INSUREE_PROFILE + "/:insuree_uuid", component: ProfilePage },
   ],
   "core.AppBar": [Enquiry],
   "core.MainMenu": [InsureeMainMenu],
