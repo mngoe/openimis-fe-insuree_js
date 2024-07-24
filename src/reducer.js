@@ -364,7 +364,7 @@ function reducer(
         ...state,
         fetchingFamilyTypes: false,
         fetchedFamilyTypes: true,
-        familyTypes: action.payload.data.familyTypes.filter(t => t.code !== 'C' && t.code !=='O').map((t) => t.code),
+        familyTypes: action.payload.data.familyTypes.filter(t => t.code !== 'C' && t.code !=='O' && t.code !=='G' && t.code !=='S' && t.code !=='T').map((t) => t.code),
         errorFamilyTypes: formatGraphQLError(action.payload),
       };
     case "INSUREE_FAMILY_TYPES_ERR":
