@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import { injectIntl } from "react-intl";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -229,6 +229,7 @@ class FamilyForm extends Component {
                 !!save ? this._save : null : null : !!save ? this._save : null
             }
             onActionToConfirm={this.onActionToConfirm}
+            openDirty={save}
           />
         )}
       </div>
