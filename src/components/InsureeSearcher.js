@@ -73,6 +73,7 @@ class InsureeSearcher extends Component {
     if (!!state.orderBy) {
       prms.push(`orderBy: ["${state.orderBy}"]`);
     }
+    prms.push(`ignoreLocation: ${true}`)
     return prms;
   };
 
