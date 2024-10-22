@@ -32,5 +32,7 @@ export const DEFAULT = {
   RENDER_LAST_NAME_FIRST: true,
   GENERIC_VOUCHER_ENABLED: false,
 };
+export const FAMILY_TYPE_POLYGAMY_CODE = "P";
+export const INSUREE_PREFERRED_PAYMENT_METHOD = "PB"
 
 export const WITHOUT_STR = "without"

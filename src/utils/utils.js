@@ -1,5 +1,5 @@
 import _ from "lodash";
-import { INSUREE_ACTIVE_STRING, PASSPORT_LENGTH } from "../constants";
+import { INSUREE_ACTIVE_STRING, PASSPORT_LENGTH, INSUREE_PREFERRED_PAYMENT_METHOD } from "../constants";
 
 export function insureeLabel(insuree) {
   if (!insuree) return "";
@@ -36,7 +36,7 @@ export const isValidInsuree = (insuree, modulesManager) => {
     (!!insuree.passport && (insuree.passport.length < PASSPORT_LENGTH || insuree.passport.length > PASSPORT_LENGTH))
   )
     return false;
-  if (!!insuree.preferredPaymentMethod && insuree.preferredPaymentMethod == "PB" && !insuree.bankCoordinates)
+  if (!!insuree.preferredPaymentMethod && insuree.preferredPaymentMethod == INSUREE_PREFERRED_PAYMENT_METHOD && !insuree.bankCoordinates)
     return false;
   if (!insuree.photo) return false;
   if (!insuree.profession) return false;
