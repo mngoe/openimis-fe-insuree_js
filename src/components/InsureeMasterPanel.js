@@ -38,6 +38,7 @@ class InsureeMasterPanel extends FormPanel {
       "renderLastNameFirst",
       DEFAULT.RENDER_LAST_NAME_FIRST,
     );
+    this.fields = props.modulesManager.getConf("fe-insuree", "fields", "{}");
   }
 
   state = {
@@ -94,6 +95,7 @@ class InsureeMasterPanel extends FormPanel {
       actions,
       edited_id,
       isSubFamily,
+      insuree,
     } = this.props;
 
     var age;
@@ -259,15 +261,30 @@ class InsureeMasterPanel extends FormPanel {
                       onChangeAddress={(v) => this.updateAttribute("currentAddress", v)}
                     />
                   </Grid>
-                  <Grid item xs={6} className={classes.item}>
-                    <TextInput
-                      module="insuree"
-                      label="Insuree.phone"
-                      readOnly={readOnly}
-                      value={!!edited && !!edited.phone ? edited.phone : ""}
-                      onChange={(v) => this.updateAttribute("phone", v)}
-                    />
-                  </Grid>
+                  {(!insuree || insuree == null || (!!insuree && insuree.head == true)) &&
+                  this.fields.phoneNoHead == "M" ? (
+                    <Grid item xs={6} className={classes.item}>
+                      <TextInput
+                        module="insuree"
+                        label="Insuree.phone"
+                        readOnly={readOnly}
+                        required={true}
+                        value={!!edited && !!edited.phone ? edited.phone : ""}
+                        onChange={(v) => this.updateAttribute("phone", v)}
+                      />
+                    </Grid>
+                  ) : (
+                    <Grid item xs={6} className={classes.item}>
+                      <TextInput
+                        module="insuree"
+                        label="Insuree.phone"
+                        readOnly={readOnly}
+                        required={false}
+                        value={!!edited && !!edited.phone ? edited.phone : ""}
+                        onChange={(v) => this.updateAttribute("phone", v)}
+                      />
+                    </Grid>
+                  )}
                   <Grid item xs={6} className={classes.item}>
                     <TextInput
                       module="insuree"
@@ -349,7 +366,8 @@ class InsureeMasterPanel extends FormPanel {
                       onChange={(v) => this.updateAttribute("incomeLevel", v)}
                     />
                   </Grid>
-                  {(!!edited && !!edited.family && !!edited.family.headInsuree  && edited?.head == true) || (!!edited && !edited.family)? (
+                  {(!!edited && !!edited.family && !!edited.family.headInsuree && edited?.head == true) ||
+                  (!!edited && !edited.family) ? (
                     <Grid item xs={3} className={classes.item}>
                       <PublishedComponent
                         pubRef="insuree.PaymentMethodPicker"
@@ -361,7 +379,7 @@ class InsureeMasterPanel extends FormPanel {
                         onChange={(v) => this.updateAttribute("preferredPaymentMethod", v)}
                       />
                     </Grid>
-                  ):null}
+                  ) : null}
                   {edited?.preferredPaymentMethod == "PB" && (
                     <Grid item xs={3} className={classes.item}>
                       <TextInput

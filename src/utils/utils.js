@@ -31,6 +31,11 @@ export const isValidInsuree = (insuree, modulesManager) => {
   if (!insuree.gender || !insuree.gender?.code) return false;
   if (!!insuree.photo && (!insuree.photo.date || !insuree.photo.officerId || !insuree.photo.photo)) return false;
   if (!insuree.incomeLevel) return false;
+  if (!insuree.family && !insuree.hasOwnProperty('isFamily') ){
+    if(!insuree.phone){
+      return false
+    }
+  }
   if (
     !insuree.passport ||
     (!!insuree.passport && (insuree.passport.length < PASSPORT_LENGTH || insuree.passport.length > PASSPORT_LENGTH))
