@@ -20,7 +20,7 @@ const styles = (theme) => ({
     height: "100%",
   },
 });
-import { DEFAULT, INSUREE_ACTIVE_STRING, PASSPORT_LENGTH } from "../constants";
+import { DEFAULT, INSUREE_PREFERRED_PAYMENT_METHOD } from "../constants";
 
 const INSUREE_INSUREE_CONTRIBUTION_KEY = "insuree.Insuree";
 const INSUREE_INSUREE_PANELS_CONTRIBUTION_KEY = "insuree.Insuree.panels";
@@ -37,6 +37,11 @@ class InsureeMasterPanel extends FormPanel {
       "fe-insuree",
       "renderLastNameFirst",
       DEFAULT.RENDER_LAST_NAME_FIRST,
+    );
+    this.passportLength = props.modulesManager.getConf(
+      "fe-insuree",
+      "passportLength",
+      7,
     );
   }
 
@@ -328,7 +333,7 @@ class InsureeMasterPanel extends FormPanel {
                       error={
                         edited &&
                         edited.passport &&
-                        (edited.passport.length > PASSPORT_LENGTH || edited.passport.length < PASSPORT_LENGTH)
+                        (edited.passport.length > this.passportLength || edited.passport.length < this.passportLength)
                           ? true
                           : false
                       }
@@ -362,7 +367,7 @@ class InsureeMasterPanel extends FormPanel {
                       />
                     </Grid>
                   ):null}
-                  {edited?.preferredPaymentMethod == "PB" && (
+                  {edited?.preferredPaymentMethod == INSUREE_PREFERRED_PAYMENT_METHOD && (
                     <Grid item xs={3} className={classes.item}>
                       <TextInput
                         module="insuree"
