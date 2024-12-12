@@ -1,10 +1,19 @@
-import React, { Component, Fragment } from "react";
-import { withTheme, withStyles } from "@material-ui/core/styles";
+import React, { Fragment } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { injectIntl } from "react-intl";
 import _ from "lodash";
-import { Checkbox, Paper, IconButton, Grid, Divider, Typography, Tooltip } from "@material-ui/core";
+
+import {
+  Checkbox,
+  Paper,
+  IconButton,
+  Grid,
+  Divider,
+  Typography,
+  Tooltip,
+  Collapse,
+} from "@material-ui/core";
 import {
   Search as SearchIcon,
   Add as AddIcon,
@@ -12,7 +21,10 @@ import {
   PersonPin as SetHeadIcon,
   Delete as DeleteIcon,
   Clear as RemoveIcon,
+  Remove as CloseIcon,
 } from "@material-ui/icons";
+import { withTheme, withStyles } from "@material-ui/core/styles";
+
 import {
   formatMessage,
   formatMessageWithValues,
@@ -29,7 +41,6 @@ import {
   PublishedComponent,
   ProgressOrError,
 } from "@openimis/fe-core";
-import EnquiryDialog from "./EnquiryDialog";
 import {
   fetchFamilyMembers,
   selectFamilyMember,
@@ -39,9 +50,11 @@ import {
   changeFamily,
   checkCanAddInsuree,
 } from "../actions";
-import { RIGHT_INSUREE_DELETE } from "../constants";
+import { RIGHT_INSUREE_DELETE, EMPTY_STRING, DEFAULT } from "../constants";
 import { insureeLabel, familyLabel } from "../utils/utils";
 import ChangeInsureeFamilyDialog from "./ChangeInsureeFamilyDialog";
+import EnquiryDialog from "./EnquiryDialog";
+import FamilyInsureesSearcher from "./FamilyInsureesSearcher";
 import RemoveInsureeFromFamilyDialog from "./RemoveInsureeFromFamilyDialog";
 
 const styles = (theme) => ({
@@ -59,8 +72,10 @@ class FamilyInsureesOverview extends PagedDataHandler {
     removeInsuree: null,
     changeInsureeFamily: null,
     reset: 0,
-    canAddAction: null,
+    canAddAction: () => null,
     checkedCanAdd: false,
+    filters: {},
+    showInsureeSearcher: false,
   };
 
   constructor(props) {
@@ -71,7 +86,36 @@ class FamilyInsureesOverview extends PagedDataHandler {
       [5, 10, 20],
     );
     this.defaultPageSize = props.modulesManager.getConf("fe-insuree", "familyInsureesOverview.defaultPageSize", 5);
+    this.renderLastNameFirst = props.modulesManager.getConf(
+      "fe-insuree",
+      "renderLastNameFirst",
+      DEFAULT.RENDER_LAST_NAME_FIRST,
+    );
   }
+
+  handleInsureeSearcherToogle = (providedState) =>
+    this.setState(() => ({
+      showInsureeSearcher: providedState,
+    }));
+
+  onChangeFilters = (newFilters) => {
+    const tempFilters = { ...this.state.filters };
+    newFilters.forEach((filter) => {
+      if (filter.value === null || filter.value === EMPTY_STRING) {
+        delete tempFilters[filter.id];
+      } else {
+        tempFilters[filter.id] = { value: filter.value, filter: filter.filter };
+      }
+    });
+    this.setState({ filters: tempFilters });
+  };
+
+  resetFilters = () => this.setState(() => ({ filters: {} }));
+
+  closeInsureeSearcher = () => {
+    this.handleInsureeSearcherToogle(false);
+    this.resetFilters();
+  };
 
   componentDidMount() {
     this.setState({ orderBy: null }, (e) => this.onChangeRowsPerPage(this.defaultPageSize));
@@ -94,8 +138,9 @@ class FamilyInsureesOverview extends PagedDataHandler {
         messages.push(formatMessage(this.props.intl, "insuree", "addInsuree.alert.message"));
         this.props.coreAlert(formatMessage(this.props.intl, "insuree", "addInsuree.alert.title"), messages);
       }
-    } else if (!!prevProps.alert && !this.props.alert) {
-      this.setState({ checkedCanAdd: true }, (e) => this.state.canAddAction());
+    }
+    if (this.state.filters !== prevState.filters) {
+      this.query();
     }
   }
 
@@ -106,6 +151,9 @@ class FamilyInsureesOverview extends PagedDataHandler {
     }
     if (!!this.props.family && !!this.props.family.uuid) {
       prms.push(`familyUuid:"${this.props.family.uuid}"`);
+      for (const [key, value] of Object.entries(this.state.filters)) {
+        prms.push(value["filter"]);
+      }
       return prms;
     }
     return null;
@@ -127,8 +175,8 @@ class FamilyInsureesOverview extends PagedDataHandler {
 
   headers = [
     "Insuree.chfId",
-    "Insuree.lastName",
-    "Insuree.otherNames",
+    this.renderLastNameFirst ? "Insuree.lastName" : "Insuree.otherNames",
+    !this.renderLastNameFirst ? "Insuree.lastName" : "Insuree.otherNames",
     "Insuree.gender",
     "Insuree.dob",
     "Insuree.cardIssued",
@@ -148,8 +196,8 @@ class FamilyInsureesOverview extends PagedDataHandler {
 
   headerActions = [
     this.sorter("chfId"),
-    this.sorter("lastName"),
-    this.sorter("otherNames"),
+    this.renderLastNameFirst ? this.sorter("lastName") : this.sorter("otherNames"),
+    !this.renderLastNameFirst ? this.sorter("lastName") : this.sorter("otherNames"),
     this.sorter("gender"),
     this.sorter("dob"),
     this.sorter("cardIssued"),
@@ -387,6 +435,13 @@ class FamilyInsureesOverview extends PagedDataHandler {
           onConfirm={this.removeInsuree}
           onCancel={(e) => this.setState({ removeInsuree: null })}
         />
+        <Collapse in={this.state.showInsureeSearcher}>
+          <FamilyInsureesSearcher
+            filters={this.state.filters}
+            onChangeFilters={this.onChangeFilters}
+            resetFilters={this.resetFilters}
+          />
+        </Collapse>
         <Grid container alignItems="center" direction="row" className={classes.paperHeader}>
           <Grid item xs={8}>
             <Typography className={classes.tableTitle}>
