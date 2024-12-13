@@ -41,7 +41,8 @@ class FamiliesPage extends Component {
     selections: [],
     shouldBeLocked: false,
     disabled: true,
-    parentLinked:null,
+    parentLinked: null,
+    canSelectMutiple: false
   };
   onDoubleClick = (f, newTab = false) => {
     historyPush(this.props.modulesManager, this.props.history, "insuree.route.familyOverview", [f.uuid], newTab);
@@ -86,32 +87,32 @@ class FamiliesPage extends Component {
   };
   linkFamilyToParent = (cancelPolicies) => {
     const { selections, family, shouldBeLocked } = this.state;
-    this.setState({
-      shouldBeLocked: true,
-      parentLinked: null,
-    }, (e)=>{
-      const updatePromises = selections.map((selection) => {
-        return this.props.linkFamily(
-          family.uuid,        
-          selection.uuid,
-          formatMessageWithValues(this.props.intl, "insuree", "linkFamily.mutationLabel", {
-            label: familyLabel(family.uuid,selection.uuid),
-          }),
-          cancelPolicies,
-        );
-      });
-  
-      Promise.all(updatePromises)
-        .then(() => {
-          this.closeModal();
-        })
-        .catch((error) => {
-          this.closeModal();
+    this.setState(
+      {
+        shouldBeLocked: true,
+        parentLinked: null,
+      },
+      (e) => {
+        const updatePromises = selections.map((selection) => {
+          return this.props.linkFamily(
+            family.uuid,
+            selection.uuid,
+            formatMessageWithValues(this.props.intl, "insuree", "linkFamily.mutationLabel", {
+              label: familyLabel(family.uuid, selection.uuid),
+            }),
+            cancelPolicies,
+          );
         });
 
-    });
-  
-   
+        Promise.all(updatePromises)
+          .then(() => {
+            this.closeModal();
+          })
+          .catch((error) => {
+            this.closeModal();
+          });
+      },
+    );
   };
   openModal = (selection) => {
     this.setState({
@@ -133,27 +134,26 @@ class FamiliesPage extends Component {
     }
     return false;
   };
-  setParentFamily = ()=>{
+  setParentFamily = () => {
     this.setState({
-      parentLinked: this.state.family
-    })
-  }
+      parentLinked: this.state.family,
+    });
+  };
 
-  printMembershipForm = (selection) =>{
-    let familyID="familyID="
-    for(let i=0; i<selection.length; i++ ){
-      familyID=`${familyID}${decodeId(selection[i].id)},`
-    }
-    let printUrl = `http://localhost/api/report/membership_report/pdf/?${familyID}`
-    window.open(printUrl, "_blank")
+  printMembershipForm = (selection) => {
+    let familyID = "familyID=";
+    familyID = `${familyID}${decodeId(selection[0].id)}`;
+    let printUrl = `http://localhost/api/report/membership_report/pdf/?${familyID}`;
+    window.open(printUrl, "_blank");
     return;
-  }
-  canPrintMemberShipForm = (selection) =>{
-    if (!!selection && selection.length>0) {
-      return true
+  };
+
+  canPrintMemberShipForm = (selection) => {
+    if (!!selection && selection.length > 0 && selection.length < 2) {
+      return true;
     }
-      return false
-  }
+    return false;
+  };
 
   componentWillUnmount = () => {
     const { location, history } = this.props;
@@ -178,8 +178,8 @@ class FamiliesPage extends Component {
       label: "insuree.familySummaries.printMembershipForm",
       action: this.printMembershipForm,
       enabled: this.canPrintMemberShipForm,
-    })
-    
+    });
+
     return (
       <div className={classes.page}>
         <FamilySearcher
@@ -189,7 +189,7 @@ class FamiliesPage extends Component {
           actionsContributionKey={FAMILY_ACTION_CONTRIBUTION_KEY}
           actions={actions}
         />
-        <LinkFamilyToParentDialog 
+        <LinkFamilyToParentDialog
           family={this.state.parentLinked}
           selectedFamily={this.state.selections}
           onConfirm={this.linkFamilyToParent}
@@ -204,7 +204,7 @@ class FamiliesPage extends Component {
               actionsContributionKey={FAMILY_ACTION_CONTRIBUTION_KEY}
               selectParent={true}
               shouldBeLocked={this.state.shouldBeLocked}
-              canSelectMutiple={false}
+              canSelectMutiple={this.state.canSelectMutiple}
             />
           </DialogContent>
           <DialogActions>
