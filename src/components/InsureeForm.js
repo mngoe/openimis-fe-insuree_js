@@ -213,19 +213,12 @@ class InsureeForm extends Component {
   };
 
   canSave = () => {
+    
     if (!this.state.insuree.chfId) return false;
     if (!this.state.insuree.dob) return false;
     if (!this.state.insuree.gender || !this.state.insuree.gender?.code) return false;
-    if (!!this.state.insuree.photo && (!this.state.insuree.photo.date || !this.state.insuree.photo.officerId)) return false;
-    const doesInsureeChange = this.doesInsureeChange();
-    if (!doesInsureeChange) return false;
-    if (this.state.lockNew) return false;
-    if (!this.props.isChfIdValid) return false;
+    return true
 
-    return this.isWorker
-      ? isValidWorker(this.state.insuree)
-      : isValidInsuree(this.state.insuree, this.props.modulesManager);
-    return true;
   };
 
   _save = (insuree) => {
