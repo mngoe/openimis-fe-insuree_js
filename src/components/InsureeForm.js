@@ -204,15 +204,19 @@ class InsureeForm extends Component {
     });
   };
 
+  doesInsureeChange = () => {
+    const { insuree } = this.props;
+    if (_.isEqual(insuree, this.state.insuree)) {
+      return false;
+    }
+    return true;
+  };
+
   canSave = () => {
     if (!this.state.insuree.chfId) return false;
     if (!this.state.insuree.dob) return false;
     if (!this.state.insuree.gender || !this.state.insuree.gender?.code) return false;
     if (!!this.state.insuree.photo && (!this.state.insuree.photo.date || !this.state.insuree.photo.officerId)) return false;
-    return true;
-  };
-
-  canSave = () => {
     const doesInsureeChange = this.doesInsureeChange();
     if (!doesInsureeChange) return false;
     if (this.state.lockNew) return false;
@@ -221,6 +225,7 @@ class InsureeForm extends Component {
     return this.isWorker
       ? isValidWorker(this.state.insuree)
       : isValidInsuree(this.state.insuree, this.props.modulesManager);
+   
   };
 
   _save = (insuree) => {
@@ -250,6 +255,8 @@ class InsureeForm extends Component {
       save,
       user
     } = this.props;
+    console.log("insuree props", this.props)
+    console.log("insuree state", this.state)
     const { insuree, clientMutationId } = this.state;
     if (!rights.includes(RIGHT_INSUREE)) return null;
     let runningMutation = !!insuree && !!clientMutationId;
