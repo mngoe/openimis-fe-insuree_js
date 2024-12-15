@@ -225,7 +225,7 @@ class InsureeForm extends Component {
     return this.isWorker
       ? isValidWorker(this.state.insuree)
       : isValidInsuree(this.state.insuree, this.props.modulesManager);
-    return true;
+   
   };
 
   _save = (insuree) => {
@@ -255,6 +255,8 @@ class InsureeForm extends Component {
       save,
       user
     } = this.props;
+    console.log("insuree props", this.props)
+    console.log("insuree state", this.state)
     const { insuree, clientMutationId } = this.state;
     if (!rights.includes(RIGHT_INSUREE)) return null;
     let runningMutation = !!insuree && !!clientMutationId;
