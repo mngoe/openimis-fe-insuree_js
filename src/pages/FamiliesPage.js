@@ -143,7 +143,7 @@ class FamiliesPage extends Component {
   printMembershipForm = (selection) => {
     let familyID = "familyID=";
     familyID = `${familyID}${decodeId(selection[0].id)}`;
-    let printUrl = `http://localhost/api/report/membership_report/pdf/?${familyID}`;
+    let printUrl = `../../api/report/membership_report/pdf/?${familyID}`;
     window.open(printUrl, "_blank");
     return;
   };
