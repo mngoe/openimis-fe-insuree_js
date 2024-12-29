@@ -42,6 +42,7 @@ class InsureeSearcher extends Component {
     confirmedAction: null,
     reset: 0,
     failedExport: false,
+    searchInitiated: false,
   };
 
   constructor(props) {
@@ -276,6 +277,13 @@ class InsureeSearcher extends Component {
     return formatters.filter(Boolean);
   };
 
+  onFiltersApplied = (filters) => {
+    this.setState({
+      searchInitiated: true,
+      filters, // Update the active filters
+    });
+  };
+
   rowDisabled = (selection, i) => !!i.validityTo;
   rowLocked = (selection, i) => !!i.clientMutationId;
 
@@ -296,6 +304,7 @@ class InsureeSearcher extends Component {
     const { failedExport } = this.state;
 
     let count = (insureesPageInfo?.totalCount || 0).toLocaleString();
+    const { searchInitiated } = this.state;
 
     return (
       <Fragment>
@@ -314,7 +323,7 @@ class InsureeSearcher extends Component {
           tableTitle={formatMessageWithValues(intl, "insuree", "insureeSummaries", { count })}
           rowsPerPageOptions={this.rowsPerPageOptions}
           defaultPageSize={this.defaultPageSize}
-          fetch={this.fetch}
+          fetch={searchInitiated ? this.fetch : () => {}}
           rowIdentifier={this.rowIdentifier}
           rowSecondaryHighlighted={this.rowSecondaryHighlighted}
           filtersToQueryParams={this.filtersToQueryParams}
@@ -337,6 +346,7 @@ class InsureeSearcher extends Component {
           }}
           exportFieldLabel={formatMessage(intl, "insuree", "workers.export")}
           chooseExportableColumns
+          onChangeFilters={this.onFiltersApplied}
         />
         {failedExport && (
           <Dialog open={failedExport} fullWidth maxWidth="sm">
