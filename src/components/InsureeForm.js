@@ -17,11 +17,15 @@ import {
   ProgressOrError,
   Helmet,
 } from "@openimis/fe-core";
-import { fetchInsureeFull, fetchFamily, clearInsuree, fetchInsureeMutation } from "../actions";
-import { RIGHT_INSUREE } from "../constants";
-import { insureeLabel } from "../utils/utils";
+import { fetchInsureeFull, fetchFamily, clearInsuree, fetchInsureeMutation, fetchUserHealthFacilityFullPath } from "../actions";
+import { DEFAULT, INSUREE_ACTIVE_STRING, RIGHT_INSUREE } from "../constants";
+import { insureeLabel, isValidInsuree, isValidWorker } from "../utils/utils";
 import FamilyDisplayPanel from "./FamilyDisplayPanel";
 import InsureeMasterPanel from "../components/InsureeMasterPanel";
+import InsureeVihMasterPanel from "./InsureeVihMasterPanel";
+
+import FamilyVihDisplayPanel from "./FamilyVihDisplayPanel";
+import WorkerMasterPanel from "./worker/WorkerMasterPanel";
 
 const styles = (theme) => ({
   page: theme.page,
@@ -31,24 +35,55 @@ const styles = (theme) => ({
 const INSUREE_INSUREE_FORM_CONTRIBUTION_KEY = "insuree.InsureeForm";
 
 class InsureeForm extends Component {
-  state = {
-    lockNew: false,
-    reset: 0,
-    insuree: this._newInsuree(),
-    newInsuree: true,
-  };
+  constructor(props) {
+    super(props);
+    this.isWorker = props.modulesManager.getConf("fe-core", "isWorker", DEFAULT.IS_WORKER);
+    this.state = {
+      lockNew: false,
+      reset: 0,
+      insuree: this._newInsuree(),
+      newInsuree: true,
+      isSaved: false,
+    };
+  }
 
   _newInsuree() {
     let insuree = {};
+
+    // NOTE: This is a placeholder data for the worker entity,
+    // as the worker itself does not have the same fields as the insuree.
+    if (this.isWorker) {
+      const dateOfBirthPlaceholder = "2000-01-01";
+      const genderCodePlaceholder = "O";
+
+      const insureeWithPlaceholderData = {
+        dob: dateOfBirthPlaceholder,
+        gender: {
+          code: genderCodePlaceholder,
+        },
+      };
+
+      insuree = { ...insuree, ...insureeWithPlaceholderData };
+    }
+
     insuree.jsonExt = {};
+    insuree.status = INSUREE_ACTIVE_STRING;
+    insuree.statusReason = null;
     return insuree;
   }
 
   componentDidMount() {
+    if (this.props.admin.health_facility_id && !this.props.userHealthFacilityFullPath) {
+      this.props.fetchUserHealthFacilityFullPath(this.props.modulesManager, this.props.admin.health_facility_id);
+    }
     if (!!this.props.insuree_uuid) {
+      if (!!this.props.family_uuid) {
+        this.props.fetchFamily(this.props.modulesManager, this.props.family_uuid);
+      }
+
       this.setState(
         (state, props) => ({ insuree_uuid: props.insuree_uuid }),
-        (e) => this.props.fetchInsureeFull(this.props.modulesManager, this.props.insuree_uuid),
+        (e) => this.props.fetchInsureeFull(this.props.modulesManager, this.props.insuree_uuid, this.isWorker),
       );
     } else if (!!this.props.family_uuid && (!this.props.family || this.props.family.uuid !== this.props.family_uuid)) {
       this.props.fetchFamily(this.props.modulesManager, this.props.family_uuid);
@@ -85,6 +120,11 @@ class InsureeForm extends Component {
         };
       });
     }
+
+    if (!this.state.insuree.family && this.props.family) {
+      const updatedInsuree = { ...this.state.insuree, family: this.props.family };
+      this.setState({ insuree: updatedInsuree });
+    }
   }
 
   componentWillUnmount = () => {
@@ -106,34 +146,61 @@ class InsureeForm extends Component {
     );
   };
 
-  reload = () => {
+  reload = async () => {
+    const { isSaved } = this.state;
     const {
-      mutation: { clientMutationId },
-      insuree_uuid,
-      family_uuid,
+      modulesManager,
+      history,
+      mutation,
+      fetchInsureeMutation,
+      insuree_uuid: insureeUuid,
+      family_uuid: familyUuid,
+      fetchInsureeFull,
     } = this.props;
 
-    if (clientMutationId && !insuree_uuid) {
-      this.props.fetchInsureeMutation(this.props.modulesManager, clientMutationId).then((res) => {
-        const mutationLogs = parseData(res.payload.data.mutationLogs);
-        if (mutationLogs?.[0]?.insurees?.[0]?.insuree) {
-          const uuid = parseData(res.payload.data.mutationLogs)[0].insurees[0].insuree.uuid;
-          uuid && family_uuid
-            ? historyPush(this.props.modulesManager, this.props.history, "insuree.route.familyOverview", [family_uuid])
-            : historyPush(this.props.modulesManager, this.props.history, "insuree.route.insuree", [uuid]);
-        }
-      });
-    } else {
-      family_uuid
-        ? historyPush(this.props.modulesManager, this.props.history, "insuree.route.familyOverview", [family_uuid])
-        : this.props.fetchInsureeFull(this.props.modulesManager, this.state.insuree_uuid);
+    if (insureeUuid) {
+      try {
+        await fetchInsureeFull(modulesManager, insureeUuid, this.isWorker);
+      } catch (error) {
+        console.error(`[RELOAD_INSUREE]: Fetching insuree details failed. ${error}`);
+      } finally {
+        this.setState((state) => ({
+          ...state,
+          clientMutationId: false,
+        }));
+      }
+      return;
     }
 
-    this.setState((state, props) => {
-      return {
-        ...state.insuree,
-        clientMutationId: false,
-      };
+    if (isSaved) {
+      try {
+        const { clientMutationId } = mutation;
+        const response = await fetchInsureeMutation(modulesManager, clientMutationId);
+        const createdInsureeUuid = parseData(response.payload.data.mutationLogs)[0].insurees[0].insuree.uuid;
+
+        await fetchInsureeFull(modulesManager, createdInsureeUuid, this.isWorker);
+        historyPush(modulesManager, history, "insuree.route.insuree", [
+          createdInsureeUuid,
+          familyUuid ? familyUuid : null,
+        ]);
+      } catch (error) {
+        console.error(`[RELOAD_INSUREE]: Error fetching insuree mutation: ${error}`);
+      } finally {
+        this.setState((state) => ({
+          ...state,
+          clientMutationId: false,
+        }));
+      }
+      return;
+    }
+
+    this.setState({
+      lockNew: false,
+      reset: 0,
+      insuree: this._newInsuree(),
+      newInsuree: true,
+      isSaved: false,
+      clientMutationId: false,
     });
   };
 
@@ -146,25 +213,16 @@ class InsureeForm extends Component {
   };
 
   canSave = () => {
-    const doesInsureeChange = this.doesInsureeChange();
-    if (!doesInsureeChange) return false;
-    if (!this.props.isInsureeNumberValid) return false;
     if (!this.state.insuree.chfId) return false;
-    if (!this.state.insuree.lastName) return false;
-    if (!this.state.insuree.otherNames) return false;
     if (!this.state.insuree.dob) return false;
     if (!this.state.insuree.gender || !this.state.insuree.gender?.code) return false;
-    if (this.state.lockNew) return false;
-    if (!!this.state.insuree.photo && (!this.state.insuree.photo.date || !this.state.insuree.photo.officerId))
-      return false;
-    return true;
+    if (!!this.state.insuree.photo && (!this.state.insuree.photo.date || !this.state.insuree.photo.officerId)) return false;
+    return true
+
   };
 
   _save = (insuree) => {
-    this.setState(
-      { lockNew: true }, // avoid duplicates
-      (e) => this.props.save(insuree),
-    );
+    this.setState({ lockNew: !insuree.id, isSaved: true }, (e) => this.props.save(insuree));
   };
 
   onEditedChanged = (insuree) => {
@@ -174,6 +232,7 @@ class InsureeForm extends Component {
   render() {
     const {
       rights,
+      programs,
       insuree_uuid,
       fetchingInsuree,
       fetchedInsuree,
@@ -187,6 +246,7 @@ class InsureeForm extends Component {
       classes,
       add,
       save,
+      user
     } = this.props;
     const { insuree, clientMutationId } = this.state;
     if (!rights.includes(RIGHT_INSUREE)) return null;
@@ -195,11 +255,12 @@ class InsureeForm extends Component {
       {
         doIt: this.reload,
         icon: <ReplayIcon />,
-        onlyIfDirty: !readOnly && !runningMutation,
+        onlyIfDirty: !readOnly && !runningMutation && !this.state.isSaved,
       },
     ];
+    const shouldBeLocked = !!runningMutation || insuree?.validityTo;
     return (
-      <div className={runningMutation ? classes.lockedPage : null}>
+      <div className={shouldBeLocked ? classes.lockedPage : null}>
         <Helmet
           title={formatMessageWithValues(this.props.intl, "insuree", "Insuree.title", {
             label: insureeLabel(this.state.insuree),
@@ -214,19 +275,24 @@ class InsureeForm extends Component {
               title="Insuree.title"
               titleParams={{ label: insureeLabel(this.state.insuree) }}
               edited_id={insuree_uuid}
+              rights={rights}
               edited={this.state.insuree}
               reset={this.state.reset}
               back={this.back}
               add={!!add && !this.state.newInsuree ? this._add : null}
               readOnly={readOnly || runningMutation || !!insuree.validityTo}
               actions={actions}
-              HeadPanel={FamilyDisplayPanel}
-              Panels={[InsureeMasterPanel]}
+              HeadPanel={!!insuree ? insuree[`email`] == "newhivuser_XM7dw70J0M3N@gmail.com" ? FamilyVihDisplayPanel : FamilyDisplayPanel : FamilyVihDisplayPanel}
+              Panels={!!insuree_uuid ? insuree[`email`] == "newhivuser_XM7dw70J0M3N@gmail.com" ? [InsureeVihMasterPanel] : [InsureeMasterPanel] : [InsureeVihMasterPanel]}
               contributedPanelsKey={INSUREE_INSUREE_FORM_CONTRIBUTION_KEY}
               insuree={this.state.insuree}
               onEditedChanged={this.onEditedChanged}
               canSave={this.canSave}
-              save={!!save ? this._save : null}
+              save={
+                !!insuree_uuid ?
+                  insuree[`email`] == "newhivuser_XM7dw70J0M3N@gmail.com" ?
+                    !!save ? this._save : null : null : !!save ? this._save : null
+              }
               openDirty={save}
             />
           )}
@@ -247,12 +313,14 @@ const mapStateToProps = (state, props) => ({
   family: state.insuree.family,
   submittingMutation: state.insuree.submittingMutation,
   mutation: state.insuree.mutation,
-  isInsureeNumberValid: state.insuree?.validationFields?.insureeNumber?.isValid,
+  admin: state.core.user,
+  userHealthFacilityFullPath: state.loc.userHealthFacilityFullPath,
+  isChfIdValid: state.insuree?.validationFields?.insureeNumber?.isValid,
 });
 
 export default withHistory(
   withModulesManager(
-    connect(mapStateToProps, { fetchInsureeFull, fetchFamily, clearInsuree, fetchInsureeMutation, journalize })(
+    connect(mapStateToProps, { fetchUserHealthFacilityFullPath,fetchInsureeFull, fetchFamily, clearInsuree, fetchInsureeMutation, journalize })(
       injectIntl(withTheme(withStyles(styles)(InsureeForm))),
     ),
   ),

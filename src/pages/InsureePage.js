@@ -6,7 +6,7 @@ import { withTheme, withStyles } from "@material-ui/core/styles";
 import { formatMessageWithValues, withModulesManager, withHistory, historyPush } from "@openimis/fe-core";
 import InsureeForm from "../components/InsureeForm";
 import { createInsuree, updateInsuree } from "../actions";
-import { RIGHT_INSUREE, RIGHT_INSUREE_ADD, RIGHT_INSUREE_EDIT } from "../constants";
+import { RIGHT_INSUREE, RIGHT_INSUREE_ADD, RIGHT_INSUREE_EDIT, RIGHT_VIH } from "../constants";
 
 const styles = (theme) => ({
   page: theme.page,

@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from "react";
-import InsureeMasterPanel from "./InsureeMasterPanel";
+import InsureeVihMasterPanel from "./InsureeVihMasterPanel";
 import { injectIntl } from "react-intl";
 import { connect } from "react-redux";
 import { Contributions, PublishedComponent, formatMessage, withModulesManager } from "@openimis/fe-core";
@@ -38,17 +38,12 @@ class HeadInsureeMasterPanel extends Component {
     ];
     return (
       <Fragment>
-        <InsureeMasterPanel
+        <InsureeVihMasterPanel
           {...this.props}
           edited={!!edited ? edited.headInsuree : null}
           onEditedChanged={this.onEditedChanged}
           title="insuree.HeadInsureeMasterPanel.title"
           actions={actions}
-        />
-        <Contributions
-          {...this.props}
-          updateAttribute={this.updateAttribute}
-          contributionKey={INSUREE_HEAD_INSUREE_PANELS_CONTRIBUTION_KEY}
         />
       </Fragment>
     );

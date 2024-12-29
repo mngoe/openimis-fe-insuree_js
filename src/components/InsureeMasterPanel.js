@@ -1,6 +1,6 @@
 import React from "react";
 import { withTheme, withStyles } from "@material-ui/core/styles";
-import { Paper, Grid, Typography, Divider, Checkbox, FormControlLabel } from "@material-ui/core";
+import { Paper, Grid, Typography, Divider, Checkbox, FormGroup, FormControlLabel, Switch } from "@material-ui/core";
 import {
   formatMessage,
   withTooltip,
@@ -11,6 +11,7 @@ import {
   Contributions,
   withModulesManager,
 } from "@openimis/fe-core";
+import { RIGHT_VIH } from "../constants";
 
 const styles = (theme) => ({
   paper: theme.paper.paper,
@@ -20,22 +21,89 @@ const styles = (theme) => ({
     height: "100%",
   },
 });
+import { DEFAULT, INSUREE_ACTIVE_STRING } from "../constants";
 
 const INSUREE_INSUREE_CONTRIBUTION_KEY = "insuree.Insuree";
 const INSUREE_INSUREE_PANELS_CONTRIBUTION_KEY = "insuree.Insuree.panels";
 
 class InsureeMasterPanel extends FormPanel {
+
+  state = {
+    age: "",
+  };
+
+  _updateAge = (dob) => {
+    var age;
+    var date = new Date(dob);
+    var month_diff = Date.now() - date.getTime();
+    var age_dt = new Date(month_diff);
+    var year = age_dt.getUTCFullYear();
+    age = Math.abs(year - 1970);
+
+    if (age < 13) {
+      alert(formatMessage(this.props.intl, "insuree", "minorBeneficiary"));
+    } else if (age > 50) {
+      alert(formatMessage(this.props.intl, "insuree", "menopausalBeneficiary"));
+    }
+
+    this.setState({ age: age });
+  }
+
+  constructor(props) {
+    super(props);
+    this.isInsureeStatusRequired = props.modulesManager.getConf(
+      "fe-insuree",
+      "insureeForm.isInsureeStatusRequired",
+      false,
+    );
+    this.renderLastNameFirst = props.modulesManager.getConf(
+      "fe-insuree",
+      "renderLastNameFirst",
+      DEFAULT.RENDER_LAST_NAME_FIRST,
+    );
+  }
+
+  renderLastNameField = (edited, classes, readOnly) => {
+    return (
+      <Grid item xs={4} className={classes.item}>
+        <TextInput
+          module="insuree"
+          label="Insuree.lastName"
+          required={true}
+          readOnly={readOnly}
+          value={!!edited && !!edited.lastName ? edited.lastName : ""}
+          onChange={(v) => this.updateAttribute("lastName", v)}
+        />
+      </Grid>
+    );
+  };
+
+  renderGivenNameField = (edited, classes, readOnly) => (
+    <Grid item xs={4} className={classes.item}>
+      <TextInput
+        module="insuree"
+        label="Insuree.otherNames"
+        required={true}
+        readOnly={readOnly}
+        value={!!edited && !!edited.otherNames ? edited.otherNames : ""}
+        onChange={(v) => this.updateAttribute("otherNames", v)}
+      />
+    </Grid>
+  );
+
   render() {
     const {
       intl,
       classes,
       edited,
+      rights,
       title = "Insuree.title",
       titleParams = { label: "" },
       readOnly = true,
       actions,
-      edited_id,
+      editedId,
     } = this.props;
+
     return (
       <Grid container>
         <Grid item xs={12}>
@@ -77,14 +145,13 @@ class InsureeMasterPanel extends FormPanel {
             <Divider />
             <Grid container className={classes.item}>
               <Grid item xs={4} className={classes.item}>
-                <PublishedComponent
-                  pubRef="insuree.InsureeNumberInput"
+                <TextInput
                   module="insuree"
                   label="Insuree.chfId"
                   required={true}
                   readOnly={readOnly}
                   value={edited?.chfId}
-                  edited_id={edited_id}
+                  editedId={editedId}
                   onChange={(v) => this.updateAttribute("chfId", v)}
                 />
               </Grid>
@@ -92,7 +159,7 @@ class InsureeMasterPanel extends FormPanel {
                 <TextInput
                   module="insuree"
                   label="Insuree.lastName"
-                  required={true}
+                  required={!rights.includes(RIGHT_VIH) ? true : false}
                   readOnly={readOnly}
                   value={!!edited && !!edited.lastName ? edited.lastName : ""}
                   onChange={(v) => this.updateAttribute("lastName", v)}
@@ -102,7 +169,7 @@ class InsureeMasterPanel extends FormPanel {
                 <TextInput
                   module="insuree"
                   label="Insuree.otherNames"
-                  required={true}
+                  required={!rights.includes(RIGHT_VIH) ? true : false}
                   readOnly={readOnly}
                   value={!!edited && !!edited.otherNames ? edited.otherNames : ""}
                   onChange={(v) => this.updateAttribute("otherNames", v)}
@@ -118,8 +185,20 @@ class InsureeMasterPanel extends FormPanel {
                       label="Insuree.dob"
                       readOnly={readOnly}
                       required={true}
+                      onChange={(v) => {
+                        this.updateAttribute("dob", v);
+                        this._updateAge(v);
+                      }
+                      }
                       maxDate={new Date()}
-                      onChange={(v) => this.updateAttribute("dob", v)}
+                    />
+                  </Grid>
+                  <Grid item xs={2} className={classes.item}>
+                    <TextInput
+                      module="insuree"
+                      label="Age"
+                      readOnly={true}
+                      value={this.state.age}
                     />
                   </Grid>
                   <Grid item xs={3} className={classes.item}>
@@ -128,22 +207,21 @@ class InsureeMasterPanel extends FormPanel {
                       value={!!edited && !!edited.gender ? edited.gender.code : ""}
                       module="insuree"
                       readOnly={readOnly}
-                      withNull={true}
+                      withNull={false}
                       required={true}
                       onChange={(v) => this.updateAttribute("gender", { code: v })}
                     />
                   </Grid>
-                  <Grid item xs={3} className={classes.item}>
+                  {!edited?.relationship?.id && <Grid item xs={3} className={classes.item}>
                     <PublishedComponent
                       pubRef="insuree.InsureeMaritalStatusPicker"
                       value={!!edited && !!edited.marital ? edited.marital : ""}
                       module="insuree"
                       readOnly={readOnly}
-                      withNull={true}
-                      nullLabel="InsureeMaritalStatus.N"
+                      withNull={false}
                       onChange={(v) => this.updateAttribute("marital", v)}
                     />
-                  </Grid>
+                  </Grid>}
                   <Grid item xs={3} className={classes.item}>
                     <FormControlLabel
                       control={
@@ -185,40 +263,39 @@ class InsureeMasterPanel extends FormPanel {
                       onChange={(v) => this.updateAttribute("email", v)}
                     />
                   </Grid>
-                  <Grid item xs={3} className={classes.item}>
+                  {!edited?.relationship?.id && <Grid item xs={3} className={classes.item}>
                     <PublishedComponent
                       pubRef="insuree.ProfessionPicker"
                       module="insuree"
                       value={!!edited && !!edited.profession ? edited.profession.id : null}
                       readOnly={readOnly}
-                      withNull={true}
-                      nullLabel={formatMessage(intl, "insuree", "Profession.none")}
+                      withNull={false}
                       onChange={(v) => this.updateAttribute("profession", { id: v })}
                     />
                   </Grid>
+                  }
                   <Grid item xs={3} className={classes.item}>
                     <PublishedComponent
                       pubRef="insuree.EducationPicker"
                       module="insuree"
                       value={!!edited && !!edited.education ? edited.education.id : ""}
                       readOnly={readOnly}
-                      withNull={true}
-                      nullLabel={formatMessage(intl, "insuree", "insuree.Education.none")}
+                      withNull={false}
                       onChange={(v) => this.updateAttribute("education", { id: v })}
                     />
                   </Grid>
-                  <Grid item xs={3} className={classes.item}>
+                  {!edited?.relationship?.id && <Grid item xs={3} className={classes.item}>
                     <PublishedComponent
                       pubRef="insuree.IdentificationTypePicker"
                       module="insuree"
                       value={!!edited && !!edited.typeOfId ? edited.typeOfId.code : null}
                       readOnly={readOnly}
-                      withNull={true}
+                      withNull={false}
                       nullLabel={formatMessage(intl, "insuree", "IdentificationType.none")}
                       onChange={(v) => this.updateAttribute("typeOfId", { code: v })}
                     />
-                  </Grid>
-                  <Grid item xs={3} className={classes.item}>
+                  </Grid>}
+                  {!edited?.relationship?.id && <Grid item xs={3} className={classes.item}>
                     <TextInput
                       module="insuree"
                       label="Insuree.passport"
@@ -226,7 +303,7 @@ class InsureeMasterPanel extends FormPanel {
                       value={!!edited && !!edited.passport ? edited.passport : ""}
                       onChange={(v) => this.updateAttribute("passport", !!v ? v : null)}
                     />
-                  </Grid>
+                  </Grid>}
                 </Grid>
               </Grid>
               <Grid item xs={4} className={classes.item}>
@@ -238,6 +315,40 @@ class InsureeMasterPanel extends FormPanel {
                   onChange={(v) => this.updateAttribute("photo", !!v ? v : null)}
                 />
               </Grid>
+              <Grid item xs={2} className={classes.item}>
+                <FormControlLabel
+                  module="insuree"
+                  control={<Switch
+                    checked={!!edited ? edited.dead : false}
+                    module="insuree"
+                    readOnly={readOnly}
+                    onChange={(e, c) => this.updateAttribute("dead", c)}
+                  />}
+                  label={formatMessage(this.props.intl, "insuree", `Insuree.dead`)} />
+              </Grid>
+              {edited?.dead &&
+                <Grid item xs={3} className={classes.item}>
+                  <PublishedComponent
+                    pubRef="core.DatePicker"
+                    value={!!edited ? edited.dod : null}
+                    module="insuree"
+                    label="Insuree.dod"
+                    readOnly={readOnly}
+                    onChange={(v) => this.updateAttribute("dod", v)}
+                  />
+                </Grid>
+              }
+              {edited?.dead &&
+                <Grid item xs={6} className={classes.item}>
+                  <TextInput
+                    module="insuree"
+                    label="Insuree.deathreason"
+                    readOnly={readOnly}
+                    value={!!edited && !!edited.deathReason ? edited.deathReason : ""}
+                    onChange={(v) => this.updateAttribute("deathReason", v)}
+                  />
+                </Grid>
+              }
               <Contributions
                 {...this.props}
                 updateAttribute={this.updateAttribute}

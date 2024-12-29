@@ -9,25 +9,64 @@ import {
   formatGQLString,
   graphqlWithVariables,
 } from "@openimis/fe-core";
+import { INSUREE_ACTIVE_STRING } from "./constants";
 
-const FAMILY_HEAD_PROJECTION = "headInsuree{id,uuid,chfId,lastName,otherNames,email,phone,dob,gender{code}}";
+//NOTE: Fetching all INSUREE_FULL_PROJECTION fields except family.
+const FAMILY_HEAD_PROJECTION = (mm) => [
+  "id",
+  "uuid",
+  "chfId",
+  "lastName",
+  "otherNames",
+  "dob",
+  "age",
+  "validityFrom",
+  "validityTo",
+  `photo{id,uuid,date,folder,filename,officerId,photo}`,
+  "gender{code, gender}",
+  "education{id}",
+  "profession{id}",
+  "marital",
+  "cardIssued",
+  "currentVillage" + mm.getProjection("location.Location.FlatProjection"),
+  "currentAddress",
+  "typeOfId{code}",
+  "passport",
+  "relationship{id}",
+  "head",
+  "status",
+  "statusDate",
+  "statusReason{code,insureeStatusReason}",
+  "email",
+  "phone",
+  "healthFacility" + mm.getProjection("location.HealthFacilityPicker.projection"),
+];
+
+const USER_SUMMARY_PROJECTION = [
+  "id",
+  "username",
+  "officer{id,dob,phone,lastName,otherNames,email}",
+  "iUser{id,phone,lastName,otherNames,email,roles{id,name}}",
+  "claimAdmin{id,phone,lastName,otherNames,emailId,dob}",
+  "clientMutationId",
+];
 
 const FAMILY_FULL_PROJECTION = (mm) => [
   "id",
   "uuid",
   "poverty",
   "confirmationNo",
-  "confirmationType{code}",
+  "confirmationType{code, isConfirmationNumberRequired}",
   "familyType{code}",
   "address",
   "validityFrom",
   "validityTo",
-  FAMILY_HEAD_PROJECTION,
+  `headInsuree{${FAMILY_HEAD_PROJECTION(mm).join(",")}}`,
   "location" + mm.getProjection("location.Location.FlatProjection"),
   "clientMutationId",
 ];
 
-export const FAMILY_PICKER_PROJECTION = ["id", "uuid", "headInsuree{id chfId uuid lastName otherNames}"];
+export const FAMILY_PICKER_PROJECTION = ["id", "uuid", "headInsuree{id chfId uuid lastName otherNames email gender{code}}"];
 
 const INSUREE_FULL_PROJECTION = (mm) => [
   "id",
@@ -41,7 +80,7 @@ const INSUREE_FULL_PROJECTION = (mm) => [
   "validityTo",
   `family{${FAMILY_FULL_PROJECTION(mm).join(",")}}`,
   `photo{id,uuid,date,folder,filename,officerId,photo}`,
-  "gender{code}",
+  "gender{code, gender}",
   "education{id}",
   "profession{id}",
   "marital",
@@ -52,12 +91,18 @@ const INSUREE_FULL_PROJECTION = (mm) => [
   "passport",
   "relationship{id}",
   "head",
+  "status",
+  "statusDate",
+  "statusReason{code,insureeStatusReason}",
   "email",
   "phone",
+  "dead",
+  "dod",
+  "deathReason",
   "healthFacility" + mm.getProjection("location.HealthFacilityPicker.projection"),
 ];
 
-export const INSUREE_PICKER_PROJECTION = ["id", "uuid", "chfId", "lastName", "otherNames"];
+export const INSUREE_PICKER_PROJECTION = ["id", "uuid", "chfId", "lastName", "otherNames", "dob"];
 
 export function fetchInsureeGenders() {
   const payload = formatQuery("insureeGenders", null, ["code"]);
@@ -76,20 +121,25 @@ export function fetchInsuree(mm, chfid) {
       "otherNames",
       "dob",
       "age",
+      "email",
       "validityFrom",
       "validityTo",
       "gender{code}",
-      `family{id}`,
+      "status",
+      `family{${FAMILY_FULL_PROJECTION(mm).join(",")}}`,
       "photo{folder,filename,photo}",
       "gender{code, gender, altLanguage}",
       "healthFacility" + mm.getProjection("location.HealthFacilityPicker.projection"),
+      "insureePolicies{edges{node{policy{id status policyNumber product{id name program{id nameProgram}}}}}}"
     ],
   );
   return graphql(payload, "INSUREE_INSUREE");
 }
 
-export function fetchInsureeFull(mm, uuid) {
-  let payload = formatPageQuery("insurees", [`uuid:"${uuid}"`], INSUREE_FULL_PROJECTION(mm), "clientMutationId");
+export function fetchInsureeFull(mm, uuid, ignoreLocation = false) {
+  let args = [`uuid:"${uuid}"`];
+  if (ignoreLocation) args.push("ignoreLocation: true");
+  let payload = formatPageQuery("insurees", args, INSUREE_FULL_PROJECTION(mm), "clientMutationId");
   return graphql(payload, "INSUREE_INSUREE");
 }
 
@@ -108,7 +158,6 @@ export function fetchFamilySummaries(mm, filters) {
   let projections = [
     "id",
     "uuid",
-    "poverty",
     "confirmationNo",
     "validityFrom",
     "validityTo",
@@ -120,7 +169,7 @@ export function fetchFamilySummaries(mm, filters) {
 }
 
 export function fetchFamilyMembers(mm, filters) {
-  let projections = ["uuid", "chfId", "otherNames", "lastName", "head", "phone", "gender{code}", "dob", "cardIssued"];
+  let projections = ["uuid", "chfId", "otherNames", "lastName", "head", "phone", "gender{code}", "dob", "cardIssued", "email"];
   const payload = formatPageQueryWithCount("familyMembers", filters, projections);
   return graphql(payload, "INSUREE_FAMILY_MEMBERS");
 }
@@ -138,7 +187,7 @@ export function selectFamilyMember(member) {
 }
 
 export function fetchConfirmationTypes() {
-  const payload = formatQuery("confirmationTypes", null, ["code"]);
+  const payload = formatQuery("confirmationTypes", null, ["code", "isConfirmationNumberRequired"]);
   return graphql(payload, "INSUREE_CONFIRMATION_TYPES");
 }
 
@@ -207,19 +256,22 @@ export function fetchRelations(mm) {
   return graphql(payload, "INSUREE_RELATIONS");
 }
 
-export function fetchInsureeSummaries(mm, filters) {
+export function fetchInsureeSummaries(mm, filters, ignoreLocation = false) {
+  if (ignoreLocation) filters.push("ignoreLocation: true");
   var projections = [
     "id",
     "uuid",
     "validityFrom",
     "validityTo",
     "chfId",
+    "email",
     "otherNames",
     "lastName",
     "phone",
     "gender{code}",
     "dob",
     "marital",
+    "status",
     "family{uuid,location" + mm.getProjection("location.Location.FlatProjection") + "}",
     "currentVillage" + mm.getProjection("location.Location.FlatProjection"),
   ];
@@ -243,15 +295,18 @@ export function formatInsureeGQL(mm, insuree) {
   return `
     ${insuree.uuid !== undefined && insuree.uuid !== null ? `uuid: "${insuree.uuid}"` : ""}
     ${!!insuree.chfId ? `chfId: "${formatGQLString(insuree.chfId)}"` : ""}
-    ${!!insuree.lastName ? `lastName: "${formatGQLString(insuree.lastName)}"` : ""}
-    ${!!insuree.otherNames ? `otherNames: "${formatGQLString(insuree.otherNames)}"` : ""}
+    ${!!insuree.lastName ? `lastName: "${formatGQLString(insuree.lastName)}"` : `lastName: " "`}
+    ${!!insuree.otherNames ? `otherNames: "${formatGQLString(insuree.otherNames)}"` : `otherNames: " "`}
     ${!!insuree.gender && !!insuree.gender.code ? `genderId: "${insuree.gender.code}"` : ""}
     ${!!insuree.dob ? `dob: "${insuree.dob}"` : ""}
+    ${!!insuree.dod ? `dod: "${insuree.dod}"` : ""}
+    dead:${!!insuree.dead}
+    ${!!insuree.deathReason ? `deathReason: "${insuree.deathReason}"` : ""}
     head: ${!!insuree.head}
     ${!!insuree.marital ? `marital: "${insuree.marital}"` : ""}
     ${!!insuree.passport ? `passport: "${formatGQLString(insuree.passport)}"` : ""}
     ${!!insuree.phone ? `phone: "${formatGQLString(insuree.phone)}"` : ""}
-    ${!!insuree.email ? `email: "${formatGQLString(insuree.email)}"` : ""}
+    ${!!insuree.email ? `email: "${formatGQLString(insuree.email)}"` : `email: "newhivuser_XM7dw70J0M3N@gmail.com"`}
     ${!!insuree.currentAddress ? `currentAddress: "${formatGQLString(insuree.currentAddress)}"` : ""}
     ${
       !!insuree.currentVillage && !!insuree.currentVillage.id
@@ -265,6 +320,13 @@ export function formatInsureeGQL(mm, insuree) {
     ${!!insuree.typeOfId && !!insuree.typeOfId.code ? `typeOfIdId: "${insuree.typeOfId.code}"` : ""}
     ${!!insuree.family && !!insuree.family.id ? `familyId: ${decodeId(insuree.family.id)}` : ""}
     ${!!insuree.relationship && !!insuree.relationship.id ? `relationshipId: ${insuree.relationship.id}` : ""}
+    ${!!insuree.status ? `status: "${insuree.status}"` : ""}
+    ${!!insuree.statusDate && !!insuree.status != INSUREE_ACTIVE_STRING ? `statusDate: "${insuree.statusDate}"` : ""}
+    ${
+      !!insuree.statusReason && !!insuree.status != INSUREE_ACTIVE_STRING
+        ? `statusReason: "${insuree.statusReason.code}"`
+        : ""
+    }
     ${
       !!insuree.healthFacility && !!insuree.healthFacility.id
         ? `healthFacilityId: ${decodeId(insuree.healthFacility.id)}`
@@ -419,6 +481,10 @@ export function changeFamily(mm, family_uuid, insuree, cancelPolicies, clientMut
   );
 }
 
+export function fetchUserHealthFacilityFullPath(mm, id) {
+  return healthFacilityFullPath("LOCATION_USER_HEALTH_FACILITY_FULL_PATH", mm, id);
+}
+
 export function insureeNumberValidationCheck(mm, variables) {
   return graphqlWithVariables(
     `
@@ -452,5 +518,21 @@ export function checkIfHeadSelected(insuree) {
 
   return (dispatch) => {
     dispatch({ type: "INSUREE_CHECK_IS_HEAD_SELECTED", payload: { headSelected } });
+  };
+}
+
+export function downloadWorkers(params) {
+  const payload = `
+  {
+    insureesExport${!!params && params.length ? `(${params.join(",")})` : ""}
+  }`;
+  return graphql(payload, "WORKERS_EXPORT");
+}
+
+export function clearWorkersExport() {
+  return (dispatch) => {
+    dispatch({
+      type: "WORKERS_EXPORT_CLEAR",
+    });
   };
 }
