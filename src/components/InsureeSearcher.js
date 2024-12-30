@@ -27,6 +27,7 @@ const INSUREE_SEARCHER_CONTRIBUTION_KEY = "insuree.InsureeSearcher";
 
 class InsureeSearcher extends Component {
   state = {
+    searchInitiated: false,
     open: false,
     chfid: null,
     confirmedAction: null,
@@ -233,7 +234,12 @@ class InsureeSearcher extends Component {
 
   rowDisabled = (selection, i) => !!i.validityTo;
   rowLocked = (selection, i) => !!i.clientMutationId;
-
+  onFiltersApplied = (filters) => {
+        this.setState({
+          searchInitiated: true,
+          filters, // Update the active filters
+        });
+      };
   render() {
     const {
       intl,
@@ -248,7 +254,7 @@ class InsureeSearcher extends Component {
     } = this.props;
 
     let count = insureesPageInfo.totalCount;
-
+    const { searchInitiated } = this.state;
     return (
       <Fragment>
         <EnquiryDialog open={this.state.open} chfid={this.state.chfid} onClose={this.handleClose} />
@@ -266,7 +272,7 @@ class InsureeSearcher extends Component {
           tableTitle={formatMessageWithValues(intl, "insuree", "insureeSummaries", { count })}
           rowsPerPageOptions={this.rowsPerPageOptions}
           defaultPageSize={this.defaultPageSize}
-          fetch={this.fetch}
+          fetch={searchInitiated ? this.fetch : () => {}}
           rowIdentifier={this.rowIdentifier}
           filtersToQueryParams={this.filtersToQueryParams}
           defaultOrderBy="chfId"
@@ -278,6 +284,7 @@ class InsureeSearcher extends Component {
           onDoubleClick={(i) => !i.clientMutationId && onDoubleClick(i)}
           reset={this.state.reset}
           canFetch = {false}
+          onChangeFilters={this.onFiltersApplied}
         />
       </Fragment>
     );
