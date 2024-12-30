@@ -24,6 +24,7 @@ const FAMILY_SEARCHER_CONTRIBUTION_KEY = "insuree.FamilySearcher";
 
 class FamilySearcher extends Component {
   state = {
+    searchInitiated: false,
     deleteFamily: null,
     reset: 0,
   };
@@ -177,7 +178,12 @@ class FamilySearcher extends Component {
 
   rowDisabled = (selection, i) => !!i.validityTo;
   rowLocked = (selection, i) => !!i.clientMutationId;
-
+  onFiltersApplied = (filters) => {
+    this.setState({
+      searchInitiated: true,
+      filters, // Update the active filters
+    });
+  };
   render() {
     const {
       intl,
@@ -192,6 +198,7 @@ class FamilySearcher extends Component {
       actionsContributionKey,
     } = this.props;
     let count = familiesPageInfo.totalCount;
+    const { searchInitiated } = this.state;
     return (
       <Fragment>
         <DeleteFamilyDialog
@@ -213,7 +220,7 @@ class FamilySearcher extends Component {
           tableTitle={formatMessageWithValues(intl, "insuree", "familySummaries", { count })}
           rowsPerPageOptions={this.rowsPerPageOptions}
           defaultPageSize={this.defaultPageSize}
-          fetch={this.fetch}
+          fetch={searchInitiated ? this.fetch : () => {}}
           rowIdentifier={this.rowIdentifier}
           filtersToQueryParams={this.filtersToQueryParams}
           defaultOrderBy="-id"
@@ -227,6 +234,7 @@ class FamilySearcher extends Component {
           actions={[]}
           actionsContributionKey={actionsContributionKey}
           canFetch = {false}
+          onChangeFilters={this.onFiltersApplied}
         />
       </Fragment>
     );
