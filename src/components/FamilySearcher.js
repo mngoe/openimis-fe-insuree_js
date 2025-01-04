@@ -239,8 +239,6 @@ class FamilySearcher extends Component {
       onDoubleClick,
       actionsContributionKey,
     } = this.props;
-    console.log("props ", this.props )
-    console.log("state ", this.state)
     let count = familiesPageInfo.totalCount;
     const { searchInitiated } = this.state;
     return (

@@ -43,6 +43,7 @@ class InsureeSearcher extends Component {
     reset: 0,
     failedExport: false,
     searchInitiated: false,
+    initialFitlers: this.props.defaultFilters,
   };
 
   constructor(props) {
@@ -62,6 +63,10 @@ class InsureeSearcher extends Component {
     );
   }
 
+  componentDidMount() {
+    this.scheduleCanInsureeDetails();
+  }
+
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (!prevProps.errorWorkersExport && this.props.errorWorkersExport) {
       this.setState({ failedExport: true });
@@ -79,10 +84,34 @@ class InsureeSearcher extends Component {
     } else if (!prevProps.confirmed && this.props.confirmed && !!this.state.confirmedAction) {
       this.state.confirmedAction();
     }
+    if (
+      prevState.searchInitiated !== this.state.searchInitiated ||
+      prevState.initialFitlers !== this.state.initialFitlers
+    ) {
+      this.scheduleCanInsureeDetails();
+    }
   }
 
   fetch = (prms) => {
     this.props.fetchInsureeSummaries(this.props.modulesManager, prms, this.isWorker);
+  };
+
+  canFetchInsureeDetails = () => {
+    if (this.state.searchInitiated === false && !!this.state.initialFitlers) {
+      this.onFiltersApplied(this.state.initialFitlers);
+    }
+  };
+
+
+
+  scheduleCanInsureeDetails = () => {
+    if (this.debounceTimeout) {
+      clearTimeout(this.debounceTimeout);
+    }
+
+    this.debounceTimeout = setTimeout(() => {
+      this.canFetchInsureeDetails();
+    }, 100);
   };
 
   rowIdentifier = (r) => r.uuid;

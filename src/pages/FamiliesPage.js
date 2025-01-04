@@ -58,8 +58,6 @@ class FamiliesPage extends Component {
 
   render() {
     const { intl, classes, rights } = this.props;
-    console.log(" props page ", this.props )
-    console.log(" state page ", this.state)
     return (
       <div className={classes.page}>
         <FamilySearcher
