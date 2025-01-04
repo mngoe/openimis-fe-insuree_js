@@ -27,6 +27,7 @@ class FamilySearcher extends Component {
     searchInitiated: false,
     deleteFamily: null,
     reset: 0,
+    initialFitlers: this.props.defaultFilters,
   };
 
   constructor(props) {
@@ -45,16 +46,45 @@ class FamilySearcher extends Component {
     );
   }
 
+  componentDidMount() {
+    this.scheduleCanFetchFamilyDetails();
+  }
+
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (prevProps.submittingMutation && !this.props.submittingMutation) {
       this.props.journalize(this.props.mutation);
       this.setState({ reset: this.state.reset + 1 });
+    }
+    if (
+      prevState.searchInitiated !== this.state.searchInitiated ||
+      prevState.initialFitlers !== this.state.initialFitlers
+    ) {
+      this.scheduleCanFetchFamilyDetails();
     }
   }
 
   fetch = (prms) => {
     this.props.fetchFamilySummaries(this.props.modulesManager, prms);
   };
+
+  canFetchFamilyDetails = () => {
+    if (this.state.searchInitiated === false && !!this.state.initialFitlers) {
+      this.onFiltersApplied(this.state.initialFitlers);
+    }
+  };
+
+
+
+  scheduleCanFetchFamilyDetails = () => {
+    if (this.debounceTimeout) {
+      clearTimeout(this.debounceTimeout);
+    }
+
+    this.debounceTimeout = setTimeout(() => {
+      this.canFetchFamilyDetails();
+    }, 100);
+  };
+
 
   rowIdentifier = (r) => r.uuid;
 
@@ -209,6 +239,8 @@ class FamilySearcher extends Component {
       onDoubleClick,
       actionsContributionKey,
     } = this.props;
+    console.log("props ", this.props )
+    console.log("state ", this.state)
     let count = familiesPageInfo.totalCount;
     const { searchInitiated } = this.state;
     return (
