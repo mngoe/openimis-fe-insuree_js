@@ -61,6 +61,11 @@ class InsureeSearcher extends Component {
       "renderLastNameFirst",
       DEFAULT.RENDER_LAST_NAME_FIRST,
     );
+    this.isDefaultFetchInsureeActivated = this.props.modulesManager.getConf(
+      "fe-insuree",
+      "isDefaultFetchInsureeActivated",
+      false
+    );
   }
 
   componentDidMount() {
@@ -352,7 +357,7 @@ class InsureeSearcher extends Component {
           tableTitle={formatMessageWithValues(intl, "insuree", "insureeSummaries", { count })}
           rowsPerPageOptions={this.rowsPerPageOptions}
           defaultPageSize={this.defaultPageSize}
-          fetch={searchInitiated ? this.fetch : () => {}}
+          fetch={this.isDefaultFetchInsureeActivated == false  && searchInitiated ? this.fetch : this.isDefaultFetchInsureeActivated == true ? this.fetch : () => {}}
           rowIdentifier={this.rowIdentifier}
           rowSecondaryHighlighted={this.rowSecondaryHighlighted}
           filtersToQueryParams={this.filtersToQueryParams}

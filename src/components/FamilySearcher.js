@@ -44,6 +44,11 @@ class FamilySearcher extends Component {
       "renderLastNameFirst",
       DEFAULT.RENDER_LAST_NAME_FIRST,
     );
+    this.isDefaultFetchFamilyActivated = this.props.modulesManager.getConf(
+      "fe-insuree",
+      "isDefaultFetchFamilyActivated",
+      false
+    );
   }
 
   componentDidMount() {
@@ -262,7 +267,7 @@ class FamilySearcher extends Component {
           tableTitle={formatMessageWithValues(intl, "insuree", "familySummaries", { count })}
           rowsPerPageOptions={this.rowsPerPageOptions}
           defaultPageSize={this.defaultPageSize}
-          fetch={searchInitiated ? this.fetch : () => {}}
+          fetch={this.isDefaultFetchFamilyActivated == false  && searchInitiated ? this.fetch : this.isDefaultFetchFamilyActivated == true ? this.fetch : () => {}}
           rowIdentifier={this.rowIdentifier}
           filtersToQueryParams={this.filtersToQueryParams}
           defaultOrderBy="-id"
