@@ -15,6 +15,15 @@ const styles = (theme) => ({
 });
 
 class InsureesPage extends Component {
+
+  constructor(props) {
+    super(props);
+    let defaultFilters = {};
+    this.state = {
+      defaultFilters,
+    };
+  }
+
   onDoubleClick = (i, newTab = false) => {
     historyPush(this.props.modulesManager, this.props.history, "insuree.route.insuree", [i.uuid], newTab);
   };
@@ -27,7 +36,7 @@ class InsureesPage extends Component {
     const { intl, classes, rights } = this.props;
     return (
       <div className={classes.page}>
-        <InsureeSearcher cacheFiltersKey="insureeInsureesPageFiltersCache" onDoubleClick={this.onDoubleClick} />
+        <InsureeSearcher cacheFiltersKey="insureeInsureesPageFiltersCache" onDoubleClick={this.onDoubleClick} defaultFilters={this.state.defaultFilters} />
         {rights.includes(RIGHT_INSUREE_ADD) &&
           withTooltip(
             <div className={classes.fab}>

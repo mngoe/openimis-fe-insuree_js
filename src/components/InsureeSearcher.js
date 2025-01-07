@@ -32,6 +32,7 @@ class InsureeSearcher extends Component {
     chfid: null,
     confirmedAction: null,
     reset: 0,
+    initialFitlers: this.props.defaultFilters,
   };
 
   constructor(props) {
@@ -43,6 +44,15 @@ class InsureeSearcher extends Component {
     );
     this.defaultPageSize = props.modulesManager.getConf("fe-insuree", "insureeFilter.defaultPageSize", 10);
     this.locationLevels = this.props.modulesManager.getConf("fe-location", "location.Location.MaxLevels", 4);
+    this.isDefaultFetchInsureeActivated = this.props.modulesManager.getConf(
+      "fe-insuree",
+      "isDefaultFetchInsureeActivated",
+      true
+    );
+  }
+
+  componentDidMount() {
+    this.scheduleCanInsureeDetails();
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -52,10 +62,32 @@ class InsureeSearcher extends Component {
     } else if (!prevProps.confirmed && this.props.confirmed && !!this.state.confirmedAction) {
       this.state.confirmedAction();
     }
+    if (
+      prevState.searchInitiated !== this.state.searchInitiated ||
+      prevState.initialFitlers !== this.state.initialFitlers
+    ) {
+      this.scheduleCanInsureeDetails();
+    }
   }
 
   fetch = (prms) => {
     this.props.fetchInsureeSummaries(this.props.modulesManager, prms);
+  };
+
+  canFetchInsureeDetails = () => {
+    if (this.state.searchInitiated === false && !!this.state.initialFitlers) {
+      this.onFiltersApplied(this.state.initialFitlers);
+    }
+  };
+
+  scheduleCanInsureeDetails = () => {
+    if (this.debounceTimeout) {
+      clearTimeout(this.debounceTimeout);
+    }
+
+    this.debounceTimeout = setTimeout(() => {
+      this.canFetchInsureeDetails();
+    }, 100);
   };
 
   rowIdentifier = (r) => r.uuid;
@@ -272,7 +304,7 @@ class InsureeSearcher extends Component {
           tableTitle={formatMessageWithValues(intl, "insuree", "insureeSummaries", { count })}
           rowsPerPageOptions={this.rowsPerPageOptions}
           defaultPageSize={this.defaultPageSize}
-          fetch={searchInitiated ? this.fetch : () => {}}
+          fetch={this.isDefaultFetchInsureeActivated == false  && searchInitiated ? this.fetch : this.isDefaultFetchInsureeActivated == true ? this.fetch : () => {}}
           rowIdentifier={this.rowIdentifier}
           filtersToQueryParams={this.filtersToQueryParams}
           defaultOrderBy="chfId"
