@@ -47,7 +47,7 @@ class FamilySearcher extends Component {
     this.isDefaultFetchFamilyActivated = this.props.modulesManager.getConf(
       "fe-insuree",
       "isDefaultFetchFamilyActivated",
-      false
+      true
     );
   }
 

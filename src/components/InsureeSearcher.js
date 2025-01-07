@@ -64,7 +64,7 @@ class InsureeSearcher extends Component {
     this.isDefaultFetchInsureeActivated = this.props.modulesManager.getConf(
       "fe-insuree",
       "isDefaultFetchInsureeActivated",
-      false
+      true
     );
   }
 
