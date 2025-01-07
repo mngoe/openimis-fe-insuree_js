@@ -92,3 +92,6 @@ None
 - `ProfessionPicker.selectThreshold`, threshold to switch from combo box to drop down options in profession picker, default: 10
 - `InsureeOfficer.selectThreshold`, threshold to switch from combo box to drop down options in insuree officer picker, default: 10
 - `RelationPicker.selectThreshold`, threshold to switch from combo box to drop down options in family relation picker, default: 10
+- `isDefaultFetchInsureeActivated`, manage default fetch behavior of insuree searcher ; default: true
+- `isDefaultFetchFamilyActivated`, manage default fetch behavior of family searcher ; default: true
+
