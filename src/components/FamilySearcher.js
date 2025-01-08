@@ -27,6 +27,7 @@ class FamilySearcher extends Component {
     searchInitiated: false,
     deleteFamily: null,
     reset: 0,
+    initialFitlers: this.props.defaultFilters,
   };
 
   constructor(props) {
@@ -38,6 +39,15 @@ class FamilySearcher extends Component {
     );
     this.defaultPageSize = props.modulesManager.getConf("fe-insuree", "familyFilter.defaultPageSize", 10);
     this.locationLevels = this.props.modulesManager.getConf("fe-location", "location.Location.MaxLevels", 4);
+    this.isDefaultFetchFamilyActivated = this.props.modulesManager.getConf(
+      "fe-insuree",
+      "isDefaultFetchFamilyActivated",
+      true
+    );
+  }
+
+  componentDidMount() {
+    this.scheduleCanFetchFamilyDetails();
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -45,10 +55,34 @@ class FamilySearcher extends Component {
       this.props.journalize(this.props.mutation);
       this.setState({ reset: this.state.reset + 1 });
     }
+    if (
+      prevState.searchInitiated !== this.state.searchInitiated ||
+      prevState.initialFitlers !== this.state.initialFitlers
+    ) {
+      this.scheduleCanFetchFamilyDetails();
+    }
   }
 
   fetch = (prms) => {
     this.props.fetchFamilySummaries(this.props.modulesManager, prms);
+  };
+
+  canFetchFamilyDetails = () => {
+    if (this.state.searchInitiated === false && !!this.state.initialFitlers) {
+      this.onFiltersApplied(this.state.initialFitlers);
+    }
+  };
+
+
+
+  scheduleCanFetchFamilyDetails = () => {
+    if (this.debounceTimeout) {
+      clearTimeout(this.debounceTimeout);
+    }
+
+    this.debounceTimeout = setTimeout(() => {
+      this.canFetchFamilyDetails();
+    }, 100);
   };
 
   rowIdentifier = (r) => r.uuid;
@@ -220,7 +254,7 @@ class FamilySearcher extends Component {
           tableTitle={formatMessageWithValues(intl, "insuree", "familySummaries", { count })}
           rowsPerPageOptions={this.rowsPerPageOptions}
           defaultPageSize={this.defaultPageSize}
-          fetch={searchInitiated ? this.fetch : () => {}}
+          fetch={this.isDefaultFetchFamilyActivated == false  && searchInitiated ? this.fetch : this.isDefaultFetchFamilyActivated == true ? this.fetch : () => {}}
           rowIdentifier={this.rowIdentifier}
           filtersToQueryParams={this.filtersToQueryParams}
           defaultOrderBy="-id"
