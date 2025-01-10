@@ -63,6 +63,7 @@ const FAMILY_FULL_PROJECTION = (mm) => [
   "validityTo",
   `headInsuree{${FAMILY_HEAD_PROJECTION(mm).join(",")}}`,
   "location" + mm.getProjection("location.Location.FlatProjection"),
+  "policies{edges{node{uuid status product{code name program{nameProgram}}}}}",
   "clientMutationId",
 ];
 
