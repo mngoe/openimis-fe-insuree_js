@@ -99,3 +99,5 @@ None
 - `showInsureeSummaryAddress`, show insuree address information in enquire, default false.
 - `insureeForm.isInsureeStatusRequired`, make insuree status dropdown mandatory, default false.
 - `insureeForm.isInsureePhotoRequired`, make photo upload of an insuree mandatory, default false.
+- `isDefaultFetchInsureeActivated`, manage default fetch behavior of insuree searcher ; default: true
+- `isDefaultFetchFamilyActivated`, manage default fetch behavior of family searcher ; default: true

@@ -90,7 +90,6 @@ class FamilySearcher extends Component {
     }, 100);
   };
 
-
   rowIdentifier = (r) => r.uuid;
 
   filtersToQueryParams = (state) => {
@@ -230,7 +229,12 @@ class FamilySearcher extends Component {
   };
   rowDisabled = (selection, i) => !!i.validityTo;
   rowLocked = (selection, i) => !!i.clientMutationId;
-
+  onFiltersApplied = (filters) => {
+    this.setState({
+      searchInitiated: true,
+      filters, // Update the active filters
+    });
+  };
   render() {
     const {
       intl,
