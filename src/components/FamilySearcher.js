@@ -16,7 +16,7 @@ import {
 import { fetchFamilySummaries, deleteFamily } from "../actions";
 import { Delete as DeleteIcon } from "@material-ui/icons";
 import FamilyFilter from "./FamilyFilter";
-import { RIGHT_FAMILY_DELETE } from "../constants";
+import { DEFAULT, RIGHT_FAMILY_DELETE } from "../constants";
 import { familyLabel } from "../utils/utils";
 import DeleteFamilyDialog from "./DeleteFamilyDialog";
 
@@ -39,6 +39,11 @@ class FamilySearcher extends Component {
     );
     this.defaultPageSize = props.modulesManager.getConf("fe-insuree", "familyFilter.defaultPageSize", 10);
     this.locationLevels = this.props.modulesManager.getConf("fe-location", "location.Location.MaxLevels", 4);
+    this.renderLastNameFirst = props.modulesManager.getConf(
+      "fe-insuree",
+      "renderLastNameFirst",
+      DEFAULT.RENDER_LAST_NAME_FIRST,
+    );
     this.isDefaultFetchFamilyActivated = this.props.modulesManager.getConf(
       "fe-insuree",
       "isDefaultFetchFamilyActivated",
@@ -91,12 +96,16 @@ class FamilySearcher extends Component {
     let prms = Object.keys(state.filters)
       .filter((family) => !!state.filters[family]["filter"])
       .map((family) => state.filters[family]["filter"]);
-    prms.push(`first: ${state.pageSize}`);
+    if (!state.beforeCursor && !state.afterCursor) {
+      prms.push(`first: ${state.pageSize}`);
+    }
     if (!!state.afterCursor) {
       prms.push(`after: "${state.afterCursor}"`);
+      prms.push(`first: ${state.pageSize}`);
     }
     if (!!state.beforeCursor) {
       prms.push(`before: "${state.beforeCursor}"`);
+      prms.push(`last: ${state.pageSize}`);
     }
     if (!!state.orderBy) {
       prms.push(`orderBy: ["${state.orderBy}"]`);
@@ -117,9 +126,8 @@ class FamilySearcher extends Component {
     }
     h.push(
       "insuree.familySummaries.confirmationNo",
-      "insuree.familySummaries.validityFrom",
-      "insuree.familySummaries.validityTo",
-      "insuree.familySummaries.poverty",
+      filters?.showHistory?.value ? "insuree.familySummaries.validityFrom" : null,
+      filters?.showHistory?.value ? "insuree.familySummaries.validityTo" : null,
       "insuree.familySummaries.openNewTab",
     );
     if (!!this.props.rights.includes(RIGHT_FAMILY_DELETE)) {
@@ -192,9 +200,12 @@ class FamilySearcher extends Component {
     }
     formatters.push(
       (family) => family.confirmationNo,
-      (family) => formatDateFromISO(this.props.modulesManager, this.props.intl, family.validityFrom),
-      (family) => formatDateFromISO(this.props.modulesManager, this.props.intl, family.validityTo),
-      (family) => <Checkbox color="primary" checked={family.poverty} readOnly />,
+      filters?.showHistory?.value
+        ? (family) => formatDateFromISO(this.props.modulesManager, this.props.intl, family.validityFrom)
+        : null,
+      filters?.showHistory?.value
+        ? (family) => formatDateFromISO(this.props.modulesManager, this.props.intl, family.validityTo)
+        : null,
       (family) => (
         <Tooltip title={formatMessage(this.props.intl, "insuree", "familySummaries.openNewTabButton.tooltip")}>
           <IconButton onClick={(e) => !family.clientMutationId && this.props.onDoubleClick(family, true)}>
@@ -210,6 +221,12 @@ class FamilySearcher extends Component {
     return formatters;
   };
 
+  onFiltersApplied = (filters) => {
+    this.setState({
+      searchInitiated: true,
+      filters, // Update the active filters
+    });
+  };
   rowDisabled = (selection, i) => !!i.validityTo;
   rowLocked = (selection, i) => !!i.clientMutationId;
   onFiltersApplied = (filters) => {
