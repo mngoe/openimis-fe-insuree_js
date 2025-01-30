@@ -437,7 +437,6 @@ export function formatUnlinkFamily (familyUuids, cancelPolicies){
 }
 
 export function createFamily(mm, family, clientMutationLabel) {
-  console.log('family formated ', formatFamilyGQL(mm, family))
   let mutation = formatMutation("createFamily", formatFamilyGQL(mm, family), clientMutationLabel);
   var requestedDateTime = new Date();
   return graphql(mutation.payload, ["INSUREE_MUTATION_REQ", "INSUREE_CREATE_FAMILY_RESP", "INSUREE_MUTATION_ERR"], {
