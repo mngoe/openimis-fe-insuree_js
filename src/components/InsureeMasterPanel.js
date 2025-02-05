@@ -187,7 +187,7 @@ class InsureeMasterPanel extends FormPanel {
                         value={!!edited && !!edited.marital ? edited.marital : "N"}
                         module="insuree"
                         readOnly={readOnly}
-                        withNull={true}
+                        withNull={false}
                         onChange={(v) => this.updateAttribute("marital", v)}
                       />
                     </Grid>
