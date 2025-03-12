@@ -103,7 +103,15 @@ const INSUREE_FULL_PROJECTION = (mm) => [
   "healthFacility" + mm.getProjection("location.HealthFacilityPicker.projection"),
 ];
 
-export const INSUREE_PICKER_PROJECTION = ["id", "uuid", "chfId", "lastName", "otherNames", "dob"];
+export const INSUREE_PICKER_PROJECTION = [
+  "id", 
+  "uuid", 
+  "chfId", 
+  "lastName", 
+  "otherNames", 
+  "dob", 
+  "insureePolicies{edges{node{policy{id status policyNumber product{id name program{id nameProgram}}}}}}"
+];
 
 export function fetchInsureeGenders() {
   const payload = formatQuery("insureeGenders", null, ["code"]);
