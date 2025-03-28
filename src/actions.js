@@ -139,7 +139,7 @@ export function fetchInsuree(mm, chfid) {
       "photo{folder,filename,photo}",
       "gender{code, gender, altLanguage}",
       "healthFacility" + mm.getProjection("location.HealthFacilityPicker.projection"),
-      "insureePolicies{edges{node{policy{id status policyNumber product{id name program{id nameProgram}}}}}}"
+      "insureePolicies{edges{node{policy{id status effectiveDate expiryDate policyNumber product{id name program{id nameProgram}}}}}}"
     ],
   );
   return graphql(payload, "INSUREE_INSUREE");
