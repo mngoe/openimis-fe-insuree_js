@@ -25,7 +25,7 @@ import { fetchFamily, newFamily, createFamily, fetchFamilyMutation, fetchUserHea
 import FamilyInsureesOverview from "./FamilyInsureesOverview";
 import HeadInsureeMasterPanel from "./HeadInsureeMasterPanel";
 
-import { insureeLabel, isValidInsuree } from "../utils/utils";
+import { insureeLabel, isValidInsuree, isChfIdOnlyNumbers } from "../utils/utils";
 import FamilyVihMasterPanel from "./FamilyVihMasterPanel";
 
 const styles = (theme) => ({
@@ -150,6 +150,7 @@ class FamilyForm extends Component {
     )
       return false;
     if (!this.state.family.headInsuree.gender || !this.state.family.headInsuree.gender?.code) return false;
+    if (!!this.state.family.headInsuree.chfId && isChfIdOnlyNumbers(this.state.family.headInsuree.chfId)) return false;
     return true;
   };
 

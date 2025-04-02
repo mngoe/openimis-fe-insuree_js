@@ -12,6 +12,8 @@ import {
   withModulesManager,
 } from "@openimis/fe-core";
 import { RIGHT_VIH } from "../constants";
+import { isChfIdOnlyNumbers } from "../utils/utils";
+
 
 const styles = (theme) => ({
   paper: theme.paper.paper,
@@ -84,6 +86,7 @@ class InsureeVihMasterPanel extends FormPanel {
                   label="Insuree.chfId"
                   required={true}
                   readOnly={readOnly}
+                  error={!!edited &&!!edited.chfId && isChfIdOnlyNumbers(edited.chfId) ? true : false}
                   value={edited?.chfId}
                   new_insuree={!edited?.id}
                   onChange={(v) => this.updateAttribute("chfId", v)}
