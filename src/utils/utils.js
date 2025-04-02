@@ -64,3 +64,7 @@ export const formatLocationString = (family) => {
 export const isValidWorker = (worker) => {
   return worker?.chfId;
 };
+export const  isChfIdOnlyNumbers = (chfId) => {
+  const onlyNumberRegex = /^\d+$/;
+  return onlyNumberRegex.test(chfId);
+};
