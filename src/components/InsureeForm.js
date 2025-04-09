@@ -19,7 +19,7 @@ import {
 } from "@openimis/fe-core";
 import { fetchInsureeFull, fetchFamily, clearInsuree, fetchInsureeMutation, fetchUserHealthFacilityFullPath } from "../actions";
 import { DEFAULT, INSUREE_ACTIVE_STRING, RIGHT_INSUREE } from "../constants";
-import { insureeLabel, isValidInsuree, isValidWorker } from "../utils/utils";
+import { insureeLabel, isValidInsuree, isValidWorker, isChfIdOnlyNumbers } from "../utils/utils";
 import FamilyDisplayPanel from "./FamilyDisplayPanel";
 import InsureeMasterPanel from "../components/InsureeMasterPanel";
 import InsureeVihMasterPanel from "./InsureeVihMasterPanel";
@@ -217,6 +217,7 @@ class InsureeForm extends Component {
     if (!this.state.insuree.dob) return false;
     if (!this.state.insuree.gender || !this.state.insuree.gender?.code) return false;
     if (!!this.state.insuree.photo && (!this.state.insuree.photo.date || !this.state.insuree.photo.officerId)) return false;
+    if (!!this.state.insuree.chfId && isChfIdOnlyNumbers(this.state.insuree.chfId)) return false
     return true
 
   };
