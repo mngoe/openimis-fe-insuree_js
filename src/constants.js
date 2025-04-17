@@ -36,3 +36,5 @@ export const FAMILY_TYPE_POLYGAMY_CODE = "P";
 export const INSUREE_PREFERRED_PAYMENT_METHOD = "PB"
 
 export const WITHOUT_STR = "without"
+export const PASSPORT_MIN_LENGTH = 7
+export const PASSPORT_MAX_LENGTH = 8
