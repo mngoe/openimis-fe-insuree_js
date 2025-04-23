@@ -61,6 +61,7 @@ const FAMILY_FULL_PROJECTION = (mm) => [
   "location" + mm.getProjection("location.Location.FlatProjection"),
   "clientMutationId",
   "parent{id}",
+  "attachments{idAttachment,filename,document,title,date,mime}",
 ];
 
 export const FAMILY_PICKER_PROJECTION = ["id", "uuid", "headInsuree{id chfId uuid lastName otherNames}"];
@@ -418,6 +419,7 @@ export function formatFamilyGQL(mm, family) {
     ${!!family.jsonExt ? `jsonExt: ${formatJsonField(family.jsonExt)}` : ""}
     ${!!family.contribution ? `contribution: ${formatJsonField(family.contribution)}` : ""}
     ${!!family.parentFamily ? `parentId: ${decodeId(family.parentFamily)}` : ""}
+    ${!!family.attachments && family.attachments.length>0 ? formatAttachments(family.attachments): ""}
   `;
 }
 
@@ -632,4 +634,49 @@ export function clearWorkersExport() {
       type: "WORKERS_EXPORT_CLEAR",
     });
   };
+}
+
+export function fetchFamilyAttachments(family) {
+  const payload = formatPageQuery(
+    "insureeAttachments",
+    [`family_id: "${decodeId(family.id)}"`],
+    ["idAttachment", "title", "folder", "date", "filename", "mime"],
+  );
+  return graphql(payload, "INSUREE_INSUREE_ATTACHMENTS");
+}
+
+export function deleteAttachment(attach, clientMutationLabel) {
+  let mutation = formatMutation("deleteInsureeAttachment", `id: "${decodeId(attach.id)}"`, clientMutationLabel);
+  var requestedDateTime = new Date();
+  return graphql(
+    mutation.payload,
+    ["CLAIM_MUTATION_REQ", "INSUREE_DELETE_INSUREE_ATTACHMENT_RESP", "INSUREE_MUTATION_ERR"],
+    {
+      clientMutationId: mutation.clientMutationId,
+      clientMutationLabel,
+      requestedDateTime,
+    },
+  );
+}
+
+export function formatAttachments(attachments) {
+  if (!!attachments) {
+    attachments.pop();
+    return `attachments: [
+    ${attachments.map((a) => formatAttachment(a)).join("\n")}
+  ]`;
+  }
+  return ``
+}
+
+export function formatAttachment(attach) {
+  return `{
+    ${!!attach.id ? `id: "${decodeId(attach.id)}"` : ""}
+    ${!!attach.insureeId ? `insureeId: "${decodeId(attach.insureeId)}"` : ""}
+    ${!!attach.title ? `title: "${formatGQLString(attach.title)}"` : ""}
+    ${!!attach.date ? `date: "${attach.date}"` : ""}
+    ${!!attach.mime ? `mime: "${attach.mime}"` : ""}
+    ${!!attach.filename ? `filename: "${formatGQLString(attach.filename)}"` : ""}
+    ${!!attach.document ? `document: "${attach.document}"` : ""}
+  }`;
 }

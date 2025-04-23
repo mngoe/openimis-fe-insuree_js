@@ -278,5 +278,12 @@
   "insuree.FamilyMembersTable.phone": "Phone",
   "insuree.FamilyMembersTable.noMembers": "Family not registered.",
   "insuree.familySummaries.selectParent": "Select Parent Family",
-  "insuree.FamilyFilter.isSubfamily": "Sub-Families"
+  "insuree.FamilyFilter.isSubfamily": "Sub-Families",
+  "insuree.family.InsureeFilePanel.title": "Attachments",
+  "insuree.insureeAttachment.type": "Type",
+  "insuree.insureeAttachment.title": "Title",
+  "insuree.insureeAttachment.date": "Date",
+  "insuree.edit.attachments.title": "Attachments",
+  "insuree.insureeAttachment.fileName": "File",
+  "insureeAttachment.action": "Action"
 }

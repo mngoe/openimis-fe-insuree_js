@@ -25,6 +25,7 @@ import HeadInsureeMasterPanel from "./HeadInsureeMasterPanel";
 import FamilyMasterPanel from "./FamilyMasterPanel";
 import FamilyInsureesOverview from "./FamilyInsureesOverview";
 import SubFamiliesSummary from "./SubFamiliesSummary";
+import FamilyAttachmentPanel from "./FamilyAttachmentPanel";
 
 const styles = (theme) => ({
   lockedPage: theme.page.locked,
@@ -42,7 +43,9 @@ class FamilyForm extends Component {
     newFamily: true,
     confirmedAction: null,
     isSaved: false,
-    isButtonDisabled : false
+    isButtonDisabled : false,
+    attachmentsInsuree: null,
+    isSaving: false
   };
 
   _newFamily() {
@@ -135,6 +138,13 @@ class FamilyForm extends Component {
     });
   };
 
+  canSaveDetail = (details) => {
+    if (!details) return false;
+    if (details.filename === null || details.filename === undefined || details.filename === "") return false;
+    if (details.title === null || details.title === undefined || details.title === "") return false;
+    return true;
+  };
+
   canSave = () => {
     if (!this.state.family.location) return false;
     if (!this.state.family.familyType ) return false;
@@ -143,12 +153,18 @@ class FamilyForm extends Component {
     if (!!this.state.family.familyType ){
       return this.state.family.headInsuree && isValidInsuree(this.state.family.headInsuree, this.props.modulesManager);
     }
+    if (this.state.family.attachments !== undefined) {
+      if (this.state.family.attachments.length && this.state.family.attachments.filter((details) => !this.canSaveDetail(details)).length - 1) {
+        return false;
+      }
+    }
     if(!!this.state.isButtonDisabled && this.state.isButtonDisabled == true) return false
-    return true;
+    return false;
    
   };
 
   _save = (family) => {
+    this.setState({ isSaving : true})
     this.setState({ lockNew: !family.uuid, isSaved: true }, (e) => this.props.save(family));
   };
 
@@ -181,7 +197,7 @@ class FamilyForm extends Component {
       save,
       back,
     } = this.props;
-    const { family, newFamily, isSaved, isButtonDisabled } = this.state;
+    const { family, newFamily, isSaved, isButtonDisabled , isSaving} = this.state;
     if (!rights.includes(RIGHT_FAMILY)) return null;
     let runningMutation = !!family && !!family.clientMutationId;
     let contributedMutations = modulesManager.getContribs(INSUREE_FAMILY_OVERVIEW_CONTRIBUTED_MUTATIONS_KEY);
@@ -195,7 +211,7 @@ class FamilyForm extends Component {
         onlyIfDirty: !readOnly && !runningMutation && !isSaved,
       },
     ];
-    const shouldBeLocked = !!runningMutation || family?.validityTo;
+    const shouldBeLocked = !!runningMutation || family?.validityTo || isSaving; 
     return (
       <div className={shouldBeLocked ? classes.lockedPage : null}>
         <Helmet
@@ -217,12 +233,12 @@ class FamilyForm extends Component {
             reset={this.state.reset}
             back={back}
             add={!!add && !newFamily ? this._add : null}
-            readOnly={readOnly || runningMutation || !!family.validityTo}
+            readOnly={readOnly || runningMutation || !!family.validityTo || isSaving}
             actions={actions}
             openFamilyButton={openFamilyButton}
             overview={overview}
             HeadPanel={FamilyMasterPanel}
-            Panels={(overview && (!!family.familyType && family.familyType.code == FAMILY_TYPE_POLYGAMY_CODE))? [ HeadInsureeMasterPanel, SubFamiliesSummary] : overview &&(!!family.familyType && family.familyType.code !== FAMILY_TYPE_POLYGAMY_CODE) ? [ FamilyInsureesOverview]  : [HeadInsureeMasterPanel]}
+            Panels={(overview && (!!family.familyType && family.familyType.code == FAMILY_TYPE_POLYGAMY_CODE))? [ HeadInsureeMasterPanel, SubFamiliesSummary] : overview &&(!!family.familyType && family.familyType.code !== FAMILY_TYPE_POLYGAMY_CODE) ? [ FamilyInsureesOverview, FamilyAttachmentPanel]  : overview == false &&(!!family.familyType && family.familyType.code !== FAMILY_TYPE_POLYGAMY_CODE) ? [HeadInsureeMasterPanel, FamilyAttachmentPanel] : [HeadInsureeMasterPanel]}
             contributedPanelsKey={
               overview ? INSUREE_FAMILY_OVERVIEW_PANELS_CONTRIBUTION_KEY : INSUREE_FAMILY_PANELS_CONTRIBUTION_KEY
             }
