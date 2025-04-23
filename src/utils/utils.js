@@ -1,5 +1,5 @@
 import _ from "lodash";
-import { INSUREE_ACTIVE_STRING, INSUREE_PREFERRED_PAYMENT_METHOD } from "../constants";
+import { INSUREE_ACTIVE_STRING, INSUREE_PREFERRED_PAYMENT_METHOD, PASSPORT_MAX_LENGTH, PASSPORT_MIN_LENGTH } from "../constants";
 
 export function insureeLabel(insuree) {
   if (!insuree) return "";
@@ -23,7 +23,9 @@ export const isValidInsuree = (insuree, modulesManager) => {
   const isInsureePhotoRequired = modulesManager.getConf("fe-insuree", "insureeForm.isInsureePhotoRequired", false);
 
   const isInsureeStatusRequired = modulesManager.getConf("fe-insuree", "insureeForm.isInsureeStatusRequired", false);
-  const passportLength = modulesManager.getConf("fe-insuree", "passportLength", 7);
+  const passportMinLength = modulesManager.getConf("fe-insuree", "passportMinLength", PASSPORT_MIN_LENGTH);
+  const passportMaxLength = modulesManager.getConf("fe-insuree", "passportMaxLength", PASSPORT_MAX_LENGTH);
+
   const insureeChildId = modulesManager.getConf("fe-insuree", "insureeForm.insureeChildId", 4);
   if (isInsureeFirstServicePointRequired && !insuree.healthFacility) return false;
   if (insuree.validityTo) return false;
@@ -40,8 +42,7 @@ export const isValidInsuree = (insuree, modulesManager) => {
     }
   }
   if (
-    !insuree.passport ||
-    (!!insuree.passport && (insuree.passport.length < passportLength || insuree.passport.length > passportLength))
+    (!!insuree.passport && (insuree.passport.length < passportMinLength || insuree.passport.length > passportMaxLength))
   )
     return false;
   if (!!insuree.preferredPaymentMethod && insuree.preferredPaymentMethod == INSUREE_PREFERRED_PAYMENT_METHOD && !insuree.bankCoordinates)

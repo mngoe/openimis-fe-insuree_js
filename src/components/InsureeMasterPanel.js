@@ -20,7 +20,7 @@ const styles = (theme) => ({
     height: "100%",
   },
 });
-import { DEFAULT, FAMILY_TYPE_POLYGAMY_CODE, INSUREE_PREFERRED_PAYMENT_METHOD } from "../constants";
+import { DEFAULT, FAMILY_TYPE_POLYGAMY_CODE, INSUREE_PREFERRED_PAYMENT_METHOD, PASSPORT_MIN_LENGTH, PASSPORT_MAX_LENGTH } from "../constants";
 
 const INSUREE_INSUREE_CONTRIBUTION_KEY = "insuree.Insuree";
 const INSUREE_INSUREE_PANELS_CONTRIBUTION_KEY = "insuree.Insuree.panels";
@@ -39,7 +39,9 @@ class InsureeMasterPanel extends FormPanel {
       DEFAULT.RENDER_LAST_NAME_FIRST,
     );
     this.fields = props.modulesManager.getConf("fe-insuree", "fields", "{}");
-    this.passportLength = props.modulesManager.getConf("fe-insuree", "passportLength", 7);
+    this.passportMinLength = props.modulesManager.getConf("fe-insuree", "passportMinLength", PASSPORT_MIN_LENGTH);
+    this.passportMaxLength = props.modulesManager.getConf("fe-insuree", "passportMaxLength", PASSPORT_MAX_LENGTH);
+
     this.insureeChildId = props.modulesManager.getConf(
       "fe-insuree", 
       "insureeForm.insureeChildId", 
@@ -302,12 +304,12 @@ class InsureeMasterPanel extends FormPanel {
                       error={
                         edited &&
                         edited.passport &&
-                        (edited.passport.length > this.passportLength || edited.passport.length < this.passportLength)
+                        (edited.passport.length > this.passportMaxLength || edited.passport.length < this.passportMinLength)
                           ? true
                           : false
                       }
                       readOnly={readOnly}
-                      required={true}
+                      required={false}
                       value={!!edited && !!edited.passport ? edited.passport : ""}
                       onChange={(v) => this.updateAttribute("passport", !!v ? v : null)}
                     />
