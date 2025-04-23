@@ -335,7 +335,9 @@ class FamilyInsureesOverview extends PagedDataHandler {
       "_NEW_",
       this.props.family.uuid,
     ]);
-  rowLocked = (i) => !!i.clientMutationId;
+  rowLocked = (i) => !!i.clientMutationId || this.props.readOnly;
+  rowDisabled = (i) => !!i.clientMutationId || this.props.readOnly;
+
 
   changeInsureeFamily = (cancelPolicies) => {
     let insuree = this.state.changeInsureeFamily;
@@ -496,6 +498,7 @@ class FamilyInsureesOverview extends PagedDataHandler {
           onChangePage={this.onChangePage}
           onChangeRowsPerPage={this.onChangeRowsPerPage}
           rowLocked={this.rowLocked}
+          rowDisabled={this.rowDisabled}
         />
       </Paper>
     );
