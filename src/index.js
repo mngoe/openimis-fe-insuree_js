@@ -47,6 +47,7 @@ import EnrolledFamiliesReport from "./reports/EnrolledFamiliesReport";
 import InsureeFamilyOverviewReport from "./reports/InsureeFamilyOverviewReport";
 import InsureeMissingPhotoReport from "./reports/InsureeMissingPhotoReport";
 import InsureePendingEnrollmentReport from "./reports/InsureePendingEnrollmentReport";
+import AttachmentDialog from "./components/AttachmentDialog";
 
 const ROUTE_INSUREE_FAMILIES = "insuree/families";
 const ROUTE_INSUREE_FAMILY_OVERVIEW = "insuree/families/familyOverview";
@@ -134,6 +135,8 @@ const DEFAULT_CONFIG = {
     { key: "insuree.RelationPicker", ref: RelationPicker },
     { key: "insuree.InsureeNumberInput", ref: InsureeNumberInput },
     { key: "insuree.PaymentMethodPicker", ref: PaymentMethodPicker},
+    { key: "insuree.AttachmentDialog", ref: AttachmentDialog},
+
 
     { key: "insuree.route.families", ref: ROUTE_INSUREE_FAMILIES },
     { key: "insuree.route.familyOverview", ref: ROUTE_INSUREE_FAMILY_OVERVIEW },
