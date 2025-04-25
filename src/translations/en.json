@@ -285,5 +285,6 @@
   "insuree.insureeAttachment.date": "Date",
   "insuree.edit.attachments.title": "Attachments",
   "insuree.insureeAttachment.fileName": "File",
-  "insureeAttachment.action": "Action"
+  "insureeAttachment.action": "Action",
+  "insuree.attachments.title": "{filename}"
 }
