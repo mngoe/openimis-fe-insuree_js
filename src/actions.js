@@ -12,7 +12,7 @@ import {
 import { INSUREE_ACTIVE_STRING } from "./constants";
 
 //NOTE: Fetching all INSUREE_FULL_PROJECTION fields except family.
-const FAMILY_HEAD_PROJECTION = (mm) => [
+const FAMILY_HEAD_PROJECTION = (mm, canSearch) => [
   "id",
   "uuid",
   "chfId",
@@ -23,7 +23,7 @@ const FAMILY_HEAD_PROJECTION = (mm) => [
   "age",
   "validityFrom",
   "validityTo",
-  `photo{id,uuid,date,folder,filename,officerId,photo}`,
+  `${!!canSearch ?"" :"photo{id,uuid,date,folder,filename,officerId,photo}"}`,
   "gender{code, gender}",
   "education{id}",
   "profession{id}",
@@ -175,7 +175,7 @@ export function fetchFamilySummaries(mm, filters) {
     "parent{id}",
     "validityFrom",
     "validityTo",
-    `headInsuree{${FAMILY_HEAD_PROJECTION(mm).join(",")}}`,
+    `headInsuree{${FAMILY_HEAD_PROJECTION(mm, true).join(",")}}`,
     "location" + mm.getProjection("location.Location.FlatProjection"),
     "clientMutationId",
   ];
@@ -200,7 +200,7 @@ export function fetchSubFamilySummary(mm, filters) {
     "parent{id}",
     "validityFrom",
     "validityTo",
-    `headInsuree{${FAMILY_HEAD_PROJECTION(mm).join(",")}}`,
+    `headInsuree{${FAMILY_HEAD_PROJECTION(mm, true).join(",")}}`,
     "location" + mm.getProjection("location.Location.FlatProjection"),
     "clientMutationId",
   ];
