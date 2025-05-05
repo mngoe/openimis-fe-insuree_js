@@ -12,7 +12,7 @@ import {
 import { INSUREE_ACTIVE_STRING } from "./constants";
 
 //NOTE: Fetching all INSUREE_FULL_PROJECTION fields except family.
-const FAMILY_HEAD_PROJECTION = (mm, cansearch) => [
+const FAMILY_HEAD_PROJECTION = (mm, canSearch) => [
   "id",
   "uuid",
   "chfId",
@@ -23,7 +23,7 @@ const FAMILY_HEAD_PROJECTION = (mm, cansearch) => [
   "age",
   "validityFrom",
   "validityTo",
-  `${!!cansearch ?"" :"photo{id,uuid,date,folder,filename,officerId,photo}"}`,
+  `${!!canSearch ?"" :"photo{id,uuid,date,folder,filename,officerId,photo}"}`,
   "gender{code, gender}",
   "education{id}",
   "profession{id}",
