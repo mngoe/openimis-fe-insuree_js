@@ -51,7 +51,7 @@ import { insureeLabel, familyLabel } from "../utils/utils";
 import ChangeInsureeFamilyDialog from "./ChangeInsureeFamilyDialog";
 import RemoveSubFamilyDialog from "./RemoveSubFamilyDialog";
 import EnquiryDialog from "./EnquiryDialog";
-import FamilyInsureesSearcher from "./FamilyInsureesSearcher";
+import FamilySubFamilySearcher from "./FamilySubFamilySearcher";
 import RemoveInsureeFromFamilyDialog from "./RemoveInsureeFromFamilyDialog";
 
 const styles = (theme) => ({
@@ -497,7 +497,7 @@ class SubFamiliesSummary extends PagedDataHandler {
           onCancel={(e) => this.setState({ removeInsuree: null })}
         />
         <Collapse in={this.state.showIFamilySearcher}>
-          <FamilyInsureesSearcher
+          <FamilySubFamilySearcher
             filters={this.state.filters}
             onChangeFilters={this.onChangeFilters}
             resetFilters={this.resetFilters}
