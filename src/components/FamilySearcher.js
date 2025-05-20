@@ -290,7 +290,7 @@ class FamilySearcher extends Component {
             headers={this.headers}
             itemFormatters={this.itemFormatters}
             sorts={this.sorts}
-            rowDisabled={shouldBeLocked == true ? shouldBeLocked :this.rowDisabled}
+            // rowDisabled={shouldBeLocked == true ? shouldBeLocked :this.rowDisabled}
             rowLocked={shouldBeLocked == true ? () => true: this.rowLocked}
             onDoubleClick={(f) => !f.clientMutationId  && !selectParent && onDoubleClick(f)}
             reset={this.state.reset}
