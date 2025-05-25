@@ -1,0 +1,10 @@
+{
+    "insuree.family.InsureeFilePanel.title": "Pièces jointes",
+    "insuree.insureeAttachment.type": "Type",
+    "insuree.insureeAttachment.title": "Titre",
+    "insuree.insureeAttachment.date": "Date",
+    "insuree.edit.attachments.title": "Pièces jointes",
+    "insuree.insureeAttachment.fileName": "Fichier",
+    "insureeAttachment.action": "Action",
+    "insuree.attachments.title": "{filename}"
+}
