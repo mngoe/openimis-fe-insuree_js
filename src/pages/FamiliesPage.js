@@ -44,6 +44,15 @@ class FamiliesPage extends Component {
     parentLinked: null,
     canSelectMutiple: false
   };
+
+  constructor(props) {
+    super(props);
+    let defaultFilters = {};
+    this.state = {
+      defaultFilters,
+    };
+  }
+
   onDoubleClick = (f, newTab = false) => {
     historyPush(this.props.modulesManager, this.props.history, "insuree.route.familyOverview", [f.uuid], newTab);
   };
@@ -188,6 +197,7 @@ class FamiliesPage extends Component {
           filterPaneContributionsKey={FAMILY_FILTERS_CONTRIBUTION_KEY}
           actionsContributionKey={FAMILY_ACTION_CONTRIBUTION_KEY}
           actions={actions}
+          defaultFilters = {this.state.defaultFilters}
         />
         <LinkFamilyToParentDialog
           family={this.state.parentLinked}

@@ -14,6 +14,7 @@ function reducer(
     fetchedInsuree: false,
     errorInsuree: null,
     insuree: null,
+    insureeEnquiry: null,
     fetchingInsureeFamilyMembers: false,
     fetchedInsureeFamilyMembers: false,
     errorInsureeFamilyMembers: null,
@@ -119,6 +120,36 @@ function reducer(
           family: null,
           errorFamily: null,
         };
+    case "ENQUIRY_INSUREE_REQ":
+      return {
+        ...state,
+        fetchingInsureeEnquiry: true,
+        fetchedInsureeEnquiry: false,
+        insureeEnquiry: null,
+        errorInsureeEnquiry: null,
+      };
+    case "ENQUIRY_INSUREE_RESP":
+      return {
+        ...state,
+        fetchingInsureeEnquiry: false,
+        fetchedInsureeEnquiry: true,
+        insureeEnquiry: parseData(action.payload.data.insurees)[0],
+        errorInsureeEnquiry: formatGraphQLError(action.payload),
+      };
+    case "ENQUIRY_INSUREE_ERR":
+      return {
+        ...state,
+        fetchedInsureeEnquiry: false,
+        errorInsureeEnquiry: formatServerError(action.payload),
+      };
+    case "ENQUIRY_INSUREE_CLEAR":
+      return {
+        ...state,
+        fetchingInsureeEnquiry: false,
+        fetchedInsureeEnquiry: false,
+        insureeEnquiry: null,
+        errorInsureeEnquiry: null,
+      };
     case "INSUREE_FAMILY_NEW":
       return {
         ...state,
@@ -597,39 +628,6 @@ function reducer(
       return {
         ...state,
         headSelected: action.payload?.headSelected,
-      };
-    case "WORKERS_EXPORT_REQ":
-      return {
-        ...state,
-        fetchingWorkersExport: true,
-        fetchedWorkersExport: false,
-        workersExport: null,
-        workersExportPageInfo: {},
-        errorWorkersExport: null,
-      };
-    case "WORKERS_EXPORT_RESP":
-      return {
-        ...state,
-        fetchingWorkersExport: false,
-        fetchedWorkersExport: true,
-        workersExport: action.payload.data.insureesExport,
-        workersExportPageInfo: pageInfo(action.payload.data.insureesExportPageInfo),
-        errorWorkersExport: formatGraphQLError(action.payload),
-      };
-    case "WORKERS_EXPORT_ERR":
-      return {
-        ...state,
-        fetchingWorkersExport: false,
-        errorWorkersExport: formatServerError(action.payload),
-      };
-    case "WORKERS_EXPORT_CLEAR":
-      return {
-        ...state,
-        fetchingWorkersExport: false,
-        fetchedWorkersExport: false,
-        workersExport: null,
-        workersExportPageInfo: {},
-        errorWorkersExport: null,
       };
     case "INSUREE_MUTATION_REQ":
       return dispatchMutationReq(state, action);

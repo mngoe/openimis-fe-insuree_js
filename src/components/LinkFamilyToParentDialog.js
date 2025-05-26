@@ -22,7 +22,13 @@ class linkFamilyToParentDialog extends Component {
   }
 
   render() {
-    const { classes, family, selectedFamily, onCancel, onConfirm } = this.props;
+    const { 
+      classes, 
+      family, 
+      selectedFamily, 
+      onCancel, 
+      onConfirm 
+    } = this.props;
     return (
       <Dialog open={!!family} onClose={onCancel}>
         <DialogTitle>
@@ -34,7 +40,7 @@ class linkFamilyToParentDialog extends Component {
         </DialogTitle>
 
         <DialogContent>
-        {selectedFamily.map((familie) => (
+        {!!selectedFamily && selectedFamily.length > 0 && selectedFamily.map((familie) => (
             <DialogContentText key={familie.id}>
               <FormattedMessage
                 module="insuree"
