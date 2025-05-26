@@ -45,7 +45,7 @@ class InsureeMasterPanel extends FormPanel {
     this.insureeChildId = props.modulesManager.getConf(
       "fe-insuree", 
       "insureeForm.insureeChildId", 
-      4
+      3
     );
   }
 

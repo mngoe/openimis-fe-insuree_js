@@ -6,5 +6,6 @@
     "insuree.edit.attachments.title": "Pièces jointes",
     "insuree.insureeAttachment.fileName": "Fichier",
     "insureeAttachment.action": "Action",
-    "insuree.attachments.title": "{filename}"
+    "insuree.attachments.title": "{filename}",
+    "insuree.Payment.none": "None"
 }

@@ -60,7 +60,10 @@ const ROUTE_INSUREE_INSUREE = "insuree/insurees/insuree";
 const ROUTE_INSUREE_SUBFAMILY = "insuree/subfamily";
 
 const DEFAULT_CONFIG = {
-  "translations": [{ key: "en", messages: messages_en }, {key: "fr", messages: messages_fr}],
+  "translations": [
+    { key: "en", messages: messages_en },
+    { key: "fr", messages: messages_fr }
+  ],
   "reducers": [{ key: "insuree", reducer }],
   "reports": [
     {
@@ -135,8 +138,8 @@ const DEFAULT_CONFIG = {
     { key: "insuree.FamilyStatusPicker", ref: FamilyStatusPicker },
     { key: "insuree.RelationPicker", ref: RelationPicker },
     { key: "insuree.InsureeNumberInput", ref: InsureeNumberInput },
-    { key: "insuree.PaymentMethodPicker", ref: PaymentMethodPicker},
-    { key: "insuree.AttachmentDialog", ref: AttachmentDialog},
+    { key: "insuree.PaymentMethodPicker", ref: PaymentMethodPicker },
+    { key: "insuree.AttachmentDialog", ref: AttachmentDialog },
 
 
     { key: "insuree.route.families", ref: ROUTE_INSUREE_FAMILIES },
@@ -159,7 +162,7 @@ const DEFAULT_CONFIG = {
   "core.Router": [
     { path: ROUTE_INSUREE_FAMILIES, component: FamiliesPage },
     { path: ROUTE_INSUREE_FAMILY + "/:family_uuid?", component: FamilyPage },
-    { path: ROUTE_INSUREE_SUBFAMILY + "/:family_uuid?", component:  SubFamilyPage},
+    { path: ROUTE_INSUREE_SUBFAMILY + "/:family_uuid?", component: SubFamilyPage },
     { path: ROUTE_INSUREE_FAMILY_OVERVIEW + "/:family_uuid", component: FamilyOverviewPage },
     { path: ROUTE_INSUREE_SUBFAMILY_OVERVIEW + "/:subFamily_uuid?/:family_uuid?/:insuree_uuid?", component: SubFamilyOverviewPage },
     { path: ROUTE_INSUREE_INSUREES, component: InsureesPage },
