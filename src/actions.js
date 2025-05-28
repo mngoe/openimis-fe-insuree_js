@@ -175,7 +175,7 @@ export function fetchFamilySummaries(mm, filters) {
     "parent{id}",
     "validityFrom",
     "validityTo",
-    `headInsuree{id,uuid,chfId,lastName,otherNames,email,phone, dob}`,
+    "headInsuree{id,uuid,chfId,lastName,otherNames,email,phone, dob}",
     "location" + mm.getProjection("location.Location.FlatProjection"),
     "clientMutationId",
   ];
@@ -200,7 +200,7 @@ export function fetchSubFamilySummary(mm, filters) {
     "parent{id}",
     "validityFrom",
     "validityTo",
-    `headInsuree{id,uuid,chfId,lastName,otherNames,email,phone, dob}`,
+    "headInsuree{id,uuid,chfId,lastName,otherNames,email,phone, dob}",
     "location" + mm.getProjection("location.Location.FlatProjection"),
     "clientMutationId",
   ];
