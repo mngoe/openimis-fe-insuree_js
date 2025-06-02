@@ -205,6 +205,7 @@ class FamiliesPage extends Component {
               selectParent={true}
               shouldBeLocked={this.state.shouldBeLocked}
               canSelectMutiple={this.state.canSelectMutiple}
+              isModal={true}
             />
           </DialogContent>
           <DialogActions>
