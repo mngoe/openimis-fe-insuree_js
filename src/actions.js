@@ -347,7 +347,7 @@ function formatInsureePhoto(photo) {
     ${!!photo.uuid ? `uuid: "${photo.uuid}"` : ""}
     ${!!photo.officerId ? `officerId: ${decodeId(photo.officerId)}` : ""}
     ${!!photo.date ? `date: "${photo.date}"` : ""}
-    ${!!photo.photo ? `photo: "${photo.photo}"` : ""}
+    ${!!photo.photo ? `photo: "${formatGQLString(photo.photo)}"` : ""}
     ${!!photo.folder ? `folder: ${JSON.stringify(photo.folder)}` : ""}
     ${!!photo.folder ? `filename: ${JSON.stringify(photo.filename)}` : ""}
   }`;
