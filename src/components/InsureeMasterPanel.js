@@ -110,7 +110,7 @@ class InsureeMasterPanel extends FormPanel {
                       <Grid item xs={3}>
                         <PublishedComponent
                           pubRef="insuree.RelationPicker"
-                          withNull={true}
+                          withNull={false}
                           required={true}
                           nullLabel={formatMessage(this.props.intl, "insuree", `Relation.none`)}
                           readOnly={readOnly}
