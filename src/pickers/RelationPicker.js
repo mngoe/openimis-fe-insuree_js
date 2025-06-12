@@ -44,6 +44,7 @@ class RelationPicker extends Component {
       withNull = false,
       nullLabel = null,
     } = this.props;
+    !!relations && relations.length != 0 && relations.shift();
     return (
       <AutoSuggestion
         module="insuree"
