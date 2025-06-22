@@ -62,9 +62,7 @@ const FAMILY_FULL_PROJECTION = (mm) => [
   "clientMutationId",
   "parent{id}",
   "attachments{idAttachment,filename,document,title,date,mime}",
- 
 ];
-
 
 export const FAMILY_PICKER_PROJECTION = ["id", "uuid", "headInsuree{id chfId uuid lastName otherNames}"];
 
@@ -681,22 +679,4 @@ export function formatAttachment(attach) {
     ${!!attach.filename ? `filename: "${formatGQLString(attach.filename)}"` : ""}
     ${!!attach.document ? `document: "${attach.document}"` : ""}
   }`;
-}
-
-export function formatNotification(notification) {
-  const payload = {
-    PolicyNotification: {
-      approvalOfNotification: !!notification.approvalOfNotification
-        ? notification.approvalOfNotification
-        : false,
-      languageOfNotification: !!notification.languageOfNotification
-        ? notification.languageOfNotification
-        : 'en',
-    },
-  };
-
-  const jsonString = JSON.stringify(payload);
-  const escapedString = jsonString.replace(/"/g, '\\"');
-
-  return `contribution: "${escapedString}"`;
 }
