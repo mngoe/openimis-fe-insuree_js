@@ -47,6 +47,7 @@ class InsureeMasterPanel extends FormPanel {
       "insureeForm.insureeChildId", 
       3
     );
+    this.isEducationMandatory = props.modulesManager.getConf("fe-insuree", "isEducationMandatory", false);
   }
 
   renderLastNameField = (edited, classes, readOnly) => {
@@ -280,7 +281,7 @@ class InsureeMasterPanel extends FormPanel {
                         pubRef="insuree.EducationPicker"
                         module="insuree"
                         value={!!edited && !!edited.education ? edited.education.id : ""}
-                        required={!!edited && !!edited.relationship && edited.relationship.id == this.insureeChildId ? true : false}
+                        required={!!edited && !!edited.relationship && edited.relationship.id == this.insureeChildId && this.isEducationMandatory == true ? true : false}
                         readOnly={readOnly}
                         withNull={false}
                         onChange={(v) => this.updateAttribute("education", { id: v })}
