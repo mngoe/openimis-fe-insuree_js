@@ -368,6 +368,7 @@ class InsureeMasterPanel extends FormPanel {
                   pubRef="insuree.Avatar"
                   photo={!!edited ? edited.photo : null}
                   readOnly={readOnly}
+                  required={true}
                   withMeta={true}
                   onChange={(v) => this.updateAttribute("photo", !!v ? v : null)}
                 />
