@@ -90,6 +90,15 @@ class InsureeMasterPanel extends FormPanel {
       isSubFamily,
       insuree,
     } = this.props;
+    console.log("this.fields ", this.fields)
+    const withoutConf = (!insuree || insuree == null || (!!insuree && insuree.head == true)) ? true: false
+    const requis = (!insuree || insuree == null || (!!insuree && insuree.head == true)) &&
+    this.fields.phoneNoHead == "M"
+      ? true
+      : false
+    console.log("requis ", requis)
+    console.log("is head ",insuree )
+    console.log("without conf ", withoutConf)
 
     return (
       <Grid container>
