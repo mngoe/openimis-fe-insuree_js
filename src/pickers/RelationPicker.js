@@ -14,12 +14,17 @@ class RelationPicker extends Component {
   }
 
   componentDidMount() {
-    if (!this.props.relations) {
+    if (!this.props.relations || this.props.relations.length === 0 || this.props.relations.length === 1) {
       // prevent loading multiple times the cache when component is
       // several times on a page
       setTimeout(() => {
         !this.props.fetching && !this.props.fetched && this.props.fetchRelations(this.props.modulesManager);
       }, Math.floor(Math.random() * 300));
+    }
+  }
+  componentDidUpdate(prevProps) {
+    if (!this.props.relations || this.props.relations.length === 0 || this.props.relations.length === 1) {
+        !this.props.fetching && !this.props.fetched && this.props.fetchRelations(this.props.modulesManager);
     }
   }
 
