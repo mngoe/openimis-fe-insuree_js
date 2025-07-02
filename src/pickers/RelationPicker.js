@@ -14,17 +14,12 @@ class RelationPicker extends Component {
   }
 
   componentDidMount() {
-    if (!this.props.relations || this.props.relations.length === 0 || this.props.relations.length === 1) {
+    if (!this.props.relations) {
       // prevent loading multiple times the cache when component is
       // several times on a page
       setTimeout(() => {
         !this.props.fetching && !this.props.fetched && this.props.fetchRelations(this.props.modulesManager);
       }, Math.floor(Math.random() * 300));
-    }
-  }
-  componentDidUpdate(prevProps) {
-    if (!this.props.relations || this.props.relations.length === 0 || this.props.relations.length === 1) {
-        !this.props.fetching && !this.props.fetched && this.props.fetchRelations(this.props.modulesManager);
     }
   }
 
@@ -49,10 +44,9 @@ class RelationPicker extends Component {
       withNull = false,
       nullLabel = null,
     } = this.props;
-    !!relations && relations.length != 0 && relations.shift();
-    const filteredRelations = !!relations && relations.length != 0 ? relations.filter(item =>
-      item !== 2
-    ) : []
+    const filteredRelations = Array.isArray(relations) 
+    ? [...relations].filter((item, index) => index !== 0 && item !== 2) 
+    : [];
     return (
       <AutoSuggestion
         module="insuree"
