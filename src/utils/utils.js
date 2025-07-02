@@ -42,7 +42,9 @@ export const isValidInsuree = (insuree, modulesManager) => {
     }
   }
   if (
-    (!!insuree.passport && (insuree.passport.length < passportMinLength || insuree.passport.length > passportMaxLength))
+    !!insuree.passport &&
+    insuree.passport.length !== passportMinLength &&
+    insuree.passport.length !== passportMaxLength
   )
     return false;
   if (!!insuree.preferredPaymentMethod && insuree.preferredPaymentMethod == INSUREE_PREFERRED_PAYMENT_METHOD && !insuree.bankCoordinates)
