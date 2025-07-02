@@ -680,3 +680,29 @@ export function formatAttachment(attach) {
     ${!!attach.document ? `document: "${attach.document}"` : ""}
   }`;
 }
+export const fetchContextualEnrollmentOfficer = (mm) => {
+  return graphql(
+    `{
+  contextualInsureeOfficers {
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+      startCursor
+      endCursor
+    }
+    edges {
+      node {
+        id
+        uuid
+        code
+        lastName
+        otherNames
+      }
+    }
+  }
+}
+
+`, 
+    "CONTEXTUAL_ENROLLMENT_OFFICER"
+  )
+};

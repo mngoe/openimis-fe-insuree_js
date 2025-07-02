@@ -76,7 +76,11 @@ function reducer(
     fetchingParentFamily: false, 
     fetchedParentFamily: false,
     parentFamily: null,
-    errorParentfamily: null
+    errorParentfamily: null,
+    contextualEnrollmentOfficer: null,
+    fetchingContextualEnrollmentOfficer: false,
+    fetchedContextualEnrollmentOfficer: false,
+    errorContextualEnrollmentOfficer: null
   },
   action,
 ) {
@@ -631,6 +635,30 @@ function reducer(
         workersExportPageInfo: {},
         errorWorkersExport: null,
       };
+    case "CONTEXTUAL_ENROLLMENT_OFFICER_REQ":
+      return {
+        ...state,
+        fetchingContextualEnrollmentOfficer: true,
+        fetchedContextualEnrollmentOfficer: false,
+        contextualEnrollmentOfficer: null,
+        errorContextualEnrollmentOfficer: null, 
+      }
+    case "CONTEXTUAL_ENROLLMENT_OFFICER_RESP":
+      return {
+       ...state,
+        fetchingContextualEnrollmentOfficer: false,
+        fetchedContextualEnrollmentOfficer: true,
+        contextualEnrollmentOfficer: parseData(action.payload.data.contextualInsureeOfficers),
+        errorContextualEnrollmentOfficer: formatGraphQLError(action.payload),
+      }
+    case "CONTEXTUAL_ENROLLMENT_OFFICER_ERR":
+      return {
+      ...state,
+        fetchingContextualEnrolmentOfficer: false,
+        fetchedContextualEnrolmentOfficer: false,
+        contextualEnrollmentOfficer: null,     
+        errorContextualEnrollmentOfficer: formatServerError(action.payload),
+      }
     case "INSUREE_MUTATION_REQ":
       return dispatchMutationReq(state, action);
     case "INSUREE_MUTATION_ERR":
