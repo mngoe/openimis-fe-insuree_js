@@ -22,11 +22,11 @@ class InsureeOfficer extends Component {
       "renderLastNameFirst",
       DEFAULT.RENDER_LAST_NAME_FIRST,
     );
-    this.isCurrentAdminEnrollmentOfficerActive = props.modulesManager.getConf("fe-insuree", "isCurrentAdminEnrollmentOfficerActive", true);
+    this.isCurrentAdminEnrollmentOfficerActive = props.modulesManager.getConf("fe-insuree", "isCurrentAdminEnrollmentOfficerActive", false);
   }
 
   componentDidMount() {
-    if (!this.props.fetchedInsureeOfficers || !this.isCurrentAdminEnrollmentOfficerActive == false) {
+    if (!this.props.fetchedInsureeOfficers || this.isCurrentAdminEnrollmentOfficerActive == false) {
       // prevent loading multiple times the cache when component is
       // several times on tha page
       setTimeout(() => {
