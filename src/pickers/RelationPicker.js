@@ -45,10 +45,13 @@ class RelationPicker extends Component {
       nullLabel = null,
     } = this.props;
     !!relations && relations.length != 0 && relations.shift();
+    const filteredRelations = !!relations && relations.length != 0 ? relations.filter(item =>
+      item !== 2
+    ) : []
     return (
       <AutoSuggestion
         module="insuree"
-        items={relations}
+        items={filteredRelations}
         label={!!withLabel && (label || formatMessage(intl, "insuree", "RelationPicker.label"))}
         placeholder={
           !!withPlaceholder ? placeholder || formatMessage(intl, "insuree", "RelationPicker.placehoder") : null

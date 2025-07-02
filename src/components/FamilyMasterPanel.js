@@ -129,6 +129,7 @@ class FamilyMasterPanel extends FormPanel {
       subFamily,
       isActiveFilterFamilyType,
     } = this.props;
+
     return (
       <Fragment>
         <Grid container className={classes.tableTitle}>

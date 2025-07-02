@@ -304,7 +304,7 @@ class InsureeMasterPanel extends FormPanel {
                       error={
                         edited &&
                         edited.passport &&
-                        (edited.passport.length > this.passportMaxLength || edited.passport.length < this.passportMinLength)
+                        (edited.passport.length !== this.passportMaxLength && edited.passport.length !== this.passportMinLength)
                           ? true
                           : false
                       }
