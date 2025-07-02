@@ -17,6 +17,9 @@ import InsureeGenderPicker from "./pickers/InsureeGenderPicker";
 import EducationPicker from "./pickers/EducationPicker";
 import ProfessionPicker from "./pickers/ProfessionPicker";
 import IdentificationTypePicker from "./pickers/IdentificationTypePicker";
+import CouvertureAssuranceMutuellePicker from "./pickers/CouvertureAssuranceMutuellePicker";
+import TypesDhabitationPicker from "./pickers/TypesDhabitationPicker";
+import MilieuDeResidencePicker from "./pickers/MilieuDeResidencePicker";
 import InsureeMaritalStatusPicker from "./pickers/InsureeMaritalStatusPicker";
 import PaymentMethodPicker from "./pickers/PaymentMethodPicker";
 import InsureeStatusPicker from "./pickers/InsureeStatusPicker";
@@ -28,6 +31,8 @@ import InsureIncomeLevelPicker from "./pickers/InsureIncomeLevelPicker";
 import PhotoStatusPicker from "./pickers/PhotoStatusPicker";
 import FamilyStatusPicker from "./pickers/FamilyStatusPicker";
 import RelationPicker from "./pickers/RelationPicker";
+import HandicapNonPicker from "./pickers/HandicapNonPicker";
+import MaladieInvalidanteNonPicker from "./pickers/MaladieInvalidanteNonPicker";
 import InsureeNumberInput from "./pickers/InsureeNumberInput";
 import InsureeAvatar from "./components/InsureeAvatar";
 import InsureeCappedItemServiceLink from "./components/InsureeCappedItemServiceLink";
@@ -125,6 +130,9 @@ const DEFAULT_CONFIG = {
     { key: "insuree.EducationPicker", ref: EducationPicker },
     { key: "insuree.ProfessionPicker", ref: ProfessionPicker },
     { key: "insuree.IdentificationTypePicker", ref: IdentificationTypePicker },
+    { key: "insuree.CouvertureAssuranceMutuellePicker", ref: CouvertureAssuranceMutuellePicker },
+    { key: "insuree.TypesDhabitationPicker", ref: TypesDhabitationPicker },
+    { key: "insuree.MilieuDeResidencePicker", ref: MilieuDeResidencePicker },
     { key: "insuree.FamilyPovertyStatusPicker", ref: FamilyPovertyStatusPicker },
     { key: "insuree.ConfirmationTypePicker", ref: ConfirmationTypePicker },
     { key: "insuree.FamilyTypePicker", ref: FamilyTypePicker },
@@ -133,7 +141,9 @@ const DEFAULT_CONFIG = {
     { key: "insuree.FamilyStatusPicker", ref: FamilyStatusPicker },
     { key: "insuree.RelationPicker", ref: RelationPicker },
     { key: "insuree.InsureeNumberInput", ref: InsureeNumberInput },
-    { key: "insuree.PaymentMethodPicker", ref: PaymentMethodPicker},
+    { key: "insuree.PaymentMethodPicker", ref: PaymentMethodPicker },
+    { key: "insuree.HandicapNonPicker", ref: HandicapNonPicker },
+    { key: "insuree.MaladieInvalidanteNonPicker", ref: MaladieInvalidanteNonPicker },
 
     { key: "insuree.route.families", ref: ROUTE_INSUREE_FAMILIES },
     { key: "insuree.route.familyOverview", ref: ROUTE_INSUREE_FAMILY_OVERVIEW },
