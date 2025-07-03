@@ -36,7 +36,7 @@ class FamilyMasterPanel extends FormPanel {
       "renderLastNameFirst",
       DEFAULT.RENDER_LAST_NAME_FIRST,
     );
-    this.fields = props.modulesManager.getConf("fe-insuree", "fields", "{}");
+    this.fields = props.modulesManager.getConf("fe-insuree", "fields", {});
   }
 
   renderLastNameField = (edited, classes) => {
