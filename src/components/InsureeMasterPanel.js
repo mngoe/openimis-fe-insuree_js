@@ -97,7 +97,10 @@ class InsureeMasterPanel extends FormPanel {
     this.fields.phoneNoHead == "M"
       ? true
       : false
+    
     console.log("requis ", requis)
+    console.log("fields ", this.fields)
+    console.log("edited ", edited)
     console.log("is head ",insuree )
     console.log("without conf ", withoutConf)
 
