@@ -38,7 +38,7 @@ class InsureeMasterPanel extends FormPanel {
       "renderLastNameFirst",
       DEFAULT.RENDER_LAST_NAME_FIRST,
     );
-    this.fields = props.modulesManager.getConf("fe-insuree", "fields", "{}");
+    this.fields = props.modulesManager.getConf("fe-insuree", "fields", {});
     this.passportMinLength = props.modulesManager.getConf("fe-insuree", "passportMinLength", PASSPORT_MIN_LENGTH);
     this.passportMaxLength = props.modulesManager.getConf("fe-insuree", "passportMaxLength", PASSPORT_MAX_LENGTH);
 
