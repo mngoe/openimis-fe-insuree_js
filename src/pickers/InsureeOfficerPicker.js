@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { withTheme, withStyles } from "@material-ui/core/styles";
 import { injectIntl } from "react-intl";
-import { fetchInsureeOfficers, fetchContextualEnrollmentOfficer } from "../actions";
+import { fetchInsureeOfficers } from "../actions";
 import { formatMessage, AutoSuggestion, ProgressOrError, withModulesManager, decodeId } from "@openimis/fe-core";
 import { DEFAULT } from "../constants";
 
@@ -26,26 +26,23 @@ class InsureeOfficer extends Component {
   }
 
   componentDidMount() {
-    if (!this.props.fetchedInsureeOfficers || this.isCurrentAdminEnrollmentOfficerActive == false) {
+    if (!this.props.fetchedInsureeOfficers || !this.isCurrentAdminEnrollmentOfficerActive == false ) {
       // prevent loading multiple times the cache when component is
       // several times on tha page
       setTimeout(() => {
         !this.props.fetchingInsureeOfficers && this.props.fetchInsureeOfficers(this.props.modulesManager);
       }, Math.floor(Math.random() * 300));
     }
-    if (this.isCurrentAdminEnrollmentOfficerActive == true) {
-      this.props.fetchContextualEnrollmentOfficer(this.props.modulesManager)
 
-    }
   }
   componentDidUpdate(prevProps) {
     if (this.isCurrentAdminEnrollmentOfficerActive == true &&
-      this.props.contextualEnrollmentOfficer !== prevProps.contextualEnrollmentOfficer &&
-      this.props.contextualEnrollmentOfficer &&
-      this.props.contextualEnrollmentOfficer.length > 0 && this.isEnrollmentAdminOfficer(this.props.user, this.props.contextualEnrollmentOfficer)) {
+      this.props.insureeOfficers !== prevProps.insureeOfficers &&
+      this.props.insureeOfficers &&
+      this.props.insureeOfficers.length > 0 && this.isEnrollmentAdminOfficer(this.props.user, this.props.insureeOfficers)) {
       this.props.onChange(
-        this.props.contextualEnrollmentOfficer[0],
-        this.formatSuggestion(this.props.contextualEnrollmentOfficer[0])
+        this.props.insureeOfficers[0],
+        this.formatSuggestion(this.props.insureeOfficers[0])
       );
     }
   }
@@ -61,15 +58,11 @@ class InsureeOfficer extends Component {
     return `${a.code} ${fullName}`.trim();
   };
 
-  isEnrollmentAdminOfficer = (user, contextualEnrollmentOfficer) => {
-    if (!contextualEnrollmentOfficer || !user) return false;
-    if (user.username.trim() === contextualEnrollmentOfficer[0].code.trim()) return true;
+  isEnrollmentAdminOfficer = (user, insureeOfficers) => {
+    if (!insureeOfficers || !user) return false;
+    if (user.username.trim() === insureeOfficers[0].code.trim()) return true;
     else return false
-  }
-
-  isConditionCurrentAdminEnrollmentOfficerActive = () => {
-    return this.isCurrentAdminEnrollmentOfficerActive == true
-  }
+  } 
 
   onSuggestionSelected = (v) => this.props.onChange(v, this.formatSuggestion(v));
 
@@ -88,30 +81,24 @@ class InsureeOfficer extends Component {
       required = false,
       withNull = false,
       nullLabel = null,
-      contextualEnrollmentOfficer,
-      fetchingContextualEnrollmentOfficer,
-      fetchedContextualEnrollmentOfficer,
-      errorContextualEnrollmentOfficer,
       user
     } = this.props;
-    let v = this.isConditionCurrentAdminEnrollmentOfficerActive()
-      ? (contextualEnrollmentOfficer ? contextualEnrollmentOfficer.filter((o) => parseInt(decodeId(o.id)) === value) : [])
-      : (insureeOfficers ? insureeOfficers.filter((o) => parseInt(decodeId(o.id)) === value) : []);
+    let v = (insureeOfficers ? insureeOfficers.filter((o) => parseInt(decodeId(o.id)) === value) : []);
     v = v.length ? v[0] : null;
     return (
       <Fragment>
-        <ProgressOrError progress={fetchingContextualEnrollmentOfficer} error={errorContextualEnrollmentOfficer} />
-        {(this.isConditionCurrentAdminEnrollmentOfficerActive() ? fetchedContextualEnrollmentOfficer : fetchedInsureeOfficers) && (
+        <ProgressOrError progress={fetchingInsureeOfficers} error={errorInsureeOfficers} />
+        { fetchedInsureeOfficers && (
           <AutoSuggestion
             module="insuree"
-            items={this.isConditionCurrentAdminEnrollmentOfficerActive() ? contextualEnrollmentOfficer : insureeOfficers}
+            items={insureeOfficers}
             label={!!withLabel && (label || formatMessage(intl, "insuree", "InsureeOfficer.label"))}
             getSuggestions={this.insureeOfficers}
             getSuggestionValue={this.formatSuggestion}
             onSuggestionSelected={this.onSuggestionSelected}
-            value={this.isConditionCurrentAdminEnrollmentOfficerActive() && this.isEnrollmentAdminOfficer(user, contextualEnrollmentOfficer) ? contextualEnrollmentOfficer[0] : v}
+            value={this.isCurrentAdminEnrollmentOfficerActive == true && this.isEnrollmentAdminOfficer(user, insureeOfficers) ? insureeOfficers[0] : v}
             reset={reset}
-            readOnly={this.isConditionCurrentAdminEnrollmentOfficerActive() && this.isEnrollmentAdminOfficer(user, contextualEnrollmentOfficer) ? true : readOnly}
+            readOnly={this.isCurrentAdminEnrollmentOfficerActive == true && this.isEnrollmentAdminOfficer(user, insureeOfficers) ? true : readOnly}
             required={required}
             selectThreshold={this.selectThreshold}
             withNull={withNull}
@@ -128,15 +115,11 @@ const mapStateToProps = (state) => ({
   fetchingInsureeOfficers: state.insuree.fetchingInsureeOfficers,
   fetchedInsureeOfficers: state.insuree.fetchedInsureeOfficers,
   errorInsureeOfficers: state.insuree.errorInsureeOfficers,
-  contextualEnrollmentOfficer: state.insuree.contextualEnrollmentOfficer,
-  fetchingContextualEnrollmentOfficer: state.insuree.fetchingContextualEnrollmentOfficer,
-  fetchedContextualEnrollmentOfficer: state.insuree.fetchedContextualEnrollmentOfficer,
-  errorContextualEnrollmentOfficer: state.insuree.errorContextualEnrollmentOfficer,
   user: state.core.user
 });
 
 const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({ fetchInsureeOfficers, fetchContextualEnrollmentOfficer }, dispatch);
+  return bindActionCreators({ fetchInsureeOfficers }, dispatch);
 };
 
 export default withModulesManager(
