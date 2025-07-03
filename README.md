@@ -100,3 +100,5 @@ None
 - `insureeForm.isInsureeStatusRequired`, make insuree status dropdown mandatory, default false.
 - `insureeForm.isInsureePhotoRequired`, make photo upload of an insuree mandatory, default false.
 ' `"insureeForm.insureeChildId"`, the id of son/daugther relation in database, default 4.
+' `"isCurrentAdminEnrollmentOfficerActive"`, Enables automatic assignment of 
+  the current user as the enrolment officer during family or insuree creation. If 'True', the officer is inferred from session; if 'False', manual selection remains available. (default: 'False)
