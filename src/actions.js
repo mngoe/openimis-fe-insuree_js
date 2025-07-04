@@ -314,7 +314,7 @@ export function fetchIdentificationTypes(mm) {
 }
 
 export function fetchMilieuderesidence(mm) {
-  const payload = formatQuery("milieuderesidenceOptions", null, ["code"]);
+  const payload = formatQuery("milieuDeResidenceOptions", null, ["code"]);
   return graphql(payload, "INSUREE_MILIEUDERESIDENCE_OPTIONS");
 }
 
@@ -325,14 +325,14 @@ export function fetchCouvertureAssuranceMutuelle(mm) {
 
 export function fetchHandicapNon(mm) {
   return graphql(
-    `query { handicapNon { edges { node { id } } } }`,
+    `query { handicapNonOptions { edges { node { id } } } }`,
     'HANDICAP_NON',
   );
 }
 
 export function fetchMaladieInvalidante(mm) {
   return graphql(
-    `query { maladieInvalidante { edges { node { id } } } }`,
+    `query { maladieInvalidanteNonOptions { edges { node { id } } } }`,
     'MALADIE_INVALIDANTE',
   );
 }

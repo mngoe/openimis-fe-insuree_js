@@ -57,7 +57,7 @@ function reducer(
     errorIdentificationTypes: null,
     fetchingMilieuderesidenceOptions: false,
     fetchedMilieuderesidenceOptions: false,
-    milieuderesidenceOptions: null,
+    milieuDeResidenceOptions: null,
     errorMilieuderesidenceOptions: null,
 
     fetchingTypesDhabitationOptions: false,
@@ -312,7 +312,7 @@ function reducer(
         ...state,
         fetchingMilieuderesidenceOptions: true,
         fetchedMilieuderesidenceOptions: false,
-        milieuderesidenceOptions: null,
+        milieuDeResidenceOptions: null,
         errorMilieuderesidenceOptions: null,
       };
     case "INSUREE_MILIEUDERESIDENCE_OPTS_RESP":
@@ -320,7 +320,7 @@ function reducer(
         ...state,
         fetchingMilieuderesidenceOptions: false,
         fetchedMilieuderesidenceOptions: true,
-        milieuderesidenceOptions: action.payload.data.milieuderesidenceOptions.map((o) => o.code),
+        milieuDeResidenceOptions: action.payload.data.milieuDeResidenceOptions.map((o) => o.code),
         errorMilieuderesidenceOptions: formatGraphQLError(action.payload),
       };
     case "INSUREE_MILIEUDERESIDENCE_OPTS_ERR":
@@ -387,7 +387,7 @@ function reducer(
         ...state,
         fetchingHandicapNonOptions: false,
         fetchedHandicapNonOptions: true,
-        handicapNonOptions: action.payload.data.handicapNon.edges.map((edge) => edge.node.id) || [],
+        handicapNonOptions: action.payload.data.handicapNonOptions.edges.map((edge) => edge.node.id) || [],
         errorHandicapNonOptions: formatGraphQLError(action.payload),
       };
     case "HANDICAP_NON_ERR":
@@ -411,7 +411,7 @@ function reducer(
         ...state,
         fetchingMaladieInvalidanteOptions: false,
         fetchedMaladieInvalidanteOptions: true,
-        maladieInvalidanteOptions: action.payload.data.maladieInvalidante.edges.map((edge) => edge.node.id) || [],
+        maladieInvalidanteOptions: action.payload.data.maladieInvalidanteNonOptions.edges.map((edge) => edge.node.id) || [],
         errorMaladieInvalidanteOptions: formatGraphQLError(action.payload),
       };
     case "MALADIE_INVALIDANTE_ERR":
@@ -672,7 +672,7 @@ function reducer(
         ...state,
         fetchingMilieuderesidenceOptions: true,
         fetchedMilieuderesidenceOptions: false,
-        milieuderesidenceOptions: null,
+        milieuDeResidenceOptions: null,
         errorMilieuderesidenceOptions: null,
       };
     case "INSUREE_MILIEUDERESIDENCE_OPTIONS_RESP":
@@ -680,7 +680,7 @@ function reducer(
         ...state,
         fetchingMilieuderesidenceOptions: false,
         fetchedMilieuderesidenceOptions: true,
-        milieuderesidenceOptions: action.payload.data.milieuderesidenceOptions.map((t) => t.code),
+        milieuDeResidenceOptions: action.payload.data.milieuDeResidenceOptions.map((t) => t.code),
         errorMilieuderesidenceOptions: formatGraphQLError(action.payload),
       };
     case "INSUREE_MILIEUDERESIDENCE_OPTIONS_ERR":

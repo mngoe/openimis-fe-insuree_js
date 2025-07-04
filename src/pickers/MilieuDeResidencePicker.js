@@ -18,20 +18,20 @@ class MilieuDeResidencePicker extends Component {
     }
   }
   
-  nullDisplay = this.props.nullLabel || formatMessage(this.props.intl, "insuree", `Milieuderesidence.null`);
+  nullDisplay = this.props.nullLabel || formatMessage(this.props.intl, "insuree", `MilieuDeResidence.null`);
 
   formatSuggestion = (i) =>
-    !!i ? `${formatMessage(this.props.intl, "insuree", `Milieuderesidence.${i}`)}` : this.nullDisplay;
+    !!i ? `${formatMessage(this.props.intl, "insuree", `MilieuDeResidence.${i}`)}` : this.nullDisplay;
 
   onSuggestionSelected = (v) => this.props.onChange(v, this.formatSuggestion(v));
 
   render() {
     const {
       intl,
-      milieuderesidenceOptions,
+      milieuDeResidenceOptions,
       module = "insuree",
       withLabel = true,
-      label = "MilieuderesidencePicker.label",
+      label = "MilieuDeResidencePicker.label",
       withPlaceholder = false,
       placeholder,
       value,
@@ -41,8 +41,8 @@ class MilieuDeResidencePicker extends Component {
       withNull = false,
     } = this.props;
     
-    let options = !!milieuderesidenceOptions ? 
-      milieuderesidenceOptions.map((v) => ({ value: v, label: this.formatSuggestion(v) })) : [];
+    let options = !!milieuDeResidenceOptions ? 
+      milieuDeResidenceOptions.map((v) => ({ value: v, label: this.formatSuggestion(v) })) : [];
     
     if (withNull) {
       options.unshift({ value: null, label: this.formatSuggestion(null) });
@@ -55,7 +55,7 @@ class MilieuDeResidencePicker extends Component {
         label={!!withLabel ? label : null}
         placeholder={
           !!withPlaceholder
-            ? placeholder || formatMessage(intl, "insuree", "MilieuderesidencePicker.placeholder")
+            ? placeholder || formatMessage(intl, "insuree", "MilieuDeResidencePicker.placeholder")
             : null
         }
         onChange={this.onSuggestionSelected}
@@ -71,7 +71,7 @@ class MilieuDeResidencePicker extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  milieuderesidenceOptions: state.insuree.milieuderesidenceOptions,
+  milieuDeResidenceOptions: state.insuree.milieuDeResidenceOptions,
   fetching: state.insuree.fetchingMilieuderesidenceOptions,
   fetched: state.insuree.fetchedMilieuderesidenceOptions,
   error: state.insuree.errorMilieuderesidenceOptions,
