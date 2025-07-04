@@ -314,7 +314,7 @@ export function fetchIdentificationTypes(mm) {
 }
 
 export function fetchMilieuderesidence(mm) {
-  const payload = formatQuery("milieuDeResidenceOptions", null, ["code"]);
+  const payload = formatQuery("milieuDeResidenceOptions", null, ["code","Milieuderesidence"]);
   return graphql(payload, "INSUREE_MILIEUDERESIDENCE_OPTIONS");
 }
 

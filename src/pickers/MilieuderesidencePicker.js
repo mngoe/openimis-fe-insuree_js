@@ -21,9 +21,9 @@ class MilieuderesidencePicker extends Component {
   nullDisplay = this.props.nullLabel || formatMessage(this.props.intl, "insuree", `MilieuDeResidence.null`);
 
   formatSuggestion = (i) =>
-    !!i ? `${formatMessage(this.props.intl, "insuree", `MilieuDeResidence.${i}`)}` : this.nullDisplay;
+    !!i ? `${formatMessage(this.props.intl, "insuree", i)}` : this.nullDisplay;
 
-  onSuggestionSelected = (v) => this.props.onChange(v, this.formatSuggestion(v));
+  onSuggestionSelected = (v) => this.props.onChange(v, this.formatSuggestion(v.Milieuderesidence));
 
   render() {
     const {
@@ -42,7 +42,7 @@ class MilieuderesidencePicker extends Component {
     } = this.props;
     
     let options = !!milieuDeResidenceOptions ? 
-      milieuDeResidenceOptions.map((v) => ({ value: v, label: this.formatSuggestion(v) })) : [];
+      milieuDeResidenceOptions.map((v) => ({ value: v.code, label: this.formatSuggestion(v) })) : [];
     
     if (withNull) {
       options.unshift({ value: null, label: this.formatSuggestion(null) });
