@@ -19,7 +19,7 @@ import ProfessionPicker from "./pickers/ProfessionPicker";
 import IdentificationTypePicker from "./pickers/IdentificationTypePicker";
 import CouvertureAssuranceMutuellePicker from "./pickers/CouvertureAssuranceMutuellePicker";
 import TypesDhabitationPicker from "./pickers/TypesDhabitationPicker";
-import MilieuderesidencePicker from "./pickers/MilieuDeResidencePicker";
+import MilieuderesidencePicker from "./pickers/MilieuderesidencePicker";
 import InsureeMaritalStatusPicker from "./pickers/InsureeMaritalStatusPicker";
 import PaymentMethodPicker from "./pickers/PaymentMethodPicker";
 import InsureeStatusPicker from "./pickers/InsureeStatusPicker";
