@@ -323,14 +323,18 @@ export function fetchCouvertureAssuranceMutuelle(mm) {
   return graphql(payload, "INSUREE_COUVERTURE_ASSURANCE_MUTUELLE_OPTIONS");
 }
 
-export function fetchHandicap_Non(mm) {
-  const payload = formatQuery("handicap_NonOptions", null, ["code"]);
-  return graphql(payload, "INSUREE_HANDICAP_NON_OPTIONS");
+export function fetchHandicapNon(mm) {
+  return graphql(
+    `query { handicapNon { edges { node { id } } } }`,
+    'HANDICAP_NON',
+  );
 }
 
-export function fetchMaladieinvalidante_Non(mm) {
-  const payload = formatQuery("maladieinvalidante_NonOptions", null, ["code"]);
-  return graphql(payload, "INSUREE_MALADIEINVALIDANTE_NON_OPTIONS");
+export function fetchMaladieInvalidante(mm) {
+  return graphql(
+    `query { maladieInvalidante { edges { node { id } } } }`,
+    'MALADIE_INVALIDANTE',
+  );
 }
 
 export function fetchRelations(mm) {
@@ -422,10 +426,10 @@ export function formatInsureeGQL(mm, insuree) {
     ${!!insuree.bankCoordinates ? `bankCoordinates: "${formatGQLString(insuree.bankCoordinates)}"` : ""}
     ${!!insuree.incomeLevel ? `incomeLevelId: ${decodeId(insuree.incomeLevel.id)}` : ""}
     ${!!insuree.milieuRésidence && !!insuree.milieuRésidence.code ? `milieuRésidence: "${insuree.milieuRésidence.code}"` : ""}
-    ${!!insuree.typesHabitation && !!insuree.typesHabitation.code ? `typesHabitation: "${insuree.typesHabitation.code}"` : ""}
+    ${!!insuree.typesDhabitation && !!insuree.typesDhabitation.code ? `typesDhabitation: "${insuree.typesDhabitation.code}"` : ""}
     ${!!insuree.couvertureAssuranceMutuelle && !!insuree.couvertureAssuranceMutuelle.code ? `couvertureAssuranceMutuelle: "${insuree.couvertureAssuranceMutuelle.code}"` : ""}
-    ${!!insuree.handicap_Non && !!insuree.handicap_Non.code ? `handicap_Non: ${insuree.handicap_Non.code}` : ""}
-    ${!!insuree.maladieinvalidante_Non && !!insuree.maladieinvalidante_Non.code ? `maladieinvalidante_Non: ${insuree.maladieinvalidante_Non.code}` : ""}
+    ${!!insuree.handicapNon && !!insuree.handicapNon.code ? `handicapNon: ${insuree.handicapNon.code}` : ""}
+    ${!!insuree.maladieInvalidante && !!insuree.maladieInvalidante.code ? `maladieInvalidante: ${insuree.maladieInvalidante.code}` : ""}
   `;
 }
 

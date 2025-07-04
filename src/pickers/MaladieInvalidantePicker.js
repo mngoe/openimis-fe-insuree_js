@@ -3,25 +3,25 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { injectIntl } from "react-intl";
 import { formatMessage, SelectInput, withModulesManager } from "@openimis/fe-core";
-import { fetchMaladieinvalidante_Non } from "../actions";
+import { fetchMaladieInvalidante } from "../actions";
 import _debounce from "lodash/debounce";
 import _ from "lodash";
 
-class Maladieinvalidante_NonPicker extends Component {
+class MaladieInvalidantePicker extends Component {
   componentDidMount() {
-    if (!this.props.maladieinvalidante_NonOptions) {
+    if (!this.props.maladieInvalidanteOptions) {
       // prevent loading multiple times the cache when component is
       // several times on a page
       setTimeout(() => {
-        !this.props.fetching && !this.props.fetched && this.props.fetchMaladieinvalidante_Non(this.props.modulesManager);
+        !this.props.fetching && !this.props.fetched && this.props.fetchMaladieInvalidante(this.props.modulesManager);
       }, Math.floor(Math.random() * 300));
     }
   }
 
-  nullDisplay = this.props.nullLabel || formatMessage(this.props.intl, "insuree", `Maladieinvalidante_Non.null`);
+  nullDisplay = this.props.nullLabel || formatMessage(this.props.intl, "insuree", `MaladieInvalidante.null`);
 
   formatSuggestion = (i) =>
-    !!i ? `${formatMessage(this.props.intl, "insuree", `Maladieinvalidante_Non.${i}`)}` : this.nullDisplay;
+    !!i ? `${formatMessage(this.props.intl, "insuree", `MaladieInvalidante.${i}`)}` : this.nullDisplay;
 
   onSuggestionSelected = (v) => {
     this.props.onChange(v, this.formatSuggestion(v));
@@ -30,10 +30,10 @@ class Maladieinvalidante_NonPicker extends Component {
   render() {
     const {
       intl,
-      maladieinvalidante_NonOptions,
+      maladieInvalidanteOptions,
       module = "insuree",
       withLabel = true,
-      label = "Maladieinvalidante_NonPicker.label",
+      label = "MaladieInvalidantePicker.label",
       withPlaceholder = false,
       placeholder,
       value,
@@ -42,21 +42,17 @@ class Maladieinvalidante_NonPicker extends Component {
       required = false,
       withNull = false,
     } = this.props;
-    
-    let options = !!maladieinvalidante_NonOptions ?
-      maladieinvalidante_NonOptions.map((v) => ({ value: v, label: this.formatSuggestion(v) })) : [];
-    
+    let options = !!maladieInvalidanteOptions ? maladieInvalidanteOptions.map((v) => ({ value: v, label: this.formatSuggestion(v) })) : [];
     if (withNull) {
       options.unshift({ value: null, label: this.formatSuggestion(null) });
     }
-    
     return (
       <SelectInput
         module={module}
         options={options}
         label={!!withLabel ? label : null}
         placeholder={
-          withPlaceholder ? placeholder || formatMessage(intl, "insuree", "Maladieinvalidante_NonPicker.placeholder") : null
+          withPlaceholder ? placeholder || formatMessage(intl, "insuree", "MaladieInvalidantePicker.placeholder") : null
         }
         onChange={this.onSuggestionSelected}
         value={value}
@@ -71,13 +67,13 @@ class Maladieinvalidante_NonPicker extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  maladieinvalidante_NonOptions: state.insuree.maladieinvalidante_NonOptions,
-  fetching: state.insuree.fetchingMaladieinvalidante_NonOptions,
-  fetched: state.insuree.fetchedMaladieinvalidante_NonOptions,
+  maladieInvalidanteOptions: state.insuree.maladieInvalidanteOptions,
+  fetching: state.insuree.fetchingMaladieInvalidanteOptions,
+  fetched: state.insuree.fetchedMaladieInvalidanteOptions,
 });
 
 const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({ fetchMaladieinvalidante_Non }, dispatch);
+  return bindActionCreators({ fetchMaladieInvalidante }, dispatch);
 };
 
-export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(withModulesManager(Maladieinvalidante_NonPicker)));
+export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(withModulesManager(MaladieInvalidantePicker)));

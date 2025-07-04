@@ -314,22 +314,26 @@ class InsureeMasterPanel extends FormPanel {
                   </Grid>
                   <Grid item xs={3} className={classes.item}>
                     <PublishedComponent
-                      pubRef="insuree.Maladieinvalidante_NonPicker"
-                      value={!!edited && !!edited.maladieinvalidante_Non ? edited.maladieinvalidante_Non.code : ""}
+                      pubRef="insuree.MaladieInvalidantePicker"
+                      value={!!edited && !!edited.maladieInvalidante ? edited.maladieInvalidante.code : ""}
                       module="insuree"
                       readOnly={readOnly}
-                      withNull={false}
-                      onChange={(v) => this.updateAttribute("maladieinvalidante_Non", { code: v })}
+                      required={false}
+                      withNull={true}
+                      withLabel={true}
+                      onChange={(v) => this.updateAttribute("maladieInvalidante", { code: v })}
                     />
                   </Grid>
                   <Grid item xs={3} className={classes.item}>
                     <PublishedComponent
-                      pubRef="insuree.Handicap_NonPicker"
-                      value={!!edited && !!edited.handicap_Non ? edited.handicap_Non.code : ""}
+                      pubRef="insuree.HandicapNonPicker"
+                      value={!!edited && !!edited.handicapNon ? edited.handicapNon.code : ""}
                       module="insuree"
                       readOnly={readOnly}
-                      withNull={false}
-                      onChange={(v) => this.updateAttribute("handicap_Non", { code: v })}
+                      required={false}
+                      withNull={true}
+                      withLabel={true}
+                      onChange={(v) => this.updateAttribute("handicapNon", { code: v })}
                     />
                   </Grid>
                   <Grid item xs={3} className={classes.item}>
@@ -338,18 +342,22 @@ class InsureeMasterPanel extends FormPanel {
                       value={!!edited && !!edited.couvertureAssuranceMutuelle ? edited.couvertureAssuranceMutuelle.code : ""}
                       module="insuree"
                       readOnly={readOnly}
-                      withNull={false}
+                      required={false}
+                      withNull={true}
+                      withLabel={true}
                       onChange={(v) => this.updateAttribute("couvertureAssuranceMutuelle", { code: v })}
                     />
                   </Grid>
                   <Grid item xs={3} className={classes.item}>
                     <PublishedComponent
-                      pubRef="insuree.TypesHabitationPicker"
-                      value={!!edited && !!edited.typesHabitation ? edited.typesHabitation.code : ""}
+                      pubRef="insuree.TypesDhabitationPicker"
+                      value={!!edited && !!edited.typesDhabitation ? edited.typesDhabitation.code : ""}
                       module="insuree"
                       readOnly={readOnly}
-                      withNull={false}
-                      onChange={(v) => this.updateAttribute("typesHabitation", { code: v })}
+                      required={false}
+                      withNull={true}
+                      withLabel={true}
+                      onChange={(v) => this.updateAttribute("typesDhabitation", { code: v })}
                     />
                   </Grid>
                   <Grid item xs={3} className={classes.item}>
