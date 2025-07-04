@@ -314,7 +314,7 @@ class InsureeMasterPanel extends FormPanel {
                   </Grid>
                   <Grid item xs={3} className={classes.item}>
                     <PublishedComponent
-                      pubRef="insuree.MaladieInvalidantePicker"
+                      pubRef="insuree.MaladieInvalidanteNonPicker"
                       value={!!edited && !!edited.maladieInvalidante ? edited.maladieInvalidante.code : ""}
                       module="insuree"
                       readOnly={readOnly}
