@@ -324,16 +324,16 @@ export function fetchCouvertureAssuranceMutuelle(mm) {
 }
 
 export function fetchHandicapNon(mm) {
-  return graphql(
-    `query { handicapNonOptions { edges { node { id } } } }`,
-    'HANDICAP_NON',
+  const payload = formatQuery("handicapNonOptions", null, ["code"]);
+  return graphql(payload,'HANDICAP_NON_OPTIONS',
   );
 }
 
 export function fetchMaladieInvalidante(mm) {
+  const payload = formatQuery("maladieInvalidanteNonOptions", null, ["code"]);
   return graphql(
-    `query { maladieInvalidanteNonOptions { edges { node { id } } } }`,
-    'MALADIE_INVALIDANTE',
+    payload,
+    'MALADIE_INVALIDANTE_NON_OPTIONS',
   );
 }
 

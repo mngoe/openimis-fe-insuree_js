@@ -7,7 +7,7 @@ import { fetchMilieuderesidence } from "../actions";
 import _debounce from "lodash/debounce";
 import _ from "lodash";
 
-class MilieuDeResidencePicker extends Component {
+class MilieuderesidencePicker extends Component {
   componentDidMount() {
     if (!this.props.milieuDeResidenceOptions) {
       // prevent loading multiple times the cache when component is
@@ -31,7 +31,7 @@ class MilieuDeResidencePicker extends Component {
       milieuDeResidenceOptions,
       module = "insuree",
       withLabel = true,
-      label = "MilieuDeResidencePicker.label",
+      label = "MilieuderesidencePicker.label",
       withPlaceholder = false,
       placeholder,
       value,
@@ -55,7 +55,7 @@ class MilieuDeResidencePicker extends Component {
         label={!!withLabel ? label : null}
         placeholder={
           !!withPlaceholder
-            ? placeholder || formatMessage(intl, "insuree", "MilieuDeResidencePicker.placeholder")
+            ? placeholder || formatMessage(intl, "insuree", "MilieuderesidencePicker.placeholder")
             : null
         }
         onChange={this.onSuggestionSelected}
@@ -83,4 +83,4 @@ const mapDispatchToProps = (dispatch) => {
   }, dispatch);
 };
 
-export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(withModulesManager(MilieuDeResidencePicker)));
+export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(withModulesManager(MilieuderesidencePicker)));
