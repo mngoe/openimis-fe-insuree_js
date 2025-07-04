@@ -313,9 +313,9 @@ export function fetchIdentificationTypes(mm) {
   return graphql(payload, "INSUREE_IDENTIFICATION_TYPES");
 }
 
-export function fetchMilieuderésidence(mm) {
-  const payload = formatQuery("milieuderésidenceOptions", null, ["code"]);
-  return graphql(payload, "INSUREE_MILIEUDERÉSIDENCE_OPTIONS");
+export function fetchMilieuderesidence(mm) {
+  const payload = formatQuery("milieuderesidenceOptions", null, ["code"]);
+  return graphql(payload, "INSUREE_MILIEUDERESIDENCE_OPTIONS");
 }
 
 export function fetchCouvertureAssuranceMutuelle(mm) {

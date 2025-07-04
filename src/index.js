@@ -19,7 +19,7 @@ import ProfessionPicker from "./pickers/ProfessionPicker";
 import IdentificationTypePicker from "./pickers/IdentificationTypePicker";
 import CouvertureAssuranceMutuellePicker from "./pickers/CouvertureAssuranceMutuellePicker";
 import TypesDhabitationPicker from "./pickers/TypesDhabitationPicker";
-import MilieuderésidencePicker from "./pickers/MilieuderésidencePicker";
+import MilieuderesidencePicker from "./pickers/MilieuderesidencePicker";
 import InsureeMaritalStatusPicker from "./pickers/InsureeMaritalStatusPicker";
 import PaymentMethodPicker from "./pickers/PaymentMethodPicker";
 import InsureeStatusPicker from "./pickers/InsureeStatusPicker";
@@ -132,7 +132,7 @@ const DEFAULT_CONFIG = {
     { key: "insuree.IdentificationTypePicker", ref: IdentificationTypePicker },
     { key: "insuree.CouvertureAssuranceMutuellePicker", ref: CouvertureAssuranceMutuellePicker },
     { key: "insuree.TypesDhabitationPicker", ref: TypesDhabitationPicker },
-    { key: "insuree.MilieuderésidencePicker", ref: MilieuderésidencePicker },
+    { key: "insuree.MilieuderesidencePicker", ref: MilieuderesidencePicker },
     { key: "insuree.FamilyPovertyStatusPicker", ref: FamilyPovertyStatusPicker },
     { key: "insuree.ConfirmationTypePicker", ref: ConfirmationTypePicker },
     { key: "insuree.FamilyTypePicker", ref: FamilyTypePicker },

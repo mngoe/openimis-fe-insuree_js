@@ -55,10 +55,10 @@ function reducer(
     fetchedIdentificationTypes: false,
     identificationTypes: null,
     errorIdentificationTypes: null,
-    fetchingMilieuderésidenceOptions: false,
-    fetchedMilieuderésidenceOptions: false,
-    milieuderésidenceOptions: null,
-    errorMilieuderésidenceOptions: null,
+    fetchingMilieuderesidenceOptions: false,
+    fetchedMilieuderesidenceOptions: false,
+    milieuderesidenceOptions: null,
+    errorMilieuderesidenceOptions: null,
 
     fetchingTypesDhabitationOptions: false,
     fetchedTypesDhabitationOptions: false,
@@ -307,27 +307,27 @@ function reducer(
         fetchingInsureeGenders: false,
         errorInsureeGenders: formatServerError(action.payload),
       };
-    case "INSUREE_MILIEUDERÉSIDENCE_OPTS_REQ":
+    case "INSUREE_MILIEUDERESIDENCE_OPTS_REQ":
       return {
         ...state,
-        fetchingMilieuderésidenceOptions: true,
-        fetchedMilieuderésidenceOptions: false,
-        milieuderésidenceOptions: null,
-        errorMilieuderésidenceOptions: null,
+        fetchingMilieuderesidenceOptions: true,
+        fetchedMilieuderesidenceOptions: false,
+        milieuderesidenceOptions: null,
+        errorMilieuderesidenceOptions: null,
       };
-    case "INSUREE_MILIEUDERÉSIDENCE_OPTS_RESP":
+    case "INSUREE_MILIEUDERESIDENCE_OPTS_RESP":
       return {
         ...state,
-        fetchingMilieuderésidenceOptions: false,
-        fetchedMilieuderésidenceOptions: true,
-        milieuderésidenceOptions: action.payload.data.milieuderésidenceOptions.map((o) => o.code),
-        errorMilieuderésidenceOptions: formatGraphQLError(action.payload),
+        fetchingMilieuderesidenceOptions: false,
+        fetchedMilieuderesidenceOptions: true,
+        milieuderesidenceOptions: action.payload.data.milieuderesidenceOptions.map((o) => o.code),
+        errorMilieuderesidenceOptions: formatGraphQLError(action.payload),
       };
-    case "INSUREE_MILIEUDERÉSIDENCE_OPTS_ERR":
+    case "INSUREE_MILIEUDERESIDENCE_OPTS_ERR":
       return {
         ...state,
-        fetchingMilieuderésidenceOptions: false,
-        errorMilieuderésidenceOptions: formatGraphQLError(action.payload),
+        fetchingMilieuderesidenceOptions: false,
+        errorMilieuderesidenceOptions: formatGraphQLError(action.payload),
       };
     case "INSUREE_TYPES_DHABITATION_OPTS_REQ":
       return {
@@ -667,27 +667,27 @@ function reducer(
         fetchingIdentificationTypes: false,
         errorIdentificationTypes: formatServerError(action.payload),
       };
-    case "INSUREE_MILIEUDERÉSIDENCE_OPTIONS_REQ":
+    case "INSUREE_MILIEUDERESIDENCE_OPTIONS_REQ":
       return {
         ...state,
-        fetchingMilieuderésidenceOptions: true,
-        fetchedMilieuderésidenceOptions: false,
-        milieuderésidenceOptions: null,
-        errorMilieuderésidenceOptions: null,
+        fetchingMilieuderesidenceOptions: true,
+        fetchedMilieuderesidenceOptions: false,
+        milieuderesidenceOptions: null,
+        errorMilieuderesidenceOptions: null,
       };
-    case "INSUREE_MILIEUDERÉSIDENCE_OPTIONS_RESP":
+    case "INSUREE_MILIEUDERESIDENCE_OPTIONS_RESP":
       return {
         ...state,
-        fetchingMilieuderésidenceOptions: false,
-        fetchedMilieuderésidenceOptions: true,
-        milieuderésidenceOptions: action.payload.data.milieuderésidenceOptions.map((t) => t.code),
-        errorMilieuderésidenceOptions: formatGraphQLError(action.payload),
+        fetchingMilieuderesidenceOptions: false,
+        fetchedMilieuderesidenceOptions: true,
+        milieuderesidenceOptions: action.payload.data.milieuderesidenceOptions.map((t) => t.code),
+        errorMilieuderesidenceOptions: formatGraphQLError(action.payload),
       };
-    case "INSUREE_MILIEUDERÉSIDENCE_OPTIONS_ERR":
+    case "INSUREE_MILIEUDERESIDENCE_OPTIONS_ERR":
       return {
         ...state,
-        fetchingMilieuderésidenceOptions: false,
-        errorMilieuderésidenceOptions: formatServerError(action.payload),
+        fetchingMilieuderesidenceOptions: false,
+        errorMilieuderesidenceOptions: formatServerError(action.payload),
       };
     case "INSUREE_NUMBER_VALIDATION_FIELDS_REQ":
       return {
