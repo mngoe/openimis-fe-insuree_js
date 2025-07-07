@@ -364,7 +364,7 @@ function reducer(
         ...state,
         fetchingCouvertureAssuranceMutuelleOptions: false,
         fetchedCouvertureAssuranceMutuelleOptions: true,
-        couvertureAssuranceMutuelleOptions: action.payload.data.couvertureAssuranceMutuelleOptions.map((o) => o.code),
+        couvertureAssuranceMutuelleOptions: action.payload.data.couvertureAssuranceMutuelleOptions,
         errorCouvertureAssuranceMutuelleOptions: formatGraphQLError(action.payload),
       };
     case "INSUREE_COUVERTURE_ASSURANCE_MUTUELLE_OPTIONS_ERR":

@@ -19,7 +19,7 @@ class CouvertureAssuranceMutuellePicker extends Component {
   nullDisplay = this.props.nullLabel || formatMessage(this.props.intl, "insuree", "CouvertureAssuranceMutuelle.null");
 
   onSuggestionSelected = (v) =>
-    this.props.onChange(v, v.CouvertureAssuranceMutuelle);
+    this.props.onChange(v);
 
   render() {
     const {
