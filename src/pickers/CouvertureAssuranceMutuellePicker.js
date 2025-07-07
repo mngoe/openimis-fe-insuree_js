@@ -18,11 +18,8 @@ class CouvertureAssuranceMutuellePicker extends Component {
 
   nullDisplay = this.props.nullLabel || formatMessage(this.props.intl, "insuree", "CouvertureAssuranceMutuelle.null");
 
-  formatSuggestion = (i) =>
-    !!i ? `${formatMessage(this.props.intl, "insuree", i)}` : this.nullDisplay;
-
   onSuggestionSelected = (v) =>
-    this.props.onChange(v, this.formatSuggestion(v.CouvertureAssuranceMutuelle));
+    this.props.onChange(v, v.CouvertureAssuranceMutuelle);
 
   render() {
     const {
@@ -39,12 +36,12 @@ class CouvertureAssuranceMutuellePicker extends Component {
       withNull = false,
     } = this.props;
 
-    console.log("Données brute picker :", couvertureAssuranceMutuelleOptions);
+    console.log("Données brute picker :", this.props.couvertureAssuranceMutuelleOptions);
 
     const options = !!couvertureAssuranceMutuelleOptions
       ? couvertureAssuranceMutuelleOptions.map((v) => ({
           value: v.code,
-          label: this.formatSuggestion(v.CouvertureAssuranceMutuelle)
+          label: v.CouvertureAssuranceMutuelle
         }))
       : [];
 
