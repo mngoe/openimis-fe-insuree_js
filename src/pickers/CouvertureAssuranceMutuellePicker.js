@@ -10,8 +10,6 @@ import _ from "lodash";
 class CouvertureAssuranceMutuellePicker extends Component {
   componentDidMount() {
     if (!this.props.couvertureAssuranceMutuelleOptions) {
-      // prevent loading multiple times the cache when component is
-      // several times on a page
       setTimeout(() => {
         !this.props.fetching && !this.props.fetched && this.props.fetchCouvertureAssuranceMutuelle(this.props.modulesManager);
       }, Math.floor(Math.random() * 300));
@@ -21,7 +19,7 @@ class CouvertureAssuranceMutuellePicker extends Component {
   nullDisplay = this.props.nullLabel || formatMessage(this.props.intl, "insuree", `CouvertureAssuranceMutuelle.null`);
 
   formatSuggestion = (i) =>
-    !!i ? `${formatMessage(this.props.intl, "insuree", `CouvertureAssuranceMutuelle.${i}`)}` : this.nullDisplay;
+    !!i ? `${formatMessage(this.props.intl, "insuree", i.CouvertureAssuranceMutuelle)}` : this.nullDisplay;
 
   onSuggestionSelected = (v) => {
     this.props.onChange(v, this.formatSuggestion(v));
@@ -42,20 +40,21 @@ class CouvertureAssuranceMutuellePicker extends Component {
       required = false,
       withNull = false,
     } = this.props;
-    
-    let options = !!couvertureAssuranceMutuelleOptions ? 
-      couvertureAssuranceMutuelleOptions.map((v) => ({ value: v, label: this.formatSuggestion(v) })) : [];
-    
+
+    let options = !!couvertureAssuranceMutuelleOptions
+      ? couvertureAssuranceMutuelleOptions.map((v) => ({ value: v.code, label: this.formatSuggestion(v) }))
+      : [];
+
     if (withNull) {
       options.unshift({ value: null, label: this.formatSuggestion(null) });
     }
-    
+
     return (
       <SelectInput
         module={module}
         options={options}
         label={!!withLabel ? label : null}
-        placehoder={
+        placeholder={
           !!withPlaceholder
             ? placeholder || formatMessage(intl, "insuree", "CouvertureAssuranceMutuellePicker.placeholder")
             : null
@@ -78,8 +77,7 @@ const mapStateToProps = (state) => ({
   fetched: state.insuree.fetchedCouvertureAssuranceMutuelleOptions,
 });
 
-const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({ fetchCouvertureAssuranceMutuelle }, dispatch);
-};
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators({ fetchCouvertureAssuranceMutuelle }, dispatch);
 
 export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(withModulesManager(CouvertureAssuranceMutuellePicker)));

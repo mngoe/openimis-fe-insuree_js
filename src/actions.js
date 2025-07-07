@@ -319,7 +319,7 @@ export function fetchMilieuderesidence(mm) {
 }
 
 export function fetchCouvertureAssuranceMutuelle(mm) {
-  const payload = formatQuery("couvertureAssuranceMutuelleOptions", null, ["code"]);
+  const payload = formatQuery("couvertureAssuranceMutuelleOptions", null, ["code","CouvertureAssuranceMutuelle"]);
   return graphql(payload, "INSUREE_COUVERTURE_ASSURANCE_MUTUELLE_OPTIONS");
 }
 
