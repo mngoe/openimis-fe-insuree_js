@@ -324,7 +324,7 @@ export function fetchCouvertureAssuranceMutuelle(mm) {
 }
 
 export function fetchHandicapNon(mm) {
-  const payload = formatQuery("handicapNonOptions", null, ["code"]);
+  const payload = formatQuery("handicapNonOptions", null, ["code"],["HandicapNon"]);
   return graphql(payload,'HANDICAP_NON_OPTIONS',
   );
 }

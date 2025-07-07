@@ -10,8 +10,7 @@ import _ from "lodash";
 class HandicapNonPicker extends Component {
   componentDidMount() {
     if (!this.props.handicapNonOptions) {
-      // prevent loading multiple times the cache when component is
-      // several times on a page
+      // Prevent multiple loads if several components are present on the page
       setTimeout(() => {
         !this.props.fetching && !this.props.fetched && this.props.fetchHandicapNon(this.props.modulesManager);
       }, Math.floor(Math.random() * 300));
@@ -21,7 +20,7 @@ class HandicapNonPicker extends Component {
   nullDisplay = this.props.nullLabel || formatMessage(this.props.intl, "insuree", `HandicapNon.null`);
 
   formatSuggestion = (i) =>
-    !!i ? `${formatMessage(this.props.intl, "insuree", `HandicapNon.${i}`)}` : this.nullDisplay;
+    !!i ? `${formatMessage(this.props.intl, "insuree", i.HandicapNon)}` : this.nullDisplay;
 
   onSuggestionSelected = (v) => {
     this.props.onChange(v, this.formatSuggestion(v));
@@ -42,21 +41,27 @@ class HandicapNonPicker extends Component {
       required = false,
       withNull = false,
     } = this.props;
-    
-    let options = !!handicapNonOptions ? 
-      handicapNonOptions.map((v) => ({ value: v, label: this.formatSuggestion(v) })) : [];
-    
+
+    let options = !!handicapNonOptions
+      ? handicapNonOptions.map((v) => ({
+          value: v.code,
+          label: this.formatSuggestion(v),
+        }))
+      : [];
+
     if (withNull) {
       options.unshift({ value: null, label: this.formatSuggestion(null) });
     }
-    
+
     return (
       <SelectInput
         module={module}
         options={options}
         label={!!withLabel ? label : null}
         placeholder={
-          !!withPlaceholder ? placeholder || formatMessage(intl, "insuree", "HandicapNonPicker.placeholder") : null
+          !!withPlaceholder
+            ? placeholder || formatMessage(intl, "insuree", "HandicapNonPicker.placeholder")
+            : null
         }
         onChange={this.onSuggestionSelected}
         value={value}
@@ -77,7 +82,10 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({ fetchHandicapNon }, dispatch);
+  return bindActionCreators(
+    { fetchHandicapNon },
+    dispatch
+  );
 };
 
 export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(withModulesManager(HandicapNonPicker)));
