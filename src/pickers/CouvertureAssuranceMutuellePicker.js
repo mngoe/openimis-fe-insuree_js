@@ -39,6 +39,8 @@ class CouvertureAssuranceMutuellePicker extends Component {
       withNull = false,
     } = this.props;
 
+    console.log("Données brute picker :", couvertureAssuranceMutuelleOptions);
+
     const options = !!couvertureAssuranceMutuelleOptions
       ? couvertureAssuranceMutuelleOptions.map((v) => ({
           value: v.code,
