@@ -25,10 +25,9 @@ export const isValidInsuree = (insuree, modulesManager) => {
   const isInsureeStatusRequired = modulesManager.getConf("fe-insuree", "insureeForm.isInsureeStatusRequired", false);
   const passportMinLength = modulesManager.getConf("fe-insuree", "passportMinLength", PASSPORT_MIN_LENGTH);
   const passportMaxLength = modulesManager.getConf("fe-insuree", "passportMaxLength", PASSPORT_MAX_LENGTH);
-  const isEducationMandatory = modulesManager.getConf("fe-insuree", "isEducationMandatory", false);
 
 
-  const insureeChildId = modulesManager.getConf("fe-insuree", "insureeForm.insureeChildId", 4);
+  const insureeChildId = modulesManager.getConf("fe-insuree", "insureeForm.insureeChildId", 3);
   if (isInsureeFirstServicePointRequired && !insuree.healthFacility) return false;
   if (insuree.validityTo) return false;
   // if (!insuree.chfId) return false;
@@ -57,7 +56,7 @@ export const isValidInsuree = (insuree, modulesManager) => {
   if (isInsureePhotoRequired && !insuree.photo) return false;
   if (
     !!insuree.relationship &&
-    insuree.relationship.id == insureeChildId && isEducationMandatory == true &&
+    insuree.relationship.id == insureeChildId  &&
     (!insuree.education || (!!insuree.education && insuree.education.id == null))
   )
     return false;

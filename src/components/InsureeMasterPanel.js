@@ -47,7 +47,6 @@ class InsureeMasterPanel extends FormPanel {
       "insureeForm.insureeChildId", 
       3
     );
-    this.isEducationMandatory = props.modulesManager.getConf("fe-insuree", "isEducationMandatory", false);
   }
 
   renderLastNameField = (edited, classes, readOnly) => {
@@ -91,18 +90,6 @@ class InsureeMasterPanel extends FormPanel {
       isSubFamily,
       insuree,
     } = this.props;
-    console.log("this.fields ", this.fields)
-    const withoutConf = (!insuree || insuree == null || (!!insuree && insuree.head == true)) ? true: false
-    const requis = (!insuree || insuree == null || (!!insuree && insuree.head == true)) &&
-    this.fields.phoneNoHead == "M"
-      ? true
-      : false
-    
-    console.log("requis ", requis)
-    console.log("fields ", this.fields)
-    console.log("edited ", edited)
-    console.log("is head ",insuree )
-    console.log("without conf ", withoutConf)
 
     return (
       <Grid container>
@@ -293,7 +280,7 @@ class InsureeMasterPanel extends FormPanel {
                         pubRef="insuree.EducationPicker"
                         module="insuree"
                         value={!!edited && !!edited.education ? edited.education.id : ""}
-                        required={!!edited && !!edited.relationship && edited.relationship.id == this.insureeChildId && this.isEducationMandatory == true ? true : false}
+                        required={!!edited && !!edited.relationship && edited.relationship.id == this.insureeChildId ? true : false}
                         readOnly={readOnly}
                         withNull={false}
                         onChange={(v) => this.updateAttribute("education", { id: v })}
