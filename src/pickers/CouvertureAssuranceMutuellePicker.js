@@ -19,10 +19,10 @@ class CouvertureAssuranceMutuellePicker extends Component {
   nullDisplay = this.props.nullLabel || formatMessage(this.props.intl, "insuree", "CouvertureAssuranceMutuelle.null");
 
   formatSuggestion = (i) =>
-    !!i ? i.CouvertureAssuranceMutuelle || i.couvertureAssuranceMutuelle || "" : this.nullDisplay;
+    !!i ? `${formatMessage(this.props.intl, "insuree", i)}` : this.nullDisplay;
 
   onSuggestionSelected = (v) =>
-    this.props.onChange(v, this.formatSuggestion(v));
+    this.props.onChange(v, this.formatSuggestion(v.CouvertureAssuranceMutuelle));
 
   render() {
     const {
@@ -44,7 +44,7 @@ class CouvertureAssuranceMutuellePicker extends Component {
     const options = !!couvertureAssuranceMutuelleOptions
       ? couvertureAssuranceMutuelleOptions.map((v) => ({
           value: v.code,
-          label: this.formatSuggestion(v)
+          label: this.formatSuggestion(v.CouvertureAssuranceMutuelle)
         }))
       : [];
 
