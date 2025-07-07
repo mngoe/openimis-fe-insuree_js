@@ -20,7 +20,7 @@ class CouvertureAssuranceMutuellePicker extends Component {
 
   formatSuggestion = (i) => {
     if (!i) return this.nullDisplay;
-    return formatMessage(this.props.intl, "insuree", `CouvertureAssuranceMutuelle.${i.CouvertureAssuranceMutuelle}`);
+    return i.CouvertureAssuranceMutuelle;  // Affiche directement "Oui" ou "Non"
   };
 
   onSuggestionSelected = (v) => {
