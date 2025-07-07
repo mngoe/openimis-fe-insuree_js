@@ -4,10 +4,10 @@ import { bindActionCreators } from "redux";
 import { injectIntl } from "react-intl";
 import { formatMessage, SelectInput, withModulesManager } from "@openimis/fe-core";
 import { fetchCouvertureAssuranceMutuelle } from "../actions";
-import _debounce from "lodash/debounce";
 import _ from "lodash";
 
 class CouvertureAssuranceMutuellePicker extends Component {
+  
   componentDidMount() {
     if (!this.props.couvertureAssuranceMutuelleOptions) {
       setTimeout(() => {
@@ -18,20 +18,16 @@ class CouvertureAssuranceMutuellePicker extends Component {
 
   nullDisplay = this.props.nullLabel || formatMessage(this.props.intl, "insuree", "CouvertureAssuranceMutuelle.null");
 
-  formatSuggestion = (i) => {
-    if (!i) return this.nullDisplay;
-    return i.CouvertureAssuranceMutuelle;
-  };
+  formatSuggestion = (i) =>
+    !!i ? i.CouvertureAssuranceMutuelle || i.couvertureAssuranceMutuelle || "" : this.nullDisplay;
 
-  onSuggestionSelected = (v) => {
+  onSuggestionSelected = (v) =>
     this.props.onChange(v, this.formatSuggestion(v));
-  };
 
   render() {
     const {
       intl,
       couvertureAssuranceMutuelleOptions,
-      module = "insuree",
       withLabel = true,
       label = "CouvertureAssuranceMutuellePicker.label",
       withPlaceholder = false,
@@ -43,15 +39,12 @@ class CouvertureAssuranceMutuellePicker extends Component {
       withNull = false,
     } = this.props;
 
-    if (!couvertureAssuranceMutuelleOptions || couvertureAssuranceMutuelleOptions.length === 0) {
-      return null;
-    }
-
-    // Correction ici: utiliser directement les options du backend
-    let options = couvertureAssuranceMutuelleOptions.map((v) => ({
-      value: v.code,  // Utiliser le code comme valeur
-      label: v.CouvertureAssuranceMutuelle  // Utiliser le texte directement
-    }));
+    const options = !!couvertureAssuranceMutuelleOptions
+      ? couvertureAssuranceMutuelleOptions.map((v) => ({
+          value: v.code,
+          label: this.formatSuggestion(v)
+        }))
+      : [];
 
     if (withNull) {
       options.unshift({ value: null, label: this.nullDisplay });
@@ -59,11 +52,11 @@ class CouvertureAssuranceMutuellePicker extends Component {
 
     return (
       <SelectInput
-        module={module}
+        module="insuree"
         options={options}
-        label={withLabel ? label : null}
+        label={!!withLabel ? label : null}
         placeholder={
-          withPlaceholder
+          !!withPlaceholder
             ? placeholder || formatMessage(intl, "insuree", "CouvertureAssuranceMutuellePicker.placeholder")
             : null
         }
