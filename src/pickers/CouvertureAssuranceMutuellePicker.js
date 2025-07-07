@@ -20,7 +20,7 @@ class CouvertureAssuranceMutuellePicker extends Component {
 
   formatSuggestion = (i) => {
     if (!i) return this.nullDisplay;
-    return i.CouvertureAssuranceMutuelle;  // Affiche directement "Oui" ou "Non"
+    return i.CouvertureAssuranceMutuelle;
   };
 
   onSuggestionSelected = (v) => {
@@ -47,9 +47,10 @@ class CouvertureAssuranceMutuellePicker extends Component {
       return null;
     }
 
+    // Correction ici: utiliser directement les options du backend
     let options = couvertureAssuranceMutuelleOptions.map((v) => ({
-      value: v.code,
-      label: this.formatSuggestion(v)
+      value: v.code,  // Utiliser le code comme valeur
+      label: v.CouvertureAssuranceMutuelle  // Utiliser le texte directement
     }));
 
     if (withNull) {
