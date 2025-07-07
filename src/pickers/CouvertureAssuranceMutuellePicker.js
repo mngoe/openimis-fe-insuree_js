@@ -16,10 +16,12 @@ class CouvertureAssuranceMutuellePicker extends Component {
     }
   }
 
-  nullDisplay = this.props.nullLabel || formatMessage(this.props.intl, "insuree", `CouvertureAssuranceMutuelle.null`);
+  nullDisplay = this.props.nullLabel || formatMessage(this.props.intl, "insuree", "CouvertureAssuranceMutuelle.null");
 
-  formatSuggestion = (i) =>
-    !!i ? `${formatMessage(this.props.intl, "insuree", i.CouvertureAssuranceMutuelle)}` : this.nullDisplay;
+  formatSuggestion = (i) => {
+    if (!i) return this.nullDisplay;
+    return formatMessage(this.props.intl, "insuree", `CouvertureAssuranceMutuelle.${i.CouvertureAssuranceMutuelle}`);
+  };
 
   onSuggestionSelected = (v) => {
     this.props.onChange(v, this.formatSuggestion(v));
@@ -41,21 +43,26 @@ class CouvertureAssuranceMutuellePicker extends Component {
       withNull = false,
     } = this.props;
 
-    let options = !!couvertureAssuranceMutuelleOptions
-      ? couvertureAssuranceMutuelleOptions.map((v) => ({ value: v.code, label: this.formatSuggestion(v) }))
-      : [];
+    if (!couvertureAssuranceMutuelleOptions || couvertureAssuranceMutuelleOptions.length === 0) {
+      return null;
+    }
+
+    let options = couvertureAssuranceMutuelleOptions.map((v) => ({
+      value: v.code,
+      label: this.formatSuggestion(v)
+    }));
 
     if (withNull) {
-      options.unshift({ value: null, label: this.formatSuggestion(null) });
+      options.unshift({ value: null, label: this.nullDisplay });
     }
 
     return (
       <SelectInput
         module={module}
         options={options}
-        label={!!withLabel ? label : null}
+        label={withLabel ? label : null}
         placeholder={
-          !!withPlaceholder
+          withPlaceholder
             ? placeholder || formatMessage(intl, "insuree", "CouvertureAssuranceMutuellePicker.placeholder")
             : null
         }
