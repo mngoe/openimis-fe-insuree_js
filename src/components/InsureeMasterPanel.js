@@ -110,7 +110,7 @@ class InsureeMasterPanel extends FormPanel {
                       <Grid item xs={3}>
                         <PublishedComponent
                           pubRef="insuree.RelationPicker"
-                          withNull={true}
+                          withNull={false}
                           required={true}
                           nullLabel={formatMessage(this.props.intl, "insuree", `Relation.none`)}
                           readOnly={readOnly}
@@ -304,7 +304,7 @@ class InsureeMasterPanel extends FormPanel {
                       error={
                         edited &&
                         edited.passport &&
-                        (edited.passport.length > this.passportMaxLength || edited.passport.length < this.passportMinLength)
+                        (edited.passport.length !== this.passportMaxLength && edited.passport.length !== this.passportMinLength)
                           ? true
                           : false
                       }
