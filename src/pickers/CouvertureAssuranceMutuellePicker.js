@@ -7,7 +7,7 @@ import { fetchCouvertureAssuranceMutuelle } from "../actions";
 import _ from "lodash";
 
 class CouvertureAssuranceMutuellePicker extends Component {
-  
+
   componentDidMount() {
     if (!this.props.couvertureAssuranceMutuelleOptions) {
       setTimeout(() => {
@@ -16,10 +16,7 @@ class CouvertureAssuranceMutuellePicker extends Component {
     }
   }
 
-  nullDisplay = this.props.nullLabel || formatMessage(this.props.intl, "insuree", "CouvertureAssuranceMutuelle.null");
-
-  onSuggestionSelected = (v) =>
-    this.props.onChange(v);
+  onSuggestionSelected = (v) => this.props.onChange(v);
 
   render() {
     const {
@@ -33,10 +30,7 @@ class CouvertureAssuranceMutuellePicker extends Component {
       reset,
       readOnly = false,
       required = false,
-      withNull = false,
     } = this.props;
-
-    console.log("Données brute picker :", this.props.couvertureAssuranceMutuelleOptions);
 
     const options = !!couvertureAssuranceMutuelleOptions
       ? couvertureAssuranceMutuelleOptions.map((v) => ({
@@ -44,10 +38,6 @@ class CouvertureAssuranceMutuellePicker extends Component {
           label: v.CouvertureAssuranceMutuelle
         }))
       : [];
-
-    if (withNull) {
-      options.unshift({ value: null, label: this.nullDisplay });
-    }
 
     return (
       <SelectInput
@@ -64,8 +54,7 @@ class CouvertureAssuranceMutuellePicker extends Component {
         reset={reset}
         readOnly={readOnly}
         required={required}
-        withNull={withNull}
-        nullLabel={this.nullDisplay}
+        withNull={false} 
       />
     );
   }
@@ -80,4 +69,6 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) =>
   bindActionCreators({ fetchCouvertureAssuranceMutuelle }, dispatch);
 
-export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(withModulesManager(CouvertureAssuranceMutuellePicker)));
+export default injectIntl(
+  connect(mapStateToProps, mapDispatchToProps)(withModulesManager(CouvertureAssuranceMutuellePicker))
+);
