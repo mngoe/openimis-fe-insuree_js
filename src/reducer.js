@@ -398,28 +398,29 @@ function reducer(
       };
 
     // Gestion des options MaladieInvalidante
-    case "MALADIE_INVALIDANTE_NON_OPTIONS_REQ":
-      return {
-        ...state,
-        fetchingMaladieInvalidanteOptions: true,
-        fetchedMaladieInvalidanteOptions: false,
-        maladieInvalidanteOptions: null,
-        errorMaladieInvalidanteOptions: null,
-      };
-    case "MALADIE_INVALIDANTE_NON_OPTIONS_RESP":
-      return {
-        ...state,
-        fetchingMaladieInvalidanteOptions: false,
-        fetchedMaladieInvalidanteOptions: true,
-        maladieInvalidanteOptions: action.payload.data.maladieInvalidanteNonOptions,
-        errorMaladieInvalidanteOptions: formatGraphQLError(action.payload),
-      };
-    case "MALADIE_INVALIDANTE_NON_OPTIONS_ERR":
-      return {
-        ...state,
-        fetchingMaladieInvalidanteOptions: false,
-        errorMaladieInvalidanteOptions: formatGraphQLError(action.payload),
-      };
+      case "MALADIE_INVALIDANTE_NON_OPTIONS_REQ":
+        return {
+          ...state,
+          fetchingMaladieInvalidanteNonOptions: true,
+          fetchedMaladieInvalidanteNonOptions: false,
+          maladieInvalidanteNonOptions: null,
+          errorMaladieInvalidanteNonOptions: null,
+        };
+      case "MALADIE_INVALIDANTE_NON_OPTIONS_RESP":
+        return {
+          ...state,
+          fetchingMaladieInvalidanteNonOptions: false,
+          fetchedMaladieInvalidanteNonOptions: true,
+          maladieInvalidanteNonOptions: action.payload.data.maladieInvalidanteNonOptions,
+          errorMaladieInvalidanteNonOptions: formatGraphQLError(action.payload),
+        };
+      case "MALADIE_INVALIDANTE_NON_OPTIONS_ERR":
+        return {
+          ...state,
+          fetchingMaladieInvalidanteNonOptions: false,
+          errorMaladieInvalidanteNonOptions: formatGraphQLError(action.payload),
+        };
+
     case "INSUREE_INSUREES_REQ":
       return {
         ...state,
