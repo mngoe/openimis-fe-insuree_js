@@ -362,11 +362,13 @@ class InsureeMasterPanel extends FormPanel {
                   </Grid>
                   <Grid item xs={3} className={classes.item}>
                     <PublishedComponent
-                      pubRef="insuree.MilieuDeResidencePicker"
+                      pubRef="insuree.MilieuderesidencePicker"
                       value={!!edited && !!edited.milieuderesidence ? edited.milieuderesidence.code : ""}
                       module="insuree"
                       readOnly={readOnly}
-                      withNull={false}
+                      withNull={true}
+                      withLabel={true}
+                      required={false}
                       onChange={(v) => this.updateAttribute("milieuderesidence", { code: v })}
                     />
                   </Grid>

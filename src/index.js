@@ -32,6 +32,7 @@ import PhotoStatusPicker from "./pickers/PhotoStatusPicker";
 import FamilyStatusPicker from "./pickers/FamilyStatusPicker";
 import RelationPicker from "./pickers/RelationPicker";
 import HandicapNonPicker from "./pickers/HandicapNonPicker";
+import MaladieInvalidanteNonPicker from "./pickers/MaladieInvalidanteNonPicker";
 import InsureeNumberInput from "./pickers/InsureeNumberInput";
 import InsureeAvatar from "./components/InsureeAvatar";
 import InsureeCappedItemServiceLink from "./components/InsureeCappedItemServiceLink";
@@ -142,6 +143,7 @@ const DEFAULT_CONFIG = {
     { key: "insuree.InsureeNumberInput", ref: InsureeNumberInput },
     { key: "insuree.PaymentMethodPicker", ref: PaymentMethodPicker },
     { key: "insuree.HandicapNonPicker", ref: HandicapNonPicker },
+    { key: "insuree.MaladieInvalidanteNonPicker", ref: MaladieInvalidanteNonPicker },
 
     { key: "insuree.route.families", ref: ROUTE_INSUREE_FAMILIES },
     { key: "insuree.route.familyOverview", ref: ROUTE_INSUREE_FAMILY_OVERVIEW },
