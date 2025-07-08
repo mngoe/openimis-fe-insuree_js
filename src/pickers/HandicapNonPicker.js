@@ -63,6 +63,8 @@ class HandicapNonPicker extends Component {
   }
 }
 
+console.log("HandicapNonPicker loaded"+this.props.handicapNonOptions);
+
 const mapStateToProps = (state) => ({
   handicapNonOptions: state.insuree.handicapNonOptions,
   fetching: state.insuree.fetchingHandicapNonOptions,
