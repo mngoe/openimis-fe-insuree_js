@@ -325,7 +325,7 @@ export function fetchHandicapNon(mm) {
   );
 }
 
-export function fetchMaladieInvalidante(mm) {
+export function fetchMaladieInvalidanteNon(mm) {
   const payload = formatQuery("maladieInvalidanteNonOptions", null, ["code","MaladieInvalidanteNon"]);
   return graphql(
     payload,
