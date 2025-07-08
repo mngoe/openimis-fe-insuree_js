@@ -18,14 +18,7 @@ class MaladieInvalidanteNonPicker extends Component {
     }
   }
 
-  nullDisplay = this.props.nullLabel || formatMessage(this.props.intl, "insuree", `MaladieInvalidanteNon.null`);
-
-  formatSuggestion = (i) =>
-    !!i ? `${formatMessage(this.props.intl, "insuree", `MaladieInvalidanteNon.${i}`)}` : this.nullDisplay;
-
-  onSuggestionSelected = (v) => {
-    this.props.onChange(v, this.formatSuggestion(v));
-  };
+  onSuggestionSelected = (v) => this.props.onChange(v, this.formatSuggestion(v));
 
   render() {
     const {
@@ -44,11 +37,8 @@ class MaladieInvalidanteNonPicker extends Component {
     } = this.props;
     
     let options = !!maladieInvalidanteNonOptions ? 
-      maladieInvalidanteNonOptions.map((v) => ({ value: v, label: this.formatSuggestion(v) })) : [];
+      maladieInvalidanteNonOptions.map((v) => ({ value: v.code, label: v.MaladieInvalidanteNon })) : [];
     
-    if (withNull) {
-      options.unshift({ value: null, label: this.formatSuggestion(null) });
-    }
     
     return (
       <SelectInput
@@ -63,8 +53,7 @@ class MaladieInvalidanteNonPicker extends Component {
         reset={reset}
         readOnly={readOnly}
         required={required}
-        withNull={withNull}
-        nullLabel={this.nullDisplay}
+        withNull={false}
       />
     );
   }
