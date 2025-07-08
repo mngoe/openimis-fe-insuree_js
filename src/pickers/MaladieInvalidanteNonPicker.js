@@ -18,7 +18,7 @@ class MaladieInvalidanteNonPicker extends Component {
     }
   }
 
-  onSuggestionSelected = (v) => this.props.onChange(v, this.formatSuggestion(v));
+  onSuggestionSelected = (v) => this.props.onChange(v);
 
   render() {
     const {
