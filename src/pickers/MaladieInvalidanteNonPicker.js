@@ -36,7 +36,9 @@ class MaladieInvalidanteNonPicker extends Component {
       withNull = false,
     } = this.props;
     
-    let options = !!maladieInvalidanteNonOptions ? 
+    console.log(this.props.maladieInvalidanteNonOptions);
+
+    const options = !!maladieInvalidanteNonOptions ? 
       maladieInvalidanteNonOptions.map((v) => ({ value: v.code, label: v.MaladieInvalidanteNon })) : [];
     
     
