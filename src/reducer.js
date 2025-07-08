@@ -342,7 +342,7 @@ function reducer(
         ...state,
         fetchingTypesDhabitationOptions: false,
         fetchedTypesDhabitationOptions: true,
-        typesDhabitationOptions: action.payload.data.typesDhabitationOptions,
+        typesDhabitationOptions: action.payload.data.typesHabitationOptions,
         errorTypesDhabitationOptions: formatGraphQLError(action.payload),
       };
     case "INSUREE_TYPES_DHABITATION_OPTS_ERR":
