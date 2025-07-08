@@ -40,10 +40,7 @@ class MilieuderesidencePicker extends Component {
     
     let options = !!milieuDeResidenceOptions ? 
       milieuDeResidenceOptions.map((v) => ({ value: v.code, label: v.Milieuderesidence })) : [];
-    
-    if (withNull) {
-      options.unshift({ value: null, label: this.formatSuggestion(null) });
-    }
+ 
     
     return (
       <SelectInput
