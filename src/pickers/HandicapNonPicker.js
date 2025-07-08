@@ -17,14 +17,7 @@ class HandicapNonPicker extends Component {
     }
   }
 
-  nullDisplay = this.props.nullLabel || formatMessage(this.props.intl, "insuree", `HandicapNon.null`);
-
-  formatSuggestion = (i) =>
-    !!i ? `${formatMessage(this.props.intl, "insuree", i.HandicapNon)}` : this.nullDisplay;
-
-  onSuggestionSelected = (v) => {
-    this.props.onChange(v, this.formatSuggestion(v));
-  };
+  onSuggestionSelected = (v) => this.props.onChange(v);
 
   render() {
     const {
@@ -45,13 +38,9 @@ class HandicapNonPicker extends Component {
     let options = !!handicapNonOptions
       ? handicapNonOptions.map((v) => ({
           value: v.code,
-          label: this.formatSuggestion(v),
+          label: v.HandicapNon,
         }))
       : [];
-
-    if (withNull) {
-      options.unshift({ value: null, label: this.formatSuggestion(null) });
-    }
 
     return (
       <SelectInput
@@ -68,8 +57,7 @@ class HandicapNonPicker extends Component {
         reset={reset}
         readOnly={readOnly}
         required={required}
-        withNull={withNull}
-        nullLabel={this.nullDisplay}
+        withNull={false}
       />
     );
   }
