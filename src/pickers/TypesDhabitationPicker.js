@@ -18,14 +18,8 @@ class TypesDhabitationPicker extends Component {
     }
   }
 
-  nullDisplay = this.props.nullLabel || formatMessage(this.props.intl, "insuree", `TypesDhabitation.null`);
 
-  formatSuggestion = (i) =>
-    !!i ? `${formatMessage(this.props.intl, "insuree", `TypesDhabitation.${i}`)}` : this.nullDisplay;
-
-  onSuggestionSelected = (v) => {
-    this.props.onChange(v, this.formatSuggestion(v));
-  };
+  onSuggestionSelected = (v) =>this.props.onChange(v);
 
   render() {
     const {
@@ -42,10 +36,10 @@ class TypesDhabitationPicker extends Component {
       required = false,
       withNull = false,
     } = this.props;
-    let options = !!typesDhabitationOptions ? typesDhabitationOptions.map((v) => ({ value: v, label: this.formatSuggestion(v) })) : [];
-    if (withNull) {
-      options.unshift({ value: null, label: this.formatSuggestion(null) });
-    }
+
+
+    const options = !!typesDhabitationOptions ? typesDhabitationOptions.map((v) => ({ value: v.code, label: v.TypesHabitation })) : [];
+    
     return (
       <SelectInput
         module={module}
@@ -59,8 +53,7 @@ class TypesDhabitationPicker extends Component {
         reset={reset}
         readOnly={readOnly}
         required={required}
-        withNull={withNull}
-        nullLabel={this.nullDisplay}
+        withNull={false}
       />
     );
   }

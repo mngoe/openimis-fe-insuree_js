@@ -108,10 +108,6 @@ export function fetchInsureeGenders(mm) {
   return graphql(payload, "INSUREE_GENDERS");
 }
 
-export function fetchTypesHabitation(mm) {
-  const payload = formatQuery("typesHabitationOptions", null, ["code"]);
-  return graphql(payload, "INSUREE_TYPES_HABITATION_OPTIONS");
-}
 
 export function fetchInsuree(mm, chfid) {
   let payload = formatPageQuery(
@@ -330,11 +326,16 @@ export function fetchHandicapNon(mm) {
 }
 
 export function fetchMaladieInvalidante(mm) {
-  const payload = formatQuery("maladieInvalidanteNonOptions", null, ["code"]);
+  const payload = formatQuery("maladieInvalidanteNonOptions", null, ["code","MaladieInvalidanteNon"]);
   return graphql(
     payload,
     'MALADIE_INVALIDANTE_NON_OPTIONS',
   );
+}
+
+export function fetchTypesHabitation(mm) {
+  const payload = formatQuery("typesHabitationOptions", null, ["code", "TypesHabitation"]);
+  return graphql(payload, "INSUREE_TYPES_HABITATION_OPTIONS");
 }
 
 export function fetchRelations(mm) {
