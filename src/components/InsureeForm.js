@@ -209,11 +209,13 @@ class InsureeForm extends Component {
   };
 
   canSave = () => {
-    console.log(this.state.insuree);
     const doesInsureeChange = this.doesInsureeChange();
     if (!doesInsureeChange) return false;
     if (this.state.lockNew) return false;
     // if (!this.props.isChfIdValid) return false;
+    console.log(isValidInsuree(this.state.insuree, this.props.modulesManager));
+    console.log(this.isWorker);
+    console.log(doesInsureeChange);
 
     return this.isWorker
       ? isValidWorker(this.state.insuree)

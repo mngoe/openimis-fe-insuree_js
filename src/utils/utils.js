@@ -13,6 +13,7 @@ export function familyLabel(family) {
 }
 
 export const isValidInsuree = (insuree, modulesManager) => {
+  console.log("insuree: ", insuree);
   const isInsureeFirstServicePointRequired = modulesManager.getConf(
     "fe-insuree",
     "insureeForm.isInsureeFirstServicePointRequired",
@@ -27,6 +28,10 @@ export const isValidInsuree = (insuree, modulesManager) => {
   const passportMaxLength = modulesManager.getConf("fe-insuree", "passportMaxLength", PASSPORT_MAX_LENGTH);
 
   const insureeChildId = modulesManager.getConf("fe-insuree", "insureeForm.insureeChildId", 4);
+  console.log("passportMinLength: ", passportMinLength);
+  console.log("passportMinLength: ", passportMinLength);
+  console.log("isInsureeStatusRequired: ", isInsureeStatusRequired);
+  console.log("isPhoneNumberMandatory: ", isPhoneNumberMandatory)
   if (isInsureeFirstServicePointRequired && !insuree.healthFacility) return false;
   if (insuree.validityTo) return false;
   // if (!insuree.chfId) return false;
