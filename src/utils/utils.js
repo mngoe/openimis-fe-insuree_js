@@ -13,6 +13,7 @@ export function familyLabel(family) {
 }
 
 export const isValidInsuree = (insuree, modulesManager) => {
+  console.log("insuree: ", insuree);
   const isInsureeFirstServicePointRequired = modulesManager.getConf(
     "fe-insuree",
     "insureeForm.isInsureeFirstServicePointRequired",

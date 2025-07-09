@@ -209,7 +209,6 @@ class InsureeForm extends Component {
   };
 
   canSave = () => {
-    console.log(this.state.insuree);
     const doesInsureeChange = this.doesInsureeChange();
     if (!doesInsureeChange) return false;
     if (this.state.lockNew) return false;
