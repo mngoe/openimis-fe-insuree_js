@@ -214,6 +214,9 @@ class InsureeForm extends Component {
     if (!doesInsureeChange) return false;
     if (this.state.lockNew) return false;
     // if (!this.props.isChfIdValid) return false;
+    console.log(isValidInsuree(this.state.insuree, this.props.modulesManager));
+    console.log(this.isWorker);
+    console.log(doesInsureeChange);
 
     return this.isWorker
       ? isValidWorker(this.state.insuree)
