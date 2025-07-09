@@ -188,7 +188,7 @@ class FamilyMasterPanel extends FormPanel {
               />
             </Grid>
           )}
-          {this.fields.confirmationType !== "N" && (
+          {this.confirmationTypeValue !== "N" && (
             <>
               <Grid item xs={2} className={classes.item}>
                 <PublishedComponent
