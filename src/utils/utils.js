@@ -25,7 +25,7 @@ export const isValidInsuree = (insuree, modulesManager) => {
   const isInsureeStatusRequired = modulesManager.getConf("fe-insuree", "insureeForm.isInsureeStatusRequired", false);
   const passportMinLength = modulesManager.getConf("fe-insuree", "passportMinLength", PASSPORT_MIN_LENGTH);
   const passportMaxLength = modulesManager.getConf("fe-insuree", "passportMaxLength", PASSPORT_MAX_LENGTH);
-
+  const phoneNoHeadMandatory = modulesManager.getConf("fe-insuree", "phoneNoHeadMandatory", "M");
   const insureeChildId = modulesManager.getConf("fe-insuree", "insureeForm.insureeChildId", 4);
   if (isInsureeFirstServicePointRequired && !insuree.healthFacility) return false;
   if (insuree.validityTo) return false;
@@ -36,7 +36,7 @@ export const isValidInsuree = (insuree, modulesManager) => {
   if (!insuree.gender || !insuree.gender?.code) return false;
   if (!!insuree.photo && (!insuree.photo.date || !insuree.photo.officerId || !insuree.photo.photo)) return false;
   if (!insuree.incomeLevel) return false;
-  if (!insuree.family && !insuree.hasOwnProperty('isFamily') && isPhoneNumberMandatory.phoneNoHead != "H"  ){
+  if (!insuree.family && !insuree.hasOwnProperty('isFamily') && phoneNoHeadMandatory != "H"  ){
     if(!insuree.phone){
       return false
     }
