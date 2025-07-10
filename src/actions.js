@@ -45,7 +45,12 @@ const FAMILY_HEAD_PROJECTION = (mm) => [
   "preferredPaymentMethod", 
   "bankCoordinates", 
   "coordinates",
-  "professionalSituation"
+  "professionalSituation",
+  "milieuDeResidence{code, Milieuderesidence, altLanguage}",
+  "typesHabitation{code, TypesHabitation, altLanguage}",
+  "couvertureAssuranceMutuelle{code, CouvertureAssuranceMutuelle, altLanguage}",
+  "handicapNon{code, HandicapNon, altLanguage}",
+  "maladieInvalidanteNon{code, MaladieInvalidanteNon, altLanguage}"
 ];
 const FAMILY_FULL_PROJECTION = (mm) => [
   "id",
@@ -99,6 +104,11 @@ const INSUREE_FULL_PROJECTION = (mm) => [
   "email",
   "phone",
   "healthFacility" + mm.getProjection("location.HealthFacilityPicker.projection"),
+  "milieuDeResidence{code, Milieuderesidence, altLanguage}",
+  "typesHabitation{code, TypesHabitation, altLanguage}",
+  "couvertureAssuranceMutuelle{code, CouvertureAssuranceMutuelle, altLanguage}",
+  "handicapNon{code, HandicapNon, altLanguage}",
+  "maladieInvalidanteNon{code, MaladieInvalidanteNon, altLanguage}",
 ];
 
 export const INSUREE_PICKER_PROJECTION = ["id", "uuid", "chfId", "lastName", "otherNames", "dob"];
@@ -310,31 +320,27 @@ export function fetchIdentificationTypes(mm) {
 }
 
 export function fetchMilieuderesidence(mm) {
-  const payload = formatQuery("milieuDeResidenceOptions", null, ["code","Milieuderesidence"]);
+  const payload = formatQuery("milieuDeResidenceOptions", null, ["code", "Milieuderesidence", "altLanguage"]);
   return graphql(payload, "INSUREE_MILIEUDERESIDENCE_OPTIONS");
 }
 
 export function fetchCouvertureAssuranceMutuelle(mm) {
-  const payload = formatQuery("couvertureAssuranceMutuelleOptions", null, ["code","CouvertureAssuranceMutuelle"]);
+  const payload = formatQuery("couvertureAssuranceMutuelleOptions", null, ["code", "CouvertureAssuranceMutuelle", "altLanguage"]);
   return graphql(payload, "INSUREE_COUVERTURE_ASSURANCE_MUTUELLE_OPTIONS");
 }
 
 export function fetchHandicapNon(mm) {
-  const payload = formatQuery("handicapNonOptions", null, ["code","HandicapNon"]);
-  return graphql(payload,'HANDICAP_NON_OPTIONS',
-  );
+  const payload = formatQuery("handicapNonOptions", null, ["code", "HandicapNon", "altLanguage"]);
+  return graphql(payload, 'HANDICAP_NON_OPTIONS');
 }
 
 export function fetchMaladieInvalidanteNon(mm) {
-  const payload = formatQuery("maladieInvalidanteNonOptions", null, ["code","MaladieInvalidanteNon"]);
-  return graphql(
-    payload,
-    'MALADIE_INVALIDANTE_NON_OPTIONS',
-  );
+  const payload = formatQuery("maladieInvalidanteNonOptions", null, ["code", "MaladieInvalidanteNon", "altLanguage"]);
+  return graphql(payload, 'MALADIE_INVALIDANTE_NON_OPTIONS');
 }
 
 export function fetchTypesHabitation(mm) {
-  const payload = formatQuery("typesHabitationOptions", null, ["code", "TypesHabitation"]);
+  const payload = formatQuery("typesHabitationOptions", null, ["code", "TypesHabitation", "altLanguage"]);
   return graphql(payload, "INSUREE_TYPES_HABITATION_OPTIONS");
 }
 
@@ -426,11 +432,11 @@ export function formatInsureeGQL(mm, insuree) {
     ${!!insuree.coordinates ? `coordinates: "${insuree.coordinates}"` : ""}
     ${!!insuree.bankCoordinates ? `bankCoordinates: "${formatGQLString(insuree.bankCoordinates)}"` : ""}
     ${!!insuree.incomeLevel ? `incomeLevelId: ${decodeId(insuree.incomeLevel.id)}` : ""}
-    ${!!insuree.milieuRésidence && !!insuree.milieuRésidence.code ? `milieuRésidence: "${insuree.milieuRésidence.code}"` : ""}
-    ${!!insuree.typesDhabitation && !!insuree.typesDhabitation.code ? `typesDhabitation: "${insuree.typesDhabitation.code}"` : ""}
-    ${!!insuree.couvertureAssuranceMutuelle && !!insuree.couvertureAssuranceMutuelle.code ? `couvertureAssuranceMutuelle: "${insuree.couvertureAssuranceMutuelle.code}"` : ""}
-    ${!!insuree.handicapNon && !!insuree.handicapNon.code ? `handicapNon: ${insuree.handicapNon.code}` : ""}
-    ${!!insuree.maladieInvalidante && !!insuree.maladieInvalidante.code ? `maladieInvalidante: ${insuree.maladieInvalidante.code}` : ""}
+    ${!!insuree.milieuDeResidence && !!insuree.milieuDeResidence.code ? `milieuDeResidenceId: "${insuree.milieuDeResidence.code}"` : ""}
+    ${!!insuree.typesHabitation && !!insuree.typesHabitation.code ? `typeHabitationId: "${insuree.typesHabitation.code}"` : ""}
+    ${!!insuree.couvertureAssuranceMutuelle && !!insuree.couvertureAssuranceMutuelle.code ? `couvertureAssuranceId: "${insuree.couvertureAssuranceMutuelle.code}"` : ""}
+    ${!!insuree.handicapNon && !!insuree.handicapNon.code ? `handicapId: ${insuree.handicapNon.code}` : ""}
+    ${!!insuree.maladieInvalidanteNon && !!insuree.maladieInvalidanteNon.code ? `maladieInvalidanteId: ${insuree.maladieInvalidanteNon.code}` : ""}
   `;
 }
 

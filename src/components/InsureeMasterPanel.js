@@ -315,13 +315,13 @@ class InsureeMasterPanel extends FormPanel {
                   <Grid item xs={3} className={classes.item}>
                     <PublishedComponent
                       pubRef="insuree.MaladieInvalidanteNonPicker"
-                      value={!!edited && !!edited.maladieInvalidante ? edited.maladieInvalidante.code : ""}
+                      value={!!edited && !!edited.maladieInvalidanteNon ? edited.maladieInvalidanteNon.code : ""}
                       module="insuree"
                       readOnly={readOnly}
                       required={false}
                       withNull={true}
                       withLabel={true}
-                      onChange={(v) => this.updateAttribute("maladieInvalidante", { code: v })}
+                      onChange={(v) => this.updateAttribute("maladieInvalidanteNon", { code: v })}
                     />
                   </Grid>
                   <Grid item xs={3} className={classes.item}>
@@ -351,25 +351,25 @@ class InsureeMasterPanel extends FormPanel {
                   <Grid item xs={3} className={classes.item}>
                     <PublishedComponent
                       pubRef="insuree.TypesDhabitationPicker"
-                      value={!!edited && !!edited.typesDhabitation ? edited.typesDhabitation.code : ""}
+                      value={!!edited && !!edited.typesHabitation ? edited.typesHabitation.code : ""}
                       module="insuree"
                       readOnly={readOnly}
                       required={false}
                       withNull={true}
                       withLabel={true}
-                      onChange={(v) => this.updateAttribute("typesDhabitation", { code: v })}
+                      onChange={(v) => this.updateAttribute("typesHabitation", { code: v })}
                     />
                   </Grid>
                   <Grid item xs={3} className={classes.item}>
                     <PublishedComponent
                       pubRef="insuree.MilieuderesidencePicker"
-                      value={!!edited && !!edited.milieuderesidence ? edited.milieuderesidence.code : ""}
+                      value={!!edited && !!edited.milieuDeResidence ? edited.milieuDeResidence.code : ""}
                       module="insuree"
                       readOnly={readOnly}
                       withNull={true}
                       withLabel={true}
                       required={false}
-                      onChange={(v) => this.updateAttribute("milieuderesidence", { code: v })}
+                      onChange={(v) => this.updateAttribute("milieuDeResidence", { code: v })}
                     />
                   </Grid>
 

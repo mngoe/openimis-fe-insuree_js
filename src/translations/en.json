@@ -161,8 +161,8 @@
   "insuree.IdentificationType.P": "Passport",
   "insuree.IdentificationType.V": "Voter Card",
   "insuree.CouvertureAssuranceMutuellePicker.label": "Mutual Insurance Coverage",
-  "insuree.TypesHabitationPicker.label": "Housing Type",
-  "insuree.MilieuDeResidencePicker.label": "Residential Area",
+  "insuree.TypesDhabitationPicker.label": "Housing Type",
+  "insuree.MilieuderesidencePicker.label": "Residential Area",
 
   "insuree.TypesDhabitation.EN_DUR_ETAGE": "Solid construction with floors",
   "insuree.TypesDhabitation.EN_DUR": "Solid construction (cement, baked brick, etc.)",

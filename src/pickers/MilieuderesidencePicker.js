@@ -39,7 +39,13 @@ class MilieuderesidencePicker extends Component {
     } = this.props;
     
     let options = !!milieuDeResidenceOptions ? 
-      milieuDeResidenceOptions.map((v) => ({ value: v.code, label: v.Milieuderesidence })) : [];
+      milieuDeResidenceOptions.map((v) => ({
+        value: v.code, 
+        label: v.Milieuderesidence,
+        code: v.code,
+        Milieuderesidence: v.Milieuderesidence,
+        altLanguage: v.altLanguage
+      })) : [];
  
     
     return (

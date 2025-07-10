@@ -38,7 +38,13 @@ class TypesDhabitationPicker extends Component {
     } = this.props;
 
 
-    const options = !!typesDhabitationOptions ? typesDhabitationOptions.map((v) => ({ value: v.code, label: v.TypesHabitation })) : [];
+    const options = !!typesDhabitationOptions ? typesDhabitationOptions.map((v) => ({
+      value: v.code, 
+      label: v.TypesHabitation,
+      code: v.code,
+      TypesHabitation: v.TypesHabitation,
+      altLanguage: v.altLanguage
+    })) : [];
     
     return (
       <SelectInput

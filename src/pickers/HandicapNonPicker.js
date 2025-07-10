@@ -39,6 +39,9 @@ class HandicapNonPicker extends Component {
       ? handicapNonOptions.map((v) => ({
           value: v.code,
           label: v.HandicapNon,
+          code: v.code,
+          HandicapNon: v.HandicapNon,
+          altLanguage: v.altLanguage
         }))
       : [];
 
