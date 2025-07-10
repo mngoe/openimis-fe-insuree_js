@@ -37,6 +37,7 @@ class FamilyMasterPanel extends FormPanel {
       DEFAULT.RENDER_LAST_NAME_FIRST,
     );
     this.fields = props.modulesManager.getConf("fe-insuree", "fields", "{}");
+    this.confirmationTypeValue = props.modulesManager.getConf("fe-insuree", "confirmationTypeValue", "N");
   }
 
   renderLastNameField = (edited, classes) => {
@@ -187,7 +188,7 @@ class FamilyMasterPanel extends FormPanel {
               />
             </Grid>
           )}
-          {this.fields.confirmationType !== "N" && (
+          {this.confirmationTypeValue !== "N" && (
             <>
               <Grid item xs={2} className={classes.item}>
                 <PublishedComponent

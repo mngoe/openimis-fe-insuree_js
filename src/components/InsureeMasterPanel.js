@@ -47,6 +47,7 @@ class InsureeMasterPanel extends FormPanel {
       "insureeForm.insureeChildId", 
       3
     );
+    this.phoneNoHeadMandatory = props.modulesManager.getConf("fe-insuree", "phoneNoHeadMandatory", "M");
   }
 
   renderLastNameField = (edited, classes, readOnly) => {
@@ -236,7 +237,7 @@ class InsureeMasterPanel extends FormPanel {
                       readOnly={readOnly}
                       required={
                         (!insuree || insuree == null || (!!insuree && insuree.head == true)) &&
-                        this.fields.phoneNoHead == "M"
+                        this.phoneNoHeadMandatory == "M"
                           ? true
                           : false
                       }
