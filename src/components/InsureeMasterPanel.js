@@ -309,9 +309,70 @@ class InsureeMasterPanel extends FormPanel {
                       readOnly={readOnly}
                       required={true}
                       value={!!edited && !!edited.passport ? edited.passport : ""}
-                      onChange={(v) => this.updateAttribute("passport", !!v ? v : null)}
+                      onChange={(v) => this.updateAttribute("passport", v)}
                     />
                   </Grid>
+                  <Grid item xs={3} className={classes.item}>
+                    <PublishedComponent
+                      pubRef="insuree.MaladieInvalidanteNonPicker"
+                      value={!!edited && !!edited.maladieInvalidanteNon ? edited.maladieInvalidanteNon.code : ""}
+                      module="insuree"
+                      readOnly={readOnly}
+                      required={false}
+                      withNull={true}
+                      withLabel={true}
+                      onChange={(v) => this.updateAttribute("maladieInvalidanteNon", { code: v })}
+                    />
+                  </Grid>
+                  <Grid item xs={3} className={classes.item}>
+                    <PublishedComponent
+                      pubRef="insuree.HandicapNonPicker"
+                      value={!!edited && !!edited.handicapNon ? edited.handicapNon.code : ""}
+                      module="insuree"
+                      readOnly={readOnly}
+                      required={false}
+                      withNull={true}
+                      withLabel={true}
+                      onChange={(v) => this.updateAttribute("handicapNon", { code: v })}
+                    />
+                  </Grid>
+                  <Grid item xs={3} className={classes.item}>
+                    <PublishedComponent
+                      pubRef="insuree.CouvertureAssuranceMutuellePicker"
+                      value={!!edited && !!edited.couvertureAssuranceMutuelle ? edited.couvertureAssuranceMutuelle.code : ""}
+                      module="insuree"
+                      readOnly={readOnly}
+                      required={false}
+                      withNull={true}
+                      withLabel={true}
+                      onChange={(v) => this.updateAttribute("couvertureAssuranceMutuelle", { code: v })}
+                    />
+                  </Grid>
+                  <Grid item xs={3} className={classes.item}>
+                    <PublishedComponent
+                      pubRef="insuree.TypesDhabitationPicker"
+                      value={!!edited && !!edited.typesHabitation ? edited.typesHabitation.code : ""}
+                      module="insuree"
+                      readOnly={readOnly}
+                      required={false}
+                      withNull={true}
+                      withLabel={true}
+                      onChange={(v) => this.updateAttribute("typesHabitation", { code: v })}
+                    />
+                  </Grid>
+                  <Grid item xs={3} className={classes.item}>
+                    <PublishedComponent
+                      pubRef="insuree.MilieuderesidencePicker"
+                      value={!!edited && !!edited.milieuDeResidence ? edited.milieuDeResidence.code : ""}
+                      module="insuree"
+                      readOnly={readOnly}
+                      withNull={true}
+                      withLabel={true}
+                      required={false}
+                      onChange={(v) => this.updateAttribute("milieuDeResidence", { code: v })}
+                    />
+                  </Grid>
+
                   <Grid item xs={3} className={classes.item}>
                     <PublishedComponent
                       pubRef="insuree.InsureIncomeLevelPicker"
