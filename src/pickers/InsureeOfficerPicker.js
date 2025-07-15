@@ -41,7 +41,9 @@ class InsureeOfficer extends Component {
     if (this.props.locationId !== prevProps.locationId) {
       const {locationId} = this.props
       const filters = [];
-      filters.push(`locationId:"${decodeId(locationId)}"`)    
+      if (locationId != undefined && locationId != "" ) {
+        filters.push(`locationId:"${decodeId(locationId)}"`)
+      }
       this.props.fetchInsureeOfficers(this.props.modulesManager, filters);
     }
 
