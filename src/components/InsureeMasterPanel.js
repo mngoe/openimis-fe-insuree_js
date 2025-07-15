@@ -90,6 +90,7 @@ class InsureeMasterPanel extends FormPanel {
       edited_id,
       isSubFamily,
       insuree,
+      family
     } = this.props;
 
     return (
@@ -361,6 +362,7 @@ class InsureeMasterPanel extends FormPanel {
                   readOnly={readOnly}
                   withMeta={true}
                   onChange={(v) => this.updateAttribute("photo", !!v ? v : null)}
+                  locationId = {!!family && !!family.location ? family.location.id : "" }
                 />
               </Grid>
               <Contributions
