@@ -131,7 +131,7 @@ class FamilyMasterPanel extends FormPanel {
       subFamily,
       isActiveFilterFamilyType,
     } = this.props;
-
+    console.log("fields get from config family master panel ", this.fields )
     return (
       <Fragment>
         <Grid container className={classes.tableTitle}>
@@ -189,7 +189,7 @@ class FamilyMasterPanel extends FormPanel {
               />
             </Grid>
           )}
-          {this.confirmationTypeValue !== "N" && (
+          {this.fields.confirmationType !== "N" && (
             <>
               <Grid item xs={2} className={classes.item}>
                 <PublishedComponent
