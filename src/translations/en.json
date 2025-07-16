@@ -306,5 +306,16 @@
   "insuree.edit.attachments.title": "Attachments",
   "insuree.insureeAttachment.fileName": "File",
   "insureeAttachment.action": "Action",
-  "insuree.attachments.title": "{filename}"
+  "insuree.attachments.title": "{filename}",
+  "insuree.FamilyMembersTable.gender": "Gender",
+  "insuree.FamilyMembersTable.birthDate": "Birth Date",
+  "insuree.FamilyMembersTable.beneficiaryCard": "Beneficiary Card",
+  "insuree.FamilyMembersTable.photoDate": "Photo Date",
+  "insuree.FamilyMembersTable.photoOfficer": "Officer (Photo)",
+  "insuree.FamilyMembersTable.photoFilename": "File Name",
+  "insuree.FamilyMembersTable.email": "Email",
+  "insuree.FamilyMembersTable.passport": "Identification No.",
+  "insuree.FamilyMembersTable.currentVillage.sameAsFamily": "Same Village as Family",
+  "insuree.FamilyMembersTable.currentAddress": "Address",
+  "insuree.FamilyMembersTable.currentAddress.sameAsFamily": "Same Address as Family"
 }
