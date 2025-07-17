@@ -23,7 +23,7 @@ const FAMILY_HEAD_PROJECTION = (mm, canSearch) => [
   "age",
   "validityFrom",
   "validityTo",
-  `${!!canSearch ?"" :"photo{id,uuid,date,folder,filename,officerId,photo}"}`,
+  "photo{id,uuid,date,folder,filename,officerId,photo}",
   "gender{code, gender}",
   "education{id}",
   "profession{id}",
