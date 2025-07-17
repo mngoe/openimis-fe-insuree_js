@@ -7,5 +7,15 @@
     "insuree.insureeAttachment.fileName": "Fichier",
     "insureeAttachment.action": "Action",
     "insuree.attachments.title": "{filename}",
-    "insuree.Payment.none": "None"
+    "insuree.Payment.none": "None",
+    "insuree.ResidenceEnvironmentPicker.label": "Milieu de résidence",
+    "insuree.ResidenceEnvironment.null": "Non spécifié",
+    "insuree.HousingTypePicker.label": "Type d'habitation",
+    "insuree.HousingType.null": "Non spécifié",
+    "insuree.MutualInsuranceCoveragePicker.label": "Couverture d'assurance mutuelle",
+    "insuree.MutualInsuranceCoverage.null": "Non spécifié",
+    "insuree.NoDisabilityPicker.label": "Pas de handicap",
+    "insuree.NoDisability.null": "Non spécifié",
+    "insuree.NonDisablingDiseasePicker.label": "Maladie non invalidante",
+    "insuree.NonDisablingDisease.null": "Non spécifié"
 }

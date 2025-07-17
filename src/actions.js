@@ -45,7 +45,12 @@ const FAMILY_HEAD_PROJECTION = (mm, canSearch) => [
   "preferredPaymentMethod", 
   "bankCoordinates", 
   "coordinates",
-  "professionalSituation"
+  "professionalSituation",
+  "residenceEnvironment{code, ResidenceEnvironment, altLanguage}",
+  "housingType{code, HousingType, altLanguage}",
+  "mutualInsuranceCoverage{code, MutualInsuranceCoverage, altLanguage}",
+  "noDisability{code, NoDisability, altLanguage}",
+  "nonDisablingDisease{code, NonDisablingDisease, altLanguage}"
 ];
 const FAMILY_FULL_PROJECTION = (mm) => [
   "id",
@@ -77,6 +82,11 @@ const INSUREE_FULL_PROJECTION = (mm) => [
   "validityFrom",
   "validityTo",
   "professionalSituation",
+  "residenceEnvironment{code, ResidenceEnvironment, altLanguage}",
+  "housingType{code, HousingType, altLanguage}",
+  "mutualInsuranceCoverage{code, MutualInsuranceCoverage, altLanguage}",
+  "noDisability{code, NoDisability, altLanguage}",
+  "nonDisablingDisease{code, NonDisablingDisease, altLanguage}",
   "bankCoordinates",
   "coordinates",
   "incomeLevel{id, firstLanguage, secondLanguage}",
@@ -309,6 +319,30 @@ export function fetchIdentificationTypes(mm) {
   return graphql(payload, "INSUREE_IDENTIFICATION_TYPES");
 }
 
+export function fetchResidenceEnvironment(mm) {
+  const payload = formatQuery("residenceEnvironment", null, ["code", "ResidenceEnvironment", "altLanguage"]);
+  return graphql(payload, "INSUREE_RESIDENCE_ENVIRONMENT");
+}
+
+export function fetchHousingType(mm) {
+  const payload = formatQuery("housingType", null, ["code", "HousingType", "altLanguage"]);
+  return graphql(payload, "INSUREE_HOUSING_TYPE");
+}
+
+export function fetchMutualInsuranceCoverage(mm) {
+  const payload = formatQuery("mutualInsuranceCoverage", null, ["code", "MutualInsuranceCoverage", "altLanguage"]);
+  return graphql(payload, "INSUREE_MUTUAL_INSURANCE_COVERAGE");
+}
+
+export function fetchNoDisability(mm) {
+  const payload = formatQuery("noDisability", null, ["code", "NoDisability", "altLanguage"]);
+  return graphql(payload, 'NO_DISABILITY');
+}
+
+export function fetchNonDisablingDisease(mm) {
+  const payload = formatQuery("nonDisablingDisease", null, ["code", "NonDisablingDisease", "altLanguage"]);
+  return graphql(payload, 'NON_DISABLING_DISEASE');
+}
 export function fetchRelations(mm) {
   const payload = formatQuery("relations", null, ["id"]);
   return graphql(payload, "INSUREE_RELATIONS");
@@ -394,6 +428,11 @@ export function formatInsureeGQL(mm, insuree) {
     ${!!insuree.jsonExt ? `jsonExt: ${formatJsonField(insuree.jsonExt)}` : ""}
     ${!!insuree.preferredPaymentMethod ? `preferredPaymentMethod: "${insuree.preferredPaymentMethod}"` : ""}
     ${!!insuree.professionalSituation ? `professionalSituation: "${insuree.professionalSituation}"` : ""}
+    ${!!insuree.residenceEnvironment ? `residenceEnvironmentId: "${insuree.residenceEnvironment.code}"` : ""}
+    ${!!insuree.housingType ? `housingTypeId: "${insuree.housingType.code}"` : ""}
+    ${!!insuree.mutualInsuranceCoverage ? `mutualInsuranceCoverageId: "${insuree.mutualInsuranceCoverage.code}"` : ""}
+    ${!!insuree.noDisability ? `noDisabilityId: "${insuree.noDisability.code}"` : ""}
+    ${!!insuree.nonDisablingDisease ? `nonDisablingDiseaseId: "${insuree.nonDisablingDisease.code}"` : ""}
     ${!!insuree.coordinates ? `coordinates: "${insuree.coordinates}"` : ""}
     ${!!insuree.bankCoordinates ? `bankCoordinates: "${formatGQLString(insuree.bankCoordinates)}"` : ""}
     ${!!insuree.incomeLevel ? `incomeLevelId: ${decodeId(insuree.incomeLevel.id)}` : ""}

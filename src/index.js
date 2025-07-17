@@ -29,6 +29,11 @@ import PhotoStatusPicker from "./pickers/PhotoStatusPicker";
 import FamilyStatusPicker from "./pickers/FamilyStatusPicker";
 import RelationPicker from "./pickers/RelationPicker";
 import InsureeNumberInput from "./pickers/InsureeNumberInput";
+import ResidenceEnvironmentPicker from "./pickers/ResidenceEnvironmentPicker";
+import HousingTypePicker from "./pickers/HousingTypePicker";
+import MutualInsuranceCoveragePicker from "./pickers/MutualInsuranceCoveragePicker";
+import NoDisabilityPicker from "./pickers/NoDisabilityPicker";
+import NonDisablingDiseasePicker from "./pickers/NonDisablingDiseasePicker";
 import InsureeAvatar from "./components/InsureeAvatar";
 import InsureeCappedItemServiceLink from "./components/InsureeCappedItemServiceLink";
 import InsureeProfileLink from "./components/InsureeProfileLink";
@@ -140,6 +145,11 @@ const DEFAULT_CONFIG = {
     { key: "insuree.InsureeNumberInput", ref: InsureeNumberInput },
     { key: "insuree.PaymentMethodPicker", ref: PaymentMethodPicker },
     { key: "insuree.AttachmentDialog", ref: AttachmentDialog },
+    { key: "insuree.ResidenceEnvironmentPicker", ref: ResidenceEnvironmentPicker },
+    { key: "insuree.HousingTypePicker", ref: HousingTypePicker },
+    { key: "insuree.MutualInsuranceCoveragePicker", ref: MutualInsuranceCoveragePicker },
+    { key: "insuree.NoDisabilityPicker", ref: NoDisabilityPicker },
+    { key: "insuree.NonDisablingDiseasePicker", ref: NonDisablingDiseasePicker },
 
 
     { key: "insuree.route.families", ref: ROUTE_INSUREE_FAMILIES },
