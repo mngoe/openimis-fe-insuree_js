@@ -21,6 +21,7 @@ class MutualInsuranceCoveragePicker extends Component {
     const {
       intl,
       mutualInsuranceCoverage,
+      module = "insuree",
       withLabel = true,
       label = "MutualInsuranceCoveragePicker.label",
       withPlaceholder = false,
@@ -35,7 +36,7 @@ class MutualInsuranceCoveragePicker extends Component {
     const options = !!mutualInsuranceCoverage
       ? mutualInsuranceCoverage.map((v) => ({
           value: v.code,
-          label: v.mutualInsuranceCoverage,
+          label: formatMessage(intl, "insuree", `MutualInsuranceCoverage.${v.code}`, v.mutualInsuranceCoverage),
           code: v.code,
           mutualInsuranceCoverage: v.mutualInsuranceCoverage,
           altLanguage: v.altLanguage
@@ -44,7 +45,7 @@ class MutualInsuranceCoveragePicker extends Component {
 
     return (
       <SelectInput
-        module="insuree"
+        module={module}
         options={options}
         label={!!withLabel ? label : null}
         placeholder={

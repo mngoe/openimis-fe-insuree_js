@@ -39,7 +39,7 @@ class ResidenceEnvironmentPicker extends Component {
     let options = !!residenceEnvironment ? 
       residenceEnvironment.map((v) => ({
         value: v.code, 
-        label: v.residenceEnvironment,
+        label: formatMessage(intl, "insuree", `ResidenceEnvironment.${v.code}`, v.residenceEnvironment),
         code: v.code,
         residenceEnvironment: v.residenceEnvironment,
         altLanguage: v.altLanguage

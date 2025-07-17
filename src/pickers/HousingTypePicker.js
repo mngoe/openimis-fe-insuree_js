@@ -38,7 +38,7 @@ class HousingTypePicker extends Component {
 
     const options = !!housingType ? housingType.map((v) => ({
       value: v.code, 
-      label: v.housingType,
+      label: formatMessage(intl, "insuree", `HousingType.${v.code}`, v.housingType),
       code: v.code,
       housingType: v.housingType,
       altLanguage: v.altLanguage

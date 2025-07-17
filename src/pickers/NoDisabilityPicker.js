@@ -35,13 +35,13 @@ class NoDisabilityPicker extends Component {
       withNull = true,
     } = this.props;
 
-    let options = !!noDisability
+    const options = !!noDisability
       ? noDisability.map((v) => ({
           value: v.code,
-          label: v.noDisabilityLabel,
+          label: formatMessage(intl, "insuree", `NoDisability.${v.code}`, v.noDisabilityLabel),
           code: v.code,
           noDisabilityLabel: v.noDisabilityLabel,
-          altLanguage: v.altLanguage
+          altLanguage: v.altLanguage,
         }))
       : [];
 
