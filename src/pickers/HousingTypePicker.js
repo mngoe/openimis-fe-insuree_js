@@ -38,9 +38,9 @@ class HousingTypePicker extends Component {
 
     const options = !!housingType ? housingType.map((v) => ({
       value: v.code, 
-      label: v.HousingType,
+      label: v.housingType,
       code: v.code,
-      HousingType: v.HousingType,
+      housingType: v.housingType,
       altLanguage: v.altLanguage
     })) : [];
     

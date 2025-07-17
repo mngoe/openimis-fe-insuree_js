@@ -117,7 +117,7 @@ function reducer(
         ...state,
         fetchingResidenceEnvironment: false,
         fetchedResidenceEnvironment: true,
-        residenceEnvironment: action.payload.data.residenceEnvironment,
+        residenceEnvironment: action.payload.data.residenceEnvironmentOptions,
         errorResidenceEnvironment: formatGraphQLError(action.payload),
       };
     case 'INSUREE_RESIDENCE_ENVIRONMENT_ERR':
@@ -139,7 +139,7 @@ function reducer(
         ...state,
         fetchingHousingType: false,
         fetchedHousingType: true,
-        housingType: action.payload.data.housingType,
+        housingType: action.payload.data.housingTypeOptions,
         errorHousingType: formatGraphQLError(action.payload),
       };
     case 'INSUREE_HOUSING_TYPE_ERR':
@@ -161,7 +161,7 @@ function reducer(
         ...state,
         fetchingMutualInsuranceCoverage: false,
         fetchedMutualInsuranceCoverage: true,
-        mutualInsuranceCoverage: action.payload.data.mutualInsuranceCoverage,
+        mutualInsuranceCoverage: action.payload.data.mutualInsuranceCoverageOptions,
         errorMutualInsuranceCoverage: formatGraphQLError(action.payload),
       };
     case 'INSUREE_MUTUAL_INSURANCE_COVERAGE_ERR':
@@ -178,12 +178,12 @@ function reducer(
         fetchedNoDisability: false,
         errorNoDisability: null,
       };
-    case 'INSUREE_NO_DISABILITY_RESP':
+    case 'NO_DISABILITY_RESP':
       return {
         ...state,
         fetchingNoDisability: false,
         fetchedNoDisability: true,
-        noDisability: action.payload.data.noDisability,
+        noDisability: action.payload.data.noDisabilityOptions,
         errorNoDisability: formatGraphQLError(action.payload),
       };
     case 'INSUREE_NO_DISABILITY_ERR':
@@ -193,19 +193,19 @@ function reducer(
         errorNoDisability: formatServerError(action.payload),
       };
 
-    case 'INSUREE_NON_DISABLING_DISEASE_REQ':
+    case 'NON_DISABLING_DISEASE_REQ':
       return {
         ...state,
         fetchingNonDisablingDisease: true,
         fetchedNonDisablingDisease: false,
         errorNonDisablingDisease: null,
       };
-    case 'INSUREE_NON_DISABLING_DISEASE_RESP':
+    case 'NON_DISABLING_DISEASE_RESP':
       return {
         ...state,
         fetchingNonDisablingDisease: false,
         fetchedNonDisablingDisease: true,
-        nonDisablingDisease: action.payload.data.nonDisablingDisease,
+        nonDisablingDisease: action.payload.data.nonDisablingDiseaseOptions,
         errorNonDisablingDisease: formatGraphQLError(action.payload),
       };
     case 'INSUREE_NON_DISABLING_DISEASE_ERR':

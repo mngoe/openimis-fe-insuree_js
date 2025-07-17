@@ -38,9 +38,9 @@ class NoDisabilityPicker extends Component {
     let options = !!noDisability
       ? noDisability.map((v) => ({
           value: v.code,
-          label: v.NoDisability,
+          label: v.noDisabilityLabel,
           code: v.code,
-          NoDisability: v.NoDisability,
+          noDisabilityLabel: v.noDisabilityLabel,
           altLanguage: v.altLanguage
         }))
       : [];

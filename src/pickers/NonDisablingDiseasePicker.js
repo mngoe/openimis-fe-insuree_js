@@ -41,9 +41,9 @@ class NonDisablingDiseasePicker extends Component {
     const options = !!nonDisablingDisease ? 
       nonDisablingDisease.map((v) => ({
         value: v.code, 
-        label: v.NonDisablingDisease,
+        label: v.nonDisablingDisease,
         code: v.code,
-        NonDisablingDisease: v.NonDisablingDisease,
+        nonDisablingDisease: v.nonDisablingDisease,
         altLanguage: v.altLanguage
       })) : [];
     

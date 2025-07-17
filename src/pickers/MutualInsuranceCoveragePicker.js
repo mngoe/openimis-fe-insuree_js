@@ -35,9 +35,9 @@ class MutualInsuranceCoveragePicker extends Component {
     const options = !!mutualInsuranceCoverage
       ? mutualInsuranceCoverage.map((v) => ({
           value: v.code,
-          label: v.MutualInsuranceCoverage,
+          label: v.mutualInsuranceCoverage,
           code: v.code,
-          MutualInsuranceCoverage: v.MutualInsuranceCoverage,
+          mutualInsuranceCoverage: v.mutualInsuranceCoverage,
           altLanguage: v.altLanguage
         }))
       : [];

@@ -39,9 +39,9 @@ class ResidenceEnvironmentPicker extends Component {
     let options = !!residenceEnvironment ? 
       residenceEnvironment.map((v) => ({
         value: v.code, 
-        label: v.ResidenceEnvironment,
+        label: v.residenceEnvironment,
         code: v.code,
-        ResidenceEnvironment: v.ResidenceEnvironment,
+        residenceEnvironment: v.residenceEnvironment,
         altLanguage: v.altLanguage
       })) : [];
  
