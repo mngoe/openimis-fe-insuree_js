@@ -41,12 +41,10 @@
     "insuree.NoDisability.null": "Non spécifié",
     "insuree.NoDisability.1": "Sans handicap",
     "insuree.NoDisability.2": "Avec handicap",
-    "insuree.NonDisablingDiseasePicker.label": "Maladie invalidante",
-    "insuree.NonDisablingDisease.null": "Non spécifié",
     "insuree.NonDisablingDisease.1": "Sans maladie invalidante",
-    "insuree.NonDisablingDisease.2": "Avec maladie invalidante"
+    "insuree.NonDisablingDisease.2": "Avec maladie invalidante",
     "insuree.NonDisablingDiseasePicker.label": "Maladie non invalidante",
-    "insuree.NonDisablingDisease.null": "Non spécifié"
+    "insuree.NonDisablingDisease.null": "Non spécifié",
     "insuree.Relation.1": "Chef de Famille",
     "insuree.Relation.2": "Époux/Épouse",
     "insuree.Relation.3": "Fils/Fille",

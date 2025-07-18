@@ -323,8 +323,8 @@ class InsureeMasterPanel extends FormPanel {
                       value={!!edited && !!edited.residenceEnvironment ? edited.residenceEnvironment.code : ""}
                       module="insuree"
                       readOnly={readOnly}
-                      required={false}
-                      withNull={true}
+                      required={true}
+                      withNull={false}
                       withLabel={true}
                       onChange={(v) => this.updateAttribute("residenceEnvironment", { code: v })}
                     />
@@ -335,8 +335,8 @@ class InsureeMasterPanel extends FormPanel {
                       value={!!edited && !!edited.housingType ? edited.housingType.code : ""}
                       module="insuree"
                       readOnly={readOnly}
-                      required={false}
-                      withNull={true}
+                      required={true}
+                      withNull={false}
                       withLabel={true}
                       onChange={(v) => this.updateAttribute("housingType", { code: v })}
                     />
@@ -347,8 +347,8 @@ class InsureeMasterPanel extends FormPanel {
                       value={!!edited && !!edited.mutualInsuranceCoverage ? edited.mutualInsuranceCoverage.code : ""}
                       module="insuree"
                       readOnly={readOnly}
-                      required={false}
-                      withNull={true}
+                      required={true}
+                      withNull={false}
                       withLabel={true}
                       onChange={(v) => this.updateAttribute("mutualInsuranceCoverage", { code: v })}
                     />
@@ -359,8 +359,8 @@ class InsureeMasterPanel extends FormPanel {
                       value={!!edited && !!edited.noDisability ? edited.noDisability.code : ""}
                       module="insuree"
                       readOnly={readOnly}
-                      required={false}
-                      withNull={true}
+                      required={true}
+                      withNull={false}
                       withLabel={true}
                       onChange={(v) => this.updateAttribute("noDisability", { code: v })}
                     />
@@ -371,8 +371,8 @@ class InsureeMasterPanel extends FormPanel {
                       value={!!edited && !!edited.nonDisablingDisease ? edited.nonDisablingDisease.code : ""}
                       module="insuree"
                       readOnly={readOnly}
-                      required={false}
-                      withNull={true}
+                      required={true}
+                      withNull={false}
                       withLabel={true}
                       onChange={(v) => this.updateAttribute("nonDisablingDisease", { code: v })}
                     />
