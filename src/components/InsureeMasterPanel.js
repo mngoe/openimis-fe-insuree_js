@@ -92,7 +92,7 @@ class InsureeMasterPanel extends FormPanel {
       insuree,
       family
     } = this.props;
-
+    const locationId = (!!family && !!family.location) ? family.location.id :(!!insuree && !!insuree.family && !!insuree.family.location) ? insuree.family.location.id : "" ;
     return (
       <Grid container>
         <Grid item xs={12}>
@@ -362,7 +362,7 @@ class InsureeMasterPanel extends FormPanel {
                   readOnly={readOnly}
                   withMeta={true}
                   onChange={(v) => this.updateAttribute("photo", !!v ? v : null)}
-                  locationId = {!!family && !!family.location ? family.location.id : "" }
+                  locationId = {locationId}
                 />
               </Grid>
               <Contributions
