@@ -95,6 +95,8 @@ class InsureeMasterPanel extends FormPanel {
       family
     } = this.props;
     const locationId = (!!family && !!family.location) ? family.location.id :(!!insuree && !!insuree.family && !!insuree.family.location) ? insuree.family.location.id : "" ;
+
+    console.log("fields get from config insuree master panel ", this.fields )
     return (
       <Grid container>
         <Grid item xs={12}>
@@ -240,7 +242,7 @@ class InsureeMasterPanel extends FormPanel {
                       readOnly={readOnly}
                       required={
                         (!insuree || insuree == null || (!!insuree && insuree.head == true)) &&
-                        this.phoneNoHeadMandatory == "M"
+                        this.fields.phoneNoHead == "M"
                           ? true
                           : false
                       }
