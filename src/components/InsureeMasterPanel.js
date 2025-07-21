@@ -43,8 +43,8 @@ class InsureeMasterPanel extends FormPanel {
     this.passportMaxLength = props.modulesManager.getConf("fe-insuree", "passportMaxLength", PASSPORT_MAX_LENGTH);
 
     this.insureeChildId = props.modulesManager.getConf(
-      "fe-insuree", 
-      "insureeForm.insureeChildId", 
+      "fe-insuree",
+      "insureeForm.insureeChildId",
       3
     );
     this.phoneNoHeadMandatory = props.modulesManager.getConf("fe-insuree", "phoneNoHeadMandatory", "M");
@@ -77,8 +77,21 @@ class InsureeMasterPanel extends FormPanel {
       />
     </Grid>
   );
-
+getLocationId = (insuree, family) => {
+  const { sameLocation } = this.props.edited || {};
+  const { edited }= this.props || {}
+  if (sameLocation == false) {
+    if (insuree?.currentVillage?.id) return insuree.currentVillage.id;
+    if (family?.headInsuree?.currentVillage?.id) return family.headInsuree.currentVillage.id;
+    if (edited?.currentVillage?.id ) return edited.currentVillage.id;
+  }
   
+  if (family?.location?.id) return family.location.id;
+  if (insuree?.family?.location?.id) return insuree.family.location.id;
+  
+  return "";
+};
+
 
   render() {
     const {
@@ -94,7 +107,7 @@ class InsureeMasterPanel extends FormPanel {
       insuree,
       family
     } = this.props;
-    const locationId = (!!family && !!family.location) ? family.location.id :(!!insuree && !!insuree.family && !!insuree.family.location) ? insuree.family.location.id : "" ;
+    const locationId = this.getLocationId(insuree, family);
     return (
       <Grid container>
         <Grid item xs={12}>
@@ -230,6 +243,7 @@ class InsureeMasterPanel extends FormPanel {
                       readOnly={readOnly}
                       onChangeLocation={(v) => this.updateAttribute("currentVillage", v)}
                       onChangeAddress={(v) => this.updateAttribute("currentAddress", v)}
+                      onChangeSameLocationCheckbox={(v) =>this.updateAttribute("sameLocation", v)}
                     />
                   </Grid>
 
@@ -240,7 +254,7 @@ class InsureeMasterPanel extends FormPanel {
                       readOnly={readOnly}
                       required={
                         (!insuree || insuree == null || (!!insuree && insuree.head == true)) &&
-                        this.phoneNoHeadMandatory == "M"
+                          this.phoneNoHeadMandatory == "M"
                           ? true
                           : false
                       }
@@ -307,8 +321,8 @@ class InsureeMasterPanel extends FormPanel {
                       label="Insuree.passport"
                       error={
                         edited &&
-                        edited.passport &&
-                        (edited.passport.length !== this.passportMaxLength && edited.passport.length !== this.passportMinLength)
+                          edited.passport &&
+                          (edited.passport.length !== this.passportMaxLength && edited.passport.length !== this.passportMinLength)
                           ? true
                           : false
                       }
@@ -330,7 +344,7 @@ class InsureeMasterPanel extends FormPanel {
                     />
                   </Grid>
                   {(!!edited && !!edited.family && !!edited.family.headInsuree && edited?.head == true) ||
-                  (!!edited && !edited.family) ? (
+                    (!!edited && !edited.family) ? (
                     <Grid item xs={3} className={classes.item}>
                       <PublishedComponent
                         pubRef="insuree.PaymentMethodPicker"
@@ -365,7 +379,7 @@ class InsureeMasterPanel extends FormPanel {
                   required={true}
                   withMeta={true}
                   onChange={(v) => this.updateAttribute("photo", !!v ? v : null)}
-                  locationId = {locationId}
+                  locationId={locationId}
                 />
               </Grid>
               <Contributions
