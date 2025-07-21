@@ -38,7 +38,7 @@ export const isValidInsuree = (insuree, modulesManager) => {
   if (!insuree.gender || !insuree.gender?.code) return false;
   if (!!insuree.photo && (!insuree.photo.date || !insuree.photo.officerId || !insuree.photo.photo)) return false;
   if (!insuree.incomeLevel) return false;
-  if (!insuree.family && !insuree.hasOwnProperty('isFamily') && phoneNoHeadMandatory != "H"  ){
+  if (!insuree.family && !insuree.hasOwnProperty('isFamily') && isPhoneNumberMandatory.phoneNoHead != "H"  ){
     if(!insuree.phone){
       return false
     }

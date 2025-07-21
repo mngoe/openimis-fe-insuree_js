@@ -108,6 +108,8 @@ getLocationId = (insuree, family) => {
       family
     } = this.props;
     const locationId = this.getLocationId(insuree, family);
+
+    console.log("fields get from config insuree master panel ", this.fields )
     return (
       <Grid container>
         <Grid item xs={12}>
@@ -254,7 +256,7 @@ getLocationId = (insuree, family) => {
                       readOnly={readOnly}
                       required={
                         (!insuree || insuree == null || (!!insuree && insuree.head == true)) &&
-                          this.phoneNoHeadMandatory == "M"
+                        this.fields.phoneNoHead == "M"
                           ? true
                           : false
                       }
