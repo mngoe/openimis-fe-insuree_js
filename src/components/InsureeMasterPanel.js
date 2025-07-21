@@ -244,6 +244,7 @@ class InsureeMasterPanel extends FormPanel {
                       onChangeLocation={(v) => this.updateAttribute("currentVillage", v)}
                       onChangeAddress={(v) => this.updateAttribute("currentAddress", v)}
                       onChangeSameLocationCheckbox={(v) =>this.updateAttribute("sameLocation", v)}
+
                     />
                   </Grid>
 
