@@ -66,6 +66,13 @@ export const isValidInsuree = (insuree, modulesManager) => {
   } 
   if (!!insuree.status && insuree.status !== INSUREE_ACTIVE_STRING && (!insuree.statusDate || !insuree.statusReason))
     return false;
+    
+  // Validation des nouveaux champs obligatoires
+  if (!insuree.residenceEnvironment || !insuree.residenceEnvironment.code) return false;
+  if (!insuree.housingType || !insuree.housingType.code) return false;
+  if (!insuree.mutualInsuranceCoverage || !insuree.mutualInsuranceCoverage.code) return false;
+  if (!insuree.noDisability || !insuree.noDisability.code) return false;
+  if (!insuree.nonDisablingDisease || !insuree.nonDisablingDisease.code) return false;
 
   return true;
 };
