@@ -22,6 +22,7 @@ const useStyles = makeStyles((theme) => ({
 const InsureeAddress = ({
   onChangeLocation,
   onChangeAddress,
+  onChangeSameLocationCheckbox,
   readOnly,
   value,
 }) => {
@@ -32,6 +33,13 @@ const InsureeAddress = ({
   const [location, setLocation] = useState(true);
   const [address, setAddress] = useState(true);
 
+   const handleLocationChange = (e) => {
+    const checked = e.target.checked;
+    onChangeSameLocationCheckbox(checked)
+    setLocation(checked);
+
+  };
+
   return (
     <Grid container>
       <Grid item xs={6} className={classes.item}>
@@ -41,7 +49,7 @@ const InsureeAddress = ({
               color="primary"
               checked={location}
               disabled={readOnly}
-              onChange={(e) => setLocation((prevState) => !prevState)}
+              onChange={(e) => handleLocationChange(e)}
             />
           }
           label={formatMessage("Insuree.currentVillage.sameAsFamily")}
