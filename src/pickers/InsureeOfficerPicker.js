@@ -22,13 +22,13 @@ class InsureeOfficer extends Component {
       "renderLastNameFirst",
       DEFAULT.RENDER_LAST_NAME_FIRST,
     );
-    this.isCurrentAdminEnrollmentOfficerActive = props.modulesManager.getConf("fe-insuree", "isCurrentAdminEnrollmentOfficerActive", false);
+    this.isCurrentAdminEnrollmentOfficerActive = props.modulesManager.getConf("fe-insuree", "isCurrentAdminEnrollmentOfficerActive", true);
   }
 
   componentDidMount() {
     if (!this.props.fetchedInsureeOfficers || !this.isCurrentAdminEnrollmentOfficerActive == false) {
       const filters = [];
-      !!this.props.locationId && this.props.locationId != ""  ? filters.push(`locationId:"${decodeId(locationId)}"`) : filters;
+      !!this.props.locationId && this.props.locationId != "" ? filters.push(`locationId:"${decodeId(this.props.locationId)}"`) : filters;
       
       setTimeout(() => {
         !this.props.fetchingInsureeOfficers && this.props.fetchInsureeOfficers(this.props.modulesManager, filters);
