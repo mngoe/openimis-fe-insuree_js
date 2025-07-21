@@ -78,6 +78,8 @@ class InsureeMasterPanel extends FormPanel {
     </Grid>
   );
 
+  
+
   render() {
     const {
       intl,
@@ -92,6 +94,7 @@ class InsureeMasterPanel extends FormPanel {
       insuree,
       family
     } = this.props;
+    const locationId = (!!family && !!family.location) ? family.location.id :(!!insuree && !!insuree.family && !!insuree.family.location) ? insuree.family.location.id : "" ;
 
     console.log("fields get from config insuree master panel ", this.fields )
     return (
@@ -364,7 +367,7 @@ class InsureeMasterPanel extends FormPanel {
                   required={true}
                   withMeta={true}
                   onChange={(v) => this.updateAttribute("photo", !!v ? v : null)}
-                  locationId = {!!family && !!family.location ? family.location.id : "" }
+                  locationId = {locationId}
                 />
               </Grid>
               <Contributions
