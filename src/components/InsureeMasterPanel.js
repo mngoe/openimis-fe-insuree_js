@@ -336,6 +336,66 @@ getLocationId = (insuree, family) => {
                   </Grid>
                   <Grid item xs={3} className={classes.item}>
                     <PublishedComponent
+                      pubRef="insuree.ResidenceEnvironmentPicker"
+                      value={!!edited && !!edited.residenceEnvironment ? edited.residenceEnvironment.code : ""}
+                      module="insuree"
+                      readOnly={readOnly}
+                      required={true}
+                      withNull={false}
+                      withLabel={true}
+                      onChange={(v) => this.updateAttribute("residenceEnvironment", { code: v })}
+                    />
+                  </Grid>
+                  <Grid item xs={3} className={classes.item}>
+                    <PublishedComponent
+                      pubRef="insuree.HousingTypePicker"
+                      value={!!edited && !!edited.housingType ? edited.housingType.code : ""}
+                      module="insuree"
+                      readOnly={readOnly}
+                      required={true}
+                      withNull={false}
+                      withLabel={true}
+                      onChange={(v) => this.updateAttribute("housingType", { code: v })}
+                    />
+                  </Grid>
+                  <Grid item xs={3} className={classes.item}>
+                    <PublishedComponent
+                      pubRef="insuree.MutualInsuranceCoveragePicker"
+                      value={!!edited && !!edited.mutualInsuranceCoverage ? edited.mutualInsuranceCoverage.code : ""}
+                      module="insuree"
+                      readOnly={readOnly}
+                      required={true}
+                      withNull={false}
+                      withLabel={true}
+                      onChange={(v) => this.updateAttribute("mutualInsuranceCoverage", { code: v })}
+                    />
+                  </Grid>
+                  <Grid item xs={3} className={classes.item}>
+                    <PublishedComponent
+                      pubRef="insuree.NoDisabilityPicker"
+                      value={!!edited && !!edited.noDisability ? edited.noDisability.code : ""}
+                      module="insuree"
+                      readOnly={readOnly}
+                      required={true}
+                      withNull={false}
+                      withLabel={true}
+                      onChange={(v) => this.updateAttribute("noDisability", { code: v })}
+                    />
+                  </Grid>
+                  <Grid item xs={3} className={classes.item}>
+                    <PublishedComponent
+                      pubRef="insuree.NonDisablingDiseasePicker"
+                      value={!!edited && !!edited.nonDisablingDisease ? edited.nonDisablingDisease.code : ""}
+                      module="insuree"
+                      readOnly={readOnly}
+                      required={true}
+                      withNull={false}
+                      withLabel={true}
+                      onChange={(v) => this.updateAttribute("nonDisablingDisease", { code: v })}
+                    />
+                  </Grid>
+                  <Grid item xs={3} className={classes.item}>
+                    <PublishedComponent
                       pubRef="insuree.InsureIncomeLevelPicker"
                       module="insuree"
                       value={!!edited && !!edited.incomeLevel ? edited.incomeLevel : null}
