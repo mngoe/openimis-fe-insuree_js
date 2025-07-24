@@ -25,10 +25,7 @@ export const isValidInsuree = (insuree, modulesManager) => {
   const isInsureeStatusRequired = modulesManager.getConf("fe-insuree", "insureeForm.isInsureeStatusRequired", false);
   const passportMinLength = modulesManager.getConf("fe-insuree", "passportMinLength", PASSPORT_MIN_LENGTH);
   const passportMaxLength = modulesManager.getConf("fe-insuree", "passportMaxLength", PASSPORT_MAX_LENGTH);
-  const phoneNoHeadMandatory = modulesManager.getConf("fe-insuree", "phoneNoHeadMandatory", "M");
-
-
-  const insureeChildId = modulesManager.getConf("fe-insuree", "insureeForm.insureeChildId", 3);
+  const insureeChildId = modulesManager.getConf("fe-insuree", "insureeForm.insureeChildId", 4);
   if (isInsureeFirstServicePointRequired && !insuree.healthFacility) return false;
   if (insuree.validityTo) return false;
   // if (!insuree.chfId) return false;

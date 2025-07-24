@@ -39,6 +39,8 @@ const InsureeAddress = ({
     setLocation(checked);
 
   };
+
+
   return (
     <Grid container>
       <Grid item xs={6} className={classes.item}>
@@ -48,7 +50,7 @@ const InsureeAddress = ({
               color="primary"
               checked={location}
               disabled={readOnly}
-              onChange={(e) =>handleLocationChange(e)}
+              onChange={(e) => handleLocationChange(e)}
             />
           }
           label={formatMessage("Insuree.currentVillage.sameAsFamily")}
