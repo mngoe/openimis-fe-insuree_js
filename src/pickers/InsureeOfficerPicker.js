@@ -28,8 +28,9 @@ class InsureeOfficer extends Component {
   componentDidMount() {
     if (!this.props.fetchedInsureeOfficers || !this.isCurrentAdminEnrollmentOfficerActive == false) {
       const filters = [];
-      !!this.props.locationId && this.props.locationId != "" ? filters.push(`locationId:"${decodeId(this.props.locationId)}"`) : filters;
-
+      if(!!this.props.locationId && this.props.locationId != ""){
+        filters.push(`locationId:"${decodeId(this.props.locationId)}"`)
+      }
       setTimeout(() => {
         !this.props.fetchingInsureeOfficers && this.props.fetchInsureeOfficers(this.props.modulesManager, filters);
       }, Math.floor(Math.random() * 300));
