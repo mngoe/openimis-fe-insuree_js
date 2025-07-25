@@ -29,6 +29,7 @@ class InsureeOfficer extends Component {
     if (!this.props.fetchedInsureeOfficers || !this.isCurrentAdminEnrollmentOfficerActive == false) {
       const filters = [];
       !!this.props.locationId && this.props.locationId != "" ? filters.push(`locationId:"${decodeId(this.props.locationId)}"`) : filters;
+
       setTimeout(() => {
         !this.props.fetchingInsureeOfficers && this.props.fetchInsureeOfficers(this.props.modulesManager, filters);
       }, Math.floor(Math.random() * 300));
@@ -74,7 +75,6 @@ class InsureeOfficer extends Component {
     else return false
   }
 
-
   onSuggestionSelected = (v) => this.props.onChange(v, this.formatSuggestion(v));
 
   render() {
@@ -99,7 +99,7 @@ class InsureeOfficer extends Component {
     return (
       <Fragment>
         <ProgressOrError progress={fetchingInsureeOfficers} error={errorInsureeOfficers} />
-        { fetchedInsureeOfficers && (
+        {fetchedInsureeOfficers && (
           <AutoSuggestion
             module="insuree"
             items={insureeOfficers}

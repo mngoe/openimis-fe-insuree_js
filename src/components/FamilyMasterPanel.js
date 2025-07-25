@@ -37,8 +37,6 @@ class FamilyMasterPanel extends FormPanel {
       DEFAULT.RENDER_LAST_NAME_FIRST,
     );
     this.fields = props.modulesManager.getConf("fe-insuree", "fields", "{}");
-    this.confirmationTypeValue = props.modulesManager.getConf("fe-insuree", "confirmationTypeValue", "N");
-
   }
 
   renderLastNameField = (edited, classes) => {
@@ -131,7 +129,6 @@ class FamilyMasterPanel extends FormPanel {
       subFamily,
       isActiveFilterFamilyType,
     } = this.props;
-    console.log("fields get from config family master panel ", this.fields )
     return (
       <Fragment>
         <Grid container className={classes.tableTitle}>
