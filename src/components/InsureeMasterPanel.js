@@ -85,13 +85,12 @@ class InsureeMasterPanel extends FormPanel {
     if (family?.headInsuree?.currentVillage?.id) return family.headInsuree.currentVillage.id;
     if (edited?.currentVillage?.id ) return edited.currentVillage.id;
   }
-  
+
   if (family?.location?.id) return family.location.id;
   if (insuree?.family?.location?.id) return insuree.family.location.id;
-  
+
   return "";
  };
-
 
   render() {
     const {
@@ -108,7 +107,6 @@ class InsureeMasterPanel extends FormPanel {
       family
     } = this.props;
     const locationId = this.getLocationId(insuree, family);
-
     return (
       <Grid container>
         <Grid item xs={12}>
