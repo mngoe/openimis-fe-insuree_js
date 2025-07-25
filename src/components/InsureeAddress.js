@@ -33,13 +33,12 @@ const InsureeAddress = ({
   const [location, setLocation] = useState(true);
   const [address, setAddress] = useState(true);
 
- const handleLocationChange = (e) => {
+const handleLocationChange = (e) => {
     const checked = e.target.checked;
     onChangeSameLocationCheckbox(checked)
     setLocation(checked);
 
   };
-
 
   return (
     <Grid container>
@@ -88,7 +87,6 @@ const InsureeAddress = ({
             readOnly={readOnly}
             value={value?.currentAddress ?? EMPTY_STRING}
             onChange={onChangeAddress}
-            addressSet={address}
           />
         }
       </Grid>
