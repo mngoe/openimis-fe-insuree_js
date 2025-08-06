@@ -13,6 +13,13 @@ const useStyles = makeStyles((theme) => ({
     marginInline: 16,
     marginBlock: 12,
   },
+  tableContainer: {
+    marginTop: theme.spacing(1),
+  },
+  cell: {
+    paddingTop: 12,
+    paddingBottom: 12,
+  },
   headerTitle: theme.table.title,
   actionCell: {
     width: 60,
@@ -24,6 +31,9 @@ const FAMILY_MEMBERS_HEADERS = [
   "FamilyMembersTable.InsuranceNo",
   "FamilyMembersTable.memberName",
   "FamilyMembersTable.phone",
+  "FamilyMembersTable.genre",
+  "FamilyMembersTable.birthDate",
+  "FamilyMembersTable.photo",
 ];
 
 const FamilyMembersTable = () => {
@@ -50,7 +60,7 @@ const FamilyMembersTable = () => {
         <TableHead className={classes.header}>
           <TableRow className={classes.headerTitle}>
             {FAMILY_MEMBERS_HEADERS.map((header) => (
-              <TableCell key={header}> {formatMessage(header)} </TableCell>
+              <TableCell className={classes.cell} key={header}> {formatMessage(header)} </TableCell>
             ))}
           </TableRow>
         </TableHead>
@@ -58,18 +68,31 @@ const FamilyMembersTable = () => {
           {familyMembers?.length !== 0 ? (
             familyMembers?.map((familyMember) => (
               <TableRow key={familyMember?.uuid}>
-                <TableCell> {familyMember?.chfId} </TableCell>
-                <TableCell>
+                <TableCell className={classes.cell}> {familyMember?.chfId} </TableCell>
+                <TableCell className={classes.cell}>
                   {renderLastNameFirst
                     ? `${familyMember?.lastName} ${familyMember?.otherNames}`
                     : `${familyMember?.otherNames} ${familyMember?.lastName}`}
                 </TableCell>
-                <TableCell> {familyMember?.phone ?? HYPHEN} </TableCell>
+                <TableCell className={classes.cell}> {familyMember?.phone ?? HYPHEN} </TableCell>
+                <TableCell className={classes.cell}> {familyMember?.gender?.code ?? HYPHEN} </TableCell>
+                <TableCell className={classes.cell}> {familyMember?.dob ?? HYPHEN} </TableCell>
+                <TableCell className={classes.cell}>
+                  {familyMember?.photo ? (
+                    <img
+                      src={`data:image/jpeg;base64,${familyMember.photo.photo}`}
+                      alt=""
+                      style={{ width: 80, height: 80, objectFit: "cover", borderRadius: "50%" }}
+                    />
+                  ) : (
+                    HYPHEN
+                  )}
+                </TableCell>
               </TableRow>
             ))
           ) : (
             <TableRow>
-              <TableCell> {formatMessage("insuree.FamilyMembersTable.noMembers")} </TableCell>
+              <TableCell className={classes.cell}> {formatMessage("insuree.FamilyMembersTable.noMembers")} </TableCell>
             </TableRow>
           )}
         </TableBody>

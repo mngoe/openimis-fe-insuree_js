@@ -1,5 +1,8 @@
 {
     "insuree.family.InsureeFilePanel.title": "Pièces jointes",
+    "insuree.FamilyMembersTable.genre": "Genre",
+    "insuree.FamilyMembersTable.birthDate": "Date de naissance",
+    "insuree.FamilyMembersTable.photo": "Photo",
     "insuree.insureeAttachment.type": "Type",
     "insuree.insureeAttachment.title": "Titre",
     "insuree.insureeAttachment.date": "Date",
@@ -58,5 +61,13 @@
     "insuree.Relation.22": "Mère conjointe",
     "insuree.Relation.23": "Père du chef",
     "insuree.Relation.24": "Père de l'épouse",
-    "insuree.Relation.25": "Autres membres"
+    "insuree.Relation.25": "Autres membres",
+    "insuree.SubFamilies.title": "Sous-familles",
+    "insuree.familySummaries.insuranceNo": "N° d'assuré",
+    "insuree.familySummaries.lastName": "Nom",
+    "insuree.familySummaries.otherNames": "Prénom",
+    "insuree.familySummaries.email": "Email",
+    "insuree.familySummaries.phone": "Téléphone",
+    "insuree.familySummaries.dob": "Date de naissance",
+    "insuree.familySummaries.photo": "Photo"
 }
