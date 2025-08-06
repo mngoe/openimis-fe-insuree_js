@@ -17,7 +17,7 @@ const styles = (theme) => ({
 });
 
 const InsureeAvatar = (props) => {
-  const { photo, classes, className, withMeta = false, readOnly, onChange } = props;
+  const { photo, classes, className, withMeta = false, readOnly, onChange, required , locationId} = props;
   const modulesManager = useModulesManager();
   const { formatMessage } = useTranslations("insuree", modulesManager);
 
@@ -48,7 +48,7 @@ const InsureeAvatar = (props) => {
     }
   };
 
-  const isRequired = Boolean(photo?.thumbnail || photo?.photo);
+  const isRequired = Boolean(photo?.thumbnail || photo?.photo)|| required;
   return (
     <Grid container className={className} direction="row" wrap="nowrap" spacing={1}>
       <div>
@@ -66,7 +66,7 @@ const InsureeAvatar = (props) => {
               module="insuree"
               label="Insuree.photoDate"
               readOnly={readOnly}
-              required={true}
+              required={isRequired}
               onChange={(date) => onChange({ ...photo, date })}
             />
           </Grid>
@@ -77,8 +77,9 @@ const InsureeAvatar = (props) => {
               module="insuree"
               label={formatMessage("Insuree.photoOfficer")}
               readOnly={readOnly}
-              required={true}
+              required={isRequired}
               onChange={(v) => onChange({ ...photo, officerId: v?.id })}
+              locationId = {locationId}
             />
           </Grid>
         </Grid>

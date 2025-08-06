@@ -76,11 +76,144 @@ function reducer(
     fetchingParentFamily: false, 
     fetchedParentFamily: false,
     parentFamily: null,
-    errorParentfamily: null
+    errorParentfamily: null,
+    contextualEnrollmentOfficer: null,
+    fetchingContextualEnrollmentOfficer: false,
+    fetchedContextualEnrollmentOfficer: false,
+    errorContextualEnrollmentOfficer: null,
+    residenceEnvironment: null,
+    fetchingResidenceEnvironment: false,
+    fetchedResidenceEnvironment: false,
+    errorResidenceEnvironment: null,
+    housingType: null,
+    fetchingHousingType: false,
+    fetchedHousingType: false,
+    errorHousingType: null,
+    mutualInsuranceCoverage: null,
+    fetchingMutualInsuranceCoverage: false,
+    fetchedMutualInsuranceCoverage: false,
+    errorMutualInsuranceCoverage: null,
+    noDisability: null,
+    fetchingNoDisability: false,
+    fetchedNoDisability: false,
+    errorNoDisability: null,
+    nonDisablingDisease: null,
+    fetchingNonDisablingDisease: false,
+    fetchedNonDisablingDisease: false,
+    errorNonDisablingDisease: null
   },
   action,
 ) {
   switch (action.type) {
+    case 'INSUREE_RESIDENCE_ENVIRONMENT_REQ':
+      return {
+        ...state,
+        fetchingResidenceEnvironment: true,
+        fetchedResidenceEnvironment: false,
+        errorResidenceEnvironment: null,
+      };
+    case 'INSUREE_RESIDENCE_ENVIRONMENT_RESP':
+      return {
+        ...state,
+        fetchingResidenceEnvironment: false,
+        fetchedResidenceEnvironment: true,
+        residenceEnvironment: action.payload.data.residenceEnvironmentOptions,
+        errorResidenceEnvironment: formatGraphQLError(action.payload),
+      };
+    case 'INSUREE_RESIDENCE_ENVIRONMENT_ERR':
+      return {
+        ...state,
+        fetchingResidenceEnvironment: false,
+        errorResidenceEnvironment: formatServerError(action.payload),
+      };
+
+    case 'INSUREE_HOUSING_TYPE_REQ':
+      return {
+        ...state,
+        fetchingHousingType: true,
+        fetchedHousingType: false,
+        errorHousingType: null,
+      };
+    case 'INSUREE_HOUSING_TYPE_RESP':
+      return {
+        ...state,
+        fetchingHousingType: false,
+        fetchedHousingType: true,
+        housingType: action.payload.data.housingTypeOptions,
+        errorHousingType: formatGraphQLError(action.payload),
+      };
+    case 'INSUREE_HOUSING_TYPE_ERR':
+      return {
+        ...state,
+        fetchingHousingType: false,
+        errorHousingType: formatServerError(action.payload),
+      };
+
+    case 'INSUREE_MUTUAL_INSURANCE_COVERAGE_REQ':
+      return {
+        ...state,
+        fetchingMutualInsuranceCoverage: true,
+        fetchedMutualInsuranceCoverage: false,
+        errorMutualInsuranceCoverage: null,
+      };
+    case 'INSUREE_MUTUAL_INSURANCE_COVERAGE_RESP':
+      return {
+        ...state,
+        fetchingMutualInsuranceCoverage: false,
+        fetchedMutualInsuranceCoverage: true,
+        mutualInsuranceCoverage: action.payload.data.mutualInsuranceCoverageOptions,
+        errorMutualInsuranceCoverage: formatGraphQLError(action.payload),
+      };
+    case 'INSUREE_MUTUAL_INSURANCE_COVERAGE_ERR':
+      return {
+        ...state,
+        fetchingMutualInsuranceCoverage: false,
+        errorMutualInsuranceCoverage: formatServerError(action.payload),
+      };
+
+    case 'INSUREE_NO_DISABILITY_REQ':
+      return {
+        ...state,
+        fetchingNoDisability: true,
+        fetchedNoDisability: false,
+        errorNoDisability: null,
+      };
+    case 'NO_DISABILITY_RESP':
+      return {
+        ...state,
+        fetchingNoDisability: false,
+        fetchedNoDisability: true,
+        noDisability: action.payload.data.noDisabilityOptions,
+        errorNoDisability: formatGraphQLError(action.payload),
+      };
+    case 'INSUREE_NO_DISABILITY_ERR':
+      return {
+        ...state,
+        fetchingNoDisability: false,
+        errorNoDisability: formatServerError(action.payload),
+      };
+
+    case 'NON_DISABLING_DISEASE_REQ':
+      return {
+        ...state,
+        fetchingNonDisablingDisease: true,
+        fetchedNonDisablingDisease: false,
+        errorNonDisablingDisease: null,
+      };
+    case 'NON_DISABLING_DISEASE_RESP':
+      return {
+        ...state,
+        fetchingNonDisablingDisease: false,
+        fetchedNonDisablingDisease: true,
+        nonDisablingDisease: action.payload.data.nonDisablingDiseaseOptions,
+        errorNonDisablingDisease: formatGraphQLError(action.payload),
+      };
+    case 'INSUREE_NON_DISABLING_DISEASE_ERR':
+      return {
+        ...state,
+        fetchingNonDisablingDisease: false,
+        errorNonDisablingDisease: formatServerError(action.payload),
+      };
     case "INSUREE_INSUREE_REQ":
       return {
         ...state,
@@ -364,7 +497,7 @@ function reducer(
         ...state,
         fetchingFamilyTypes: false,
         fetchedFamilyTypes: true,
-        familyTypes: action.payload.data.familyTypes.filter(t => t.code !== 'C' && t.code !=='O' && t.code !=='G' && t.code !=='S' && t.code !=='T').map((t) => t.code),
+        familyTypes: action.payload.data.familyTypes.map((t) => t.code),
         errorFamilyTypes: formatGraphQLError(action.payload),
       };
     case "INSUREE_FAMILY_TYPES_ERR":
@@ -498,7 +631,7 @@ function reducer(
         ...state,
         fetchingRelations: false,
         fetchedRelations: true,
-        relations: action.payload.data.relations.filter((p) => p.id !==10).map((p) => p.id),
+        relations: action.payload.data.relations.map((p) => p.id),
         errorRelations: formatGraphQLError(action.payload),
       };
     case "INSUREE_RELATIONS_ERR":

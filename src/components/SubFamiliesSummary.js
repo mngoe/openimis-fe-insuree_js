@@ -51,7 +51,7 @@ import { insureeLabel, familyLabel } from "../utils/utils";
 import ChangeInsureeFamilyDialog from "./ChangeInsureeFamilyDialog";
 import RemoveSubFamilyDialog from "./RemoveSubFamilyDialog";
 import EnquiryDialog from "./EnquiryDialog";
-import FamilyInsureesSearcher from "./FamilyInsureesSearcher";
+import FamilySubFamilySearcher from "./FamilySubFamilySearcher";
 import RemoveInsureeFromFamilyDialog from "./RemoveInsureeFromFamilyDialog";
 
 const styles = (theme) => ({
@@ -182,11 +182,7 @@ class SubFamiliesSummary extends PagedDataHandler {
     "insuree.familySummaries.email",
     "insuree.familySummaries.phone",
     "insuree.familySummaries.dob",
-    // ...Array.from(Array(this.locationLevels)).map((_, i) => `location.locationType.${i}`),
-    // "insuree.familySummaries.poverty",
     "insuree.familySummaries.confirmationNo",
-    // "insuree.familySummaries.validityFrom",
-    // "insuree.familySummaries.validityTo",
   ];
 
   sorter = (attr, asc = true) => [
@@ -216,17 +212,6 @@ class SubFamiliesSummary extends PagedDataHandler {
     return !!loc ? loc.name : "";
   };
 
-  //   adornedChfId = (i) => (
-  //     <Fragment>
-  //       <IconButton
-  //         size="small"
-  //         onClick={(e) => !i.clientMutationId && this.setState({ enquiryOpen: true, chfid: i.chfId })}
-  //       >
-  //         <SearchIcon />
-  //       </IconButton>
-  //       {i.chfId}
-  //     </Fragment>
-  //   );
 
   confirmSetHeadInsuree = (i) => {
     let confirmedAction = () => {
@@ -512,7 +497,7 @@ class SubFamiliesSummary extends PagedDataHandler {
           onCancel={(e) => this.setState({ removeInsuree: null })}
         />
         <Collapse in={this.state.showIFamilySearcher}>
-          <FamilyInsureesSearcher
+          <FamilySubFamilySearcher
             filters={this.state.filters}
             onChangeFilters={this.onChangeFilters}
             resetFilters={this.resetFilters}

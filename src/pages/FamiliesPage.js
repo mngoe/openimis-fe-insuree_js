@@ -21,7 +21,7 @@ import FamilySearcher from "../components/FamilySearcher";
 import LinkFamilyToParentDialog from "../components/LinkFamilyToParentDialog";
 
 import { linkFamily, fetchSubFamilySummary } from "../actions";
-import { RIGHT_FAMILY_ADD } from "../constants";
+import { FAMILY_TYPE_POLYGAMY_CODE, RIGHT_FAMILY_ADD } from "../constants";
 import { familyLabel } from "../utils/utils";
 
 const styles = (theme) => ({
@@ -39,9 +39,10 @@ class FamiliesPage extends Component {
     open: false,
     family: null,
     selections: [],
-    shouldbeLocked: false,
+    shouldBeLocked: false,
     disabled: true,
-    parentLinked:null,
+    parentLinked: null,
+    canSelectMutiple: false
   };
   onDoubleClick = (f, newTab = false) => {
     historyPush(this.props.modulesManager, this.props.history, "insuree.route.familyOverview", [f.uuid], newTab);
@@ -49,7 +50,7 @@ class FamiliesPage extends Component {
 
   OnFamilySelect = (f) => {
     const { selections } = this.state;
-    if (!!f.familyType && f.familyType?.code != "P") {
+    if (!!f.familyType && f.familyType?.code != FAMILY_TYPE_POLYGAMY_CODE) {
       this.setState({
         disabled: true,
       });
@@ -85,33 +86,33 @@ class FamiliesPage extends Component {
     if (module !== moduleName) this.props.clearCurrentPaginationPage();
   };
   linkFamilyToParent = (cancelPolicies) => {
-    const { selections, family, shouldbeLocked } = this.state;
-    this.setState({
-      shouldbeLocked: true,
-      parentLinked: null,
-    }, (e)=>{
-      const updatePromises = selections.map((selection) => {
-        return this.props.linkFamily(
-          family.uuid,        
-          selection.uuid,
-          formatMessageWithValues(this.props.intl, "insuree", "linkFamily.mutationLabel", {
-            label: familyLabel(family.uuid,selection.uuid),
-          }),
-          cancelPolicies,
-        );
-      });
-  
-      Promise.all(updatePromises)
-        .then(() => {
-          this.closeModal();
-        })
-        .catch((error) => {
-          this.closeModal();
+    const { selections, family, shouldBeLocked } = this.state;
+    this.setState(
+      {
+        shouldBeLocked: true,
+        parentLinked: null,
+      },
+      (e) => {
+        const updatePromises = selections.map((selection) => {
+          return this.props.linkFamily(
+            family.uuid,
+            selection.uuid,
+            formatMessageWithValues(this.props.intl, "insuree", "linkFamily.mutationLabel", {
+              label: familyLabel(family.uuid, selection.uuid),
+            }),
+            cancelPolicies,
+          );
         });
 
-    });
-  
-   
+        Promise.all(updatePromises)
+          .then(() => {
+            this.closeModal();
+          })
+          .catch((error) => {
+            this.closeModal();
+          });
+      },
+    );
   };
   openModal = (selection) => {
     this.setState({
@@ -128,16 +129,31 @@ class FamiliesPage extends Component {
     if (selection && selection.length) {
       return selection.every((selected) => {
         const familyTypeCode = selected.familyType?.code;
-        return familyTypeCode !== "P" && selected.parent == null;
+        return familyTypeCode !== FAMILY_TYPE_POLYGAMY_CODE && selected.parent == null;
       });
     }
     return false;
   };
-  setParentFamily = ()=>{
+  setParentFamily = () => {
     this.setState({
-      parentLinked: this.state.family
-    })
-  }
+      parentLinked: this.state.family,
+    });
+  };
+
+  printMembershipForm = (selection) => {
+    let familyID = "familyID=";
+    familyID = `${familyID}${decodeId(selection[0].id)}`;
+    let printUrl = `../../api/report/membership_report/pdf/?${familyID}`;
+    window.open(printUrl, "_blank");
+    return;
+  };
+
+  canPrintMemberShipForm = (selection) => {
+    if (!!selection && selection.length > 0 && selection.length < 2) {
+      return true;
+    }
+    return false;
+  };
 
   componentWillUnmount = () => {
     const { location, history } = this.props;
@@ -158,6 +174,12 @@ class FamiliesPage extends Component {
       enabled: this.canLinkFamilyToParent,
       icon: <LinkIcon />,
     });
+    actions.push({
+      label: "insuree.familySummaries.printMembershipForm",
+      action: this.printMembershipForm,
+      enabled: this.canPrintMemberShipForm,
+    });
+
     return (
       <div className={classes.page}>
         <FamilySearcher
@@ -167,7 +189,7 @@ class FamiliesPage extends Component {
           actionsContributionKey={FAMILY_ACTION_CONTRIBUTION_KEY}
           actions={actions}
         />
-        <LinkFamilyToParentDialog 
+        <LinkFamilyToParentDialog
           family={this.state.parentLinked}
           selectedFamily={this.state.selections}
           onConfirm={this.linkFamilyToParent}
@@ -181,8 +203,9 @@ class FamiliesPage extends Component {
               filterPaneContributionsKey={FAMILY_FILTERS_CONTRIBUTION_KEY}
               actionsContributionKey={FAMILY_ACTION_CONTRIBUTION_KEY}
               selectParent={true}
-              shouldbeLocked={this.state.shouldbeLocked}
-              canSelectMutiple={false}
+              shouldBeLocked={this.state.shouldBeLocked}
+              canSelectMutiple={this.state.canSelectMutiple}
+              isModal={true}
             />
           </DialogContent>
           <DialogActions>
