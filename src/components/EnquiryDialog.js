@@ -109,9 +109,18 @@ const EnquiryDialog = ({
     }
   };
 
+  // Fonctions utilitaires pour gérer les familles polygames
   const findPolygamousFamily = useCallback((family) => {
-    if (family?.familyType?.code === 'P') return family;
-    if (family?.parent?.familyType?.code === 'P') return family.parent;
+    console.log('[EnquiryDialog] Recherche de la famille polygame pour la famille:', family?.uuid);
+    if (family?.familyType?.code === 'P') {
+      console.log('[EnquiryDialog] Famille courante est polygame');
+      return family;
+    }
+    if (family?.parent?.familyType?.code === 'P') {
+      console.log('[EnquiryDialog] Parent de la famille courante est polygame');
+      return family.parent;
+    }
+    console.log('[EnquiryDialog] Aucune famille polygame trouvée');
     return null;
   }, []);
 
@@ -122,24 +131,54 @@ const EnquiryDialog = ({
       insuree?.id === insuree?.family?.parent?.headInsuree?.id;
     
     const polygamousFamily = findPolygamousFamily(insuree?.family);
-    return isHead && !!polygamousFamily;
+    const result = isHead && !!polygamousFamily;
+    console.log('[EnquiryDialog] Est tête de famille polygame?', result, { isHead, hasPolygamousFamily: !!polygamousFamily });
+    return result;
   }, [insuree, findPolygamousFamily]);
 
   const isPolygamousHeadWithSubFamilies = useCallback(() => {
-    return insuree?.id === insuree?.family?.parent?.headInsuree?.id &&
-           insuree?.family?.parent?.familyType?.code === 'P' &&
-           insuree?.id !== insuree?.family?.headInsuree?.id;
+    const result = insuree?.id === insuree?.family?.parent?.headInsuree?.id &&
+                  insuree?.family?.parent?.familyType?.code === 'P' &&
+                  insuree?.id !== insuree?.family?.headInsuree?.id;
+    console.log('[EnquiryDialog] Est tête de famille polygame avec sous-familles?', result);
+    return result;
   }, [insuree]);
 
+  // Liste des sous-familles filtrée et mémorisée
   const subFamiliesList = useMemo(() => {
-    if (!subfamilies || !isPolygamousHead()) return [];
+    console.log('[EnquiryDialog] Mise à jour de la liste des sous-familles');
+    console.log('[EnquiryDialog] Données d\'entrée:', { 
+      hasSubfamilies: !!subfamilies, 
+      isPolygamousHead: isPolygamousHead(),
+      familyId: insuree?.family?.uuid 
+    });
+    
+    if (!subfamilies || !isPolygamousHead()) {
+      console.log('[EnquiryDialog] Aucune sous-famille à afficher');
+      return [];
+    }
+    
     const polygamousFamily = findPolygamousFamily(insuree?.family);
-    return subfamilies.filter(subfamily => 
+    const filtered = subfamilies.filter(subfamily => 
       subfamily.parent?.id === polygamousFamily?.id
     );
+    
+    console.log(`[EnquiryDialog] ${filtered.length} sous-familles trouvées pour la famille polygame`, {
+      polygamousFamilyId: polygamousFamily?.id,
+      subfamiliesCount: subfamilies.length,
+      filteredCount: filtered.length
+    });
+    
+    return filtered;
   }, [subfamilies, isPolygamousHead, findPolygamousFamily, insuree?.family]);
 
-  const onDoubleClick = (subfamily, newTab = false) => {
+  const onDoubleClick = (subfamily, event) => {
+    console.log('[EnquiryDialog] Double-clic sur la sous-famille:', subfamily?.uuid);
+    
+    // Empêcher le comportement par défaut du double-clic
+    event.preventDefault();
+    event.stopPropagation();
+    
     const currentPathMatch = history?.location?.pathname.match(
       /\/subfamilies\/subFamilyOverview\/([^/]+)\/([^/]+)\/([^/]+)/
     );
@@ -165,21 +204,27 @@ const EnquiryDialog = ({
       }
     };
 
+    console.log('[EnquiryDialog] Détails de navigation:', navigationDetails);
+
     if (!subfamily?.uuid || !subfamily?.headInsuree?.uuid) {
+      console.error('[EnquiryDialog] Impossible de naviguer: UUID de la sous-famille ou du chef de famille manquant');
       return;
     }
 
     let parentFamilyUuid = insuree?.family?.parent?.uuid;
     
     if (!parentFamilyUuid && insuree?.family?.uuid) {
+      console.log('[EnquiryDialog] Utilisation de l\'UUID de la famille courante comme parent');
       parentFamilyUuid = insuree.family.uuid;
     }
     
     if (!parentFamilyUuid && navigationDetails.currentPath.parsed?.parentFamilyUuid) {
+      console.log('[EnquiryDialog] Utilisation de l\'UUID du parent depuis l\'URL courante');
       parentFamilyUuid = navigationDetails.currentPath.parsed.parentFamilyUuid;
     }
 
     if (!parentFamilyUuid) {
+      console.error('[EnquiryDialog] Impossible de déterminer l\'UUID de la famille parente');
       return;
     }
 
@@ -189,19 +234,23 @@ const EnquiryDialog = ({
       headInsureeUuid: subfamily.headInsuree.uuid
     };
 
-    handleClose();
+    console.log('[EnquiryDialog] Paramètres de navigation finaux:', finalNavigationParams);
+
+    // Ne pas fermer la boîte de dialogue actuelle
+    // handleClose();
   
     try {
+      console.log('[EnquiryDialog] Navigation vers la sous-famille dans un nouvel onglet');
+      // Toujours ouvrir dans un nouvel onglet (newTab = true)
       historyPush(
         modulesManager, 
         history, 
         "insuree.route.subFamilyOverview",
         [finalNavigationParams.subfamilyUuid, finalNavigationParams.parentFamilyUuid, finalNavigationParams.headInsureeUuid],
-        newTab
+        true // Toujours ouvrir dans un nouvel onglet
       );
-      window.location.reload();
     } catch (error) {
-      console.error("[EnquiryDialog] Navigation Error:", error);
+      console.error('[EnquiryDialog] Erreur lors de la navigation vers la sous-famille:', error);
     }
   };
 
@@ -267,7 +316,7 @@ const EnquiryDialog = ({
                         <TableRow 
                           key={subfamily.uuid}
                           className={classes.tableRow}
-                          onDoubleClick={() => onDoubleClick(subfamily)}
+                          onDoubleClick={(e) => onDoubleClick(subfamily, e)}
                         >
                           <TableCell>{subfamily.headInsuree?.chfId || ''}</TableCell>
                           <TableCell>{subfamily.headInsuree?.lastName || ''}</TableCell>
