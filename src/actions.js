@@ -207,7 +207,7 @@ export function fetchSubFamilySummary(mm, filters) {
     "confirmationType{code}",
     "familyType{code}",
     "address",
-    "parent{id}",
+    "parent{id, uuid}",
     "validityFrom",
     "validityTo",
     `headInsuree{${FAMILY_HEAD_PROJECTION(mm, false ).join(",")}}`,

@@ -147,30 +147,56 @@ const EnquiryDialog = ({
   // Liste des sous-familles filtrée et mémorisée
   const subFamiliesList = useMemo(() => {
     console.log('[EnquiryDialog] Mise à jour de la liste des sous-familles');
-    console.log('[EnquiryDialog] Données d\'entrée:', { 
-      hasSubfamilies: !!subfamilies, 
-      isPolygamousHead: isPolygamousHead(),
-      familyId: insuree?.family?.uuid 
-    });
     
-    if (!subfamilies || !isPolygamousHead()) {
-      console.log('[EnquiryDialog] Aucune sous-famille à afficher');
+    // Vérifier d'abord les conditions d'arrêt rapide
+    if (!subfamilies?.length || !insuree?.family) {
+      console.log('[EnquiryDialog] Aucune sous-famille à afficher (données manquantes)');
       return [];
     }
     
-    const polygamousFamily = findPolygamousFamily(insuree?.family);
-    const filtered = subfamilies.filter(subfamily => 
-      subfamily.parent?.id === polygamousFamily?.id
-    );
+    // Trouver la famille polygame une seule fois
+    const polygamousFamily = findPolygamousFamily(insuree.family);
+    if (!polygamousFamily) {
+      console.log('[EnquiryDialog] Aucune famille polygame trouvée');
+      return [];
+    }
+    
+    // Filtrer directement les sous-familles en utilisant parent.uuid
+    console.log('[EnquiryDialog] Détails du filtrage des sous-familles:', {
+      polygamousFamily: {
+        id: polygamousFamily.id,
+        uuid: polygamousFamily.uuid,
+        headInsureeId: polygamousFamily.headInsuree?.id,
+        familyType: polygamousFamily.familyType?.code
+      },
+      subfamiliesSample: subfamilies.slice(0, 3).map(sf => ({
+        id: sf.id,
+        uuid: sf.uuid,
+        parentId: sf.parent?.id,
+        parentUuid: sf.parent?.uuid,
+        headInsureeId: sf.headInsuree?.id
+      }))
+    });
+
+    const filtered = subfamilies.filter(subfamily => {
+      const isMatch = subfamily.parent?.uuid === polygamousFamily.uuid;
+      console.log(`[EnquiryDialog] Vérification sous-famille ${subfamily.uuid}:`, {
+        subfamilyParentUuid: subfamily.parent?.uuid,
+        polygamousFamilyUuid: polygamousFamily.uuid,
+        isMatch
+      });
+      return isMatch;
+    });
     
     console.log(`[EnquiryDialog] ${filtered.length} sous-familles trouvées pour la famille polygame`, {
-      polygamousFamilyId: polygamousFamily?.id,
+      polygamousFamilyUuid: polygamousFamily.uuid,
       subfamiliesCount: subfamilies.length,
-      filteredCount: filtered.length
+      filteredCount: filtered.length,
+      filteredUuids: filtered.map(f => f.uuid)
     });
     
     return filtered;
-  }, [subfamilies, isPolygamousHead, findPolygamousFamily, insuree?.family]);
+  }, [subfamilies, findPolygamousFamily, insuree?.family]);
 
   const onDoubleClick = (subfamily, event) => {
     console.log('[EnquiryDialog] Double-clic sur la sous-famille:', subfamily?.uuid);
