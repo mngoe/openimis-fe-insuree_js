@@ -217,13 +217,11 @@ export function fetchSubFamilySummary(mm, filters) {
       photo{id, uuid, date, folder, filename, officerId, photo}
     }`,
     "location" + mm.getProjection("location.Location.FlatProjection"),
+    "clientMutationId",
   ];
-  
+
   const payload = formatPageQueryWithCount("families", filters, projections);
-  
   console.log('[fetchSubFamilySummary] Envoi de la requête avec les filtres:', filters);
-  
-  // Envoi de la requête GraphQL
   return graphql(payload, "INSUREE_SUB_FAMILY");
 }
 
