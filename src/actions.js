@@ -199,6 +199,7 @@ export function fetchFamilyMembers(mm, filters) {
   return graphql(payload, "INSUREE_FAMILY_MEMBERS");
 }
 export function fetchSubFamilySummary(mm, filters) {
+
   let projections = [
     "id",
     "uuid",
@@ -207,14 +208,22 @@ export function fetchSubFamilySummary(mm, filters) {
     "confirmationType{code}",
     "familyType{code}",
     "address",
-    "parent{id, uuid}",
+    "parent{id, uuid, confirmationNo, headInsuree{chfId, lastName, otherNames}}",
     "validityFrom",
     "validityTo",
-    `headInsuree{${FAMILY_HEAD_PROJECTION(mm, false ).join(",")}}`,
-    "location" + mm.getProjection("location.Location.FlatProjection"),
     "clientMutationId",
+    `headInsuree{
+      ${FAMILY_HEAD_PROJECTION(mm, false).join(",")},
+      photo{id, uuid, date, folder, filename, officerId, photo}
+    }`,
+    "location" + mm.getProjection("location.Location.FlatProjection"),
   ];
+  
   const payload = formatPageQueryWithCount("families", filters, projections);
+  
+  console.log('[fetchSubFamilySummary] Envoi de la requête avec les filtres:', filters);
+  
+  // Envoi de la requête GraphQL
   return graphql(payload, "INSUREE_SUB_FAMILY");
 }
 
