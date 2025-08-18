@@ -1,5 +1,5 @@
-import React, { useEffect, Fragment, useRef, useMemo, useCallback } from "react";
-import { connect } from "react-redux";
+import React, { useState, useEffect, useRef, useCallback, useMemo, Fragment } from "react";
+import { connect, useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
 import { injectIntl } from "react-intl";
 
@@ -27,6 +27,8 @@ import {
   withModulesManager,
   withHistory,
   historyPush,
+  TableContainer,
+  CircularProgress,
 } from "@openimis/fe-core";
 import {
    fetchInsuree,
@@ -52,6 +54,24 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   tableHeader: theme.paper.header,
+  subfamilyTable: {
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(2),
+  },
+  subfamilyHeader: {
+    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.primary.contrastText,
+  },
+  photoCell: {
+    width: 100,
+    textAlign: 'center',
+  },
+  photo: {
+    width: 50,
+    height: 50,
+    borderRadius: '50%',
+    objectFit: 'cover',
+  },
 }));
 
 const EnquiryDialog = ({
@@ -76,6 +96,8 @@ const EnquiryDialog = ({
   const classes = useStyles();
   const prevMatchUrl = useRef(null);
   const currentPath = history?.location?.pathname;
+  const [subFamilyFilters, setSubFamilyFilters] = useState({});
+  // Utilisation de clearSubFamily passé en prop via connect
 
   const getFamilyUuidFromPath = (path) => {
     if (!path) return null;
@@ -109,7 +131,7 @@ const EnquiryDialog = ({
     }
   };
 
-  // Fonctions utilitaires pour gérer les familles polygames
+  // ici la 2eme etapes Fonctions utilitaires pour gérer les familles polygames
   const findPolygamousFamily = useCallback((family) => {
     console.log('[EnquiryDialog] Recherche de la famille polygame pour la famille:', family?.uuid);
     if (family?.familyType?.code === 'P') {
@@ -137,10 +159,24 @@ const EnquiryDialog = ({
   }, [insuree, findPolygamousFamily]);
 
   const isPolygamousHeadWithSubFamilies = useCallback(() => {
-    const result = insuree?.id === insuree?.family?.parent?.headInsuree?.id &&
-                  insuree?.family?.parent?.familyType?.code === 'P' &&
-                  insuree?.id !== insuree?.family?.headInsuree?.id;
-    console.log('[EnquiryDialog] Est tête de famille polygame avec sous-familles?', result);
+    const isHeadOfParentFamily = insuree?.id === insuree?.family?.parent?.headInsuree?.id;
+    const isPolygamous = insuree?.family?.parent?.familyType?.code === 'P' || 
+                        insuree?.family?.parent?.polygamous === true;
+    const isNotCurrentFamilyHead = insuree?.id !== insuree?.family?.headInsuree?.id;
+    
+    const result = isHeadOfParentFamily && isPolygamous && isNotCurrentFamilyHead;
+    
+    console.log('[EnquiryDialog] Vérification famille polygame:', {
+      insureeId: insuree?.id,
+      parentHeadId: insuree?.family?.parent?.headInsuree?.id,
+      familyType: insuree?.family?.parent?.familyType,
+      isPolygamous: insuree?.family?.parent?.polygamous,
+      isHeadOfParentFamily,
+      isPolygamousFamily: isPolygamous,
+      isNotCurrentFamilyHead,
+      result
+    });
+    
     return result;
   }, [insuree]);
 
@@ -154,49 +190,38 @@ const EnquiryDialog = ({
       return [];
     }
     
-    // Trouver la famille polygame une seule fois
-    const polygamousFamily = findPolygamousFamily(insuree.family);
-    if (!polygamousFamily) {
-      console.log('[EnquiryDialog] Aucune famille polygame trouvée');
-      return [];
-    }
+    // Déterminer l'UUID de la famille parente
+    const parentUuid = insuree.family.parent?.uuid || insuree.family.uuid;
     
-    // Filtrer directement les sous-familles en utilisant parent.uuid
-    console.log('[EnquiryDialog] Détails du filtrage des sous-familles:', {
-      polygamousFamily: {
-        id: polygamousFamily.id,
-        uuid: polygamousFamily.uuid,
-        headInsureeId: polygamousFamily.headInsuree?.id,
-        familyType: polygamousFamily.familyType?.code
-      },
-      subfamiliesSample: subfamilies.slice(0, 3).map(sf => ({
-        id: sf.id,
-        uuid: sf.uuid,
-        parentId: sf.parent?.id,
-        parentUuid: sf.parent?.uuid,
-        headInsureeId: sf.headInsuree?.id
-      }))
-    });
-
-    const filtered = subfamilies.filter(subfamily => {
-      const isMatch = subfamily.parent?.uuid === polygamousFamily.uuid;
-      console.log(`[EnquiryDialog] Vérification sous-famille ${subfamily.uuid}:`, {
-        subfamilyParentUuid: subfamily.parent?.uuid,
-        polygamousFamilyUuid: polygamousFamily.uuid,
-        isMatch
+    console.log('[EnquiryDialog] Filtrage des sous-familles avec parent_Uuid:', parentUuid);
+    
+    // Filtrer et trier les sous-familles
+    const filtered = subfamilies
+      .filter(subfamily => {
+        const isMatch = subfamily.parent?.uuid === parentUuid;
+        console.log(`[EnquiryDialog] Vérification sous-famille ${subfamily.uuid}:`, {
+          subfamilyParentUuid: subfamily.parent?.uuid,
+          expectedParentUuid: parentUuid,
+          isMatch
+        });
+        return isMatch;
+      })
+      // Trier par date de validité (les plus récentes en premier)
+      .sort((a, b) => {
+        const dateA = new Date(a.validityFrom);
+        const dateB = new Date(b.validityFrom);
+        return dateB - dateA;
       });
-      return isMatch;
-    });
     
-    console.log(`[EnquiryDialog] ${filtered.length} sous-familles trouvées pour la famille polygame`, {
-      polygamousFamilyUuid: polygamousFamily.uuid,
+    console.log(`[EnquiryDialog] ${filtered.length} sous-familles trouvées pour la famille parente`, {
+      parentUuid,
       subfamiliesCount: subfamilies.length,
       filteredCount: filtered.length,
       filteredUuids: filtered.map(f => f.uuid)
     });
     
     return filtered;
-  }, [subfamilies, findPolygamousFamily, insuree?.family]);
+  }, [subfamilies, insuree?.family]);
 
   const onDoubleClick = (subfamily, event) => {
     console.log('[EnquiryDialog] Double-clic sur la sous-famille:', subfamily?.uuid);
@@ -279,7 +304,7 @@ const EnquiryDialog = ({
       console.error('[EnquiryDialog] Erreur lors de la navigation vers la sous-famille:', error);
     }
   };
-
+//recuperer les données de l assurer
   useEffect(() => {
     if (open && insuree?.id !== chfid) {
       fetchInsuree(modulesManager, chfid);
@@ -293,16 +318,43 @@ const EnquiryDialog = ({
       prevMatchUrl.current = match.url;
     }
   }, [open, chfid, match?.url]);
-  
+// Récupération et gestion des sous-familles
    useEffect(() => {
     if (insuree?.family?.uuid) {
-      if (insuree.family?.parent?.uuid) {
-        fetchSubFamilySummary(modulesManager, { parent_Uuid: insuree.family.parent.uuid });
-      } else {
-        fetchSubFamilySummary(modulesManager, { parent_Uuid: insuree.family.uuid });
+      // 1. Récupération de l'UUID de la famille principale
+      const parentUuid = insuree.family?.parent?.uuid || insuree.family.uuid;
+      
+      // 2. Création des filtres pour la requête
+      const filters = {
+        // Filtre sur la famille parente
+        parent_Uuid: `"${parentUuid}"`,
+        // Ne récupérer que les familles actives
+        validityTo: "null",
+        // Trier par date de création (les plus récentes d'abord)
+        orderBy: '["-validityFrom"]'
+      };
+      
+      // Ajout des filtres additionnels s'ils existent
+      if (subFamilyFilters && typeof subFamilyFilters === 'object') {
+        Object.assign(filters, subFamilyFilters);
       }
+      
+      console.log('[EnquiryDialog] Récupération des sous-familles avec filtres:', filters);
+      
+      try {
+        // Appel de la fonction fetchSubFamilySummary avec les filtres
+        //    - La fonction s'occupe de la requête GraphQL
+        //    - Les résultats sont stockés dans le state Redux (subfamilies)
+        fetchSubFamilySummary(modulesManager, filters);
+      } catch (error) {
+        console.error('[EnquiryDialog] Erreur lors de la récupération des sous-familles:', error);
+        // Vous pouvez ajouter ici une notification d'erreur à l'utilisateur
+      }
+    } else {
+      // Si pas de famille, on s'assure de vider la liste des sous-familles
+      clearSubFamily();
     }
-  }, [insuree?.family?.uuid]);
+  }, [insuree?.family?.uuid, subFamilyFilters, fetchSubFamilySummary, modulesManager, clearSubFamily]);
 
   return (
     <Dialog maxWidth="xl" fullWidth open={open} onClose={handleClose}>
@@ -342,23 +394,29 @@ const EnquiryDialog = ({
                         <TableRow 
                           key={subfamily.uuid}
                           className={classes.tableRow}
+                          hover
                           onDoubleClick={(e) => onDoubleClick(subfamily, e)}
+                          style={{ cursor: 'pointer' }}
                         >
-                          <TableCell>{subfamily.headInsuree?.chfId || ''}</TableCell>
-                          <TableCell>{subfamily.headInsuree?.lastName || ''}</TableCell>
-                          <TableCell>{subfamily.headInsuree?.otherNames || ''}</TableCell>
-                          <TableCell>{subfamily.headInsuree?.email || ''}</TableCell>
-                          <TableCell>{subfamily.headInsuree?.phone || ''}</TableCell>
-                          <TableCell>{subfamily.headInsuree?.dob || ''}</TableCell>
+                          <TableCell>{subfamily.headInsuree?.chfId || '-'}</TableCell>
+                          <TableCell>{subfamily.headInsuree?.lastName || '-'}</TableCell>
+                          <TableCell>{subfamily.headInsuree?.otherNames || '-'}</TableCell>
+                          <TableCell>{subfamily.headInsuree?.email || '-'}</TableCell>
+                          <TableCell>{subfamily.headInsuree?.phone || '-'}</TableCell>
                           <TableCell>
-                            {subfamily.headInsuree?.photo ? (
+                            {subfamily.headInsuree?.dob 
+                              ? new Date(subfamily.headInsuree.dob).toLocaleDateString() 
+                              : '-'}
+                          </TableCell>
+                          <TableCell className={classes.photoCell}>
+                            {subfamily.headInsuree?.photo?.photo ? (
                               <img
                                 src={`data:image/jpeg;base64,${subfamily.headInsuree.photo.photo}`}
-                                alt=""
-                                style={{ width: '80px', height: '80px', objectFit: 'fill', borderRadius: '80%' }}
+                                alt="Photo"
+                                className={classes.photo}
                               />
                             ) : (
-                              <Typography>No Photo</Typography>
+                              <Typography variant="caption">-</Typography>
                             )}
                           </TableCell>
                         </TableRow>
