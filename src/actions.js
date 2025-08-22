@@ -65,7 +65,7 @@ const FAMILY_FULL_PROJECTION = (mm) => [
   `headInsuree{${FAMILY_HEAD_PROJECTION(mm).join(",")}}`,
   "location" + mm.getProjection("location.Location.FlatProjection"),
   "clientMutationId",
-  "parent{id, uuid, familyType{code}, headInsuree{id, uuid, chfId, lastName, otherNames}}",
+  "parent{id,uuid}",
   "attachments{idAttachment,filename,document,title,date,mime}",
 ];
 
@@ -135,6 +135,7 @@ export function fetchInsuree(mm, chfid) {
       "validityTo",
       "gender{code}",
       "status",
+      "head", // Ajout explicite du champ head
       `family{${FAMILY_FULL_PROJECTION(mm).join(",")}}`,
       "photo{folder,filename,photo}",
       "gender{code, gender, altLanguage}",
@@ -194,7 +195,18 @@ export function fetchFamilySummaries(mm, filters) {
 }
 
 export function fetchFamilyMembers(mm, filters) {
-  let projections = ["uuid", "chfId", "otherNames", "lastName", "head", "phone", "gender{code}", "dob", "cardIssued", `photo{id, uuid, date, folder, filename, officerId, photo}`];
+  let projections = [
+    "uuid",
+    "chfId",
+    "otherNames",
+    "lastName",
+    "head",
+    "phone",
+    "gender{code}",
+    "dob",
+    "cardIssued",
+    "photo{id,uuid,date,folder,filename,officerId,photo}",
+  ];
   const payload = formatPageQueryWithCount("familyMembers", filters, projections);
   return graphql(payload, "INSUREE_FAMILY_MEMBERS");
 }
@@ -208,14 +220,10 @@ export function fetchSubFamilySummary(mm, filters) {
     "confirmationType{code}",
     "familyType{code}",
     "address",
-    "parent{id, uuid, confirmationNo, headInsuree{chfId, lastName, otherNames}}",
+    "parent{id, uuid}",
     "validityFrom",
     "validityTo",
-    "clientMutationId",
-    `headInsuree{
-      ${FAMILY_HEAD_PROJECTION(mm, false).join(",")},
-      photo{id, uuid, date, folder, filename, officerId, photo}
-    }`,
+    `headInsuree{${FAMILY_HEAD_PROJECTION(mm, false).join(",")}}`,
     "location" + mm.getProjection("location.Location.FlatProjection"),
     "clientMutationId",
   ];
