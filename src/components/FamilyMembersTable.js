@@ -34,9 +34,6 @@ const FAMILY_MEMBERS_HEADERS = [
   "FamilyMembersTable.gender",
   "FamilyMembersTable.dob",
   "FamilyMembersTable.phone",
-  "FamilyMembersTable.genre",
-  "FamilyMembersTable.birthDate",
-  "FamilyMembersTable.photo",
 ];
 
 const getPhotoUrl = (photo) => {

@@ -44,6 +44,7 @@ const EnquiryDialog = ({
   fetchInsuree,
   fetching,
   fetched,
+  clearInsuree,
   insuree,
   error,
   onClose,
@@ -83,15 +84,13 @@ const EnquiryDialog = ({
           <Fragment>
             <InsureeSummary modulesManager={modulesManager} insuree={insuree} className={classes.summary} />
             {(() => {
-              if (insuree.head) {
-                return <FamilyMembersTable />;
-              }
               if (shouldShowSubFamilies(insuree)) {
                 const familyUuid = insuree.family?.parent?.uuid || insuree.family?.uuid;
+                const familyId = insuree.family?.parent?.id || insuree.family?.id;
                 if (!familyUuid) {
                   return null;
                 }
-                return <SubFamiliesTable familyUuid={familyUuid} />;
+                return <SubFamiliesTable familyUuid={familyUuid} familyId={familyId} />;
               }
               return <FamilyMembersTable />;
             })()}

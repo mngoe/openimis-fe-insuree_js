@@ -220,11 +220,10 @@ export function fetchSubFamilySummary(mm, filters) {
     "confirmationType{code}",
     "familyType{code}",
     "address",
-    "parent{id, uuid, confirmationNo, headInsuree{chfId, lastName, otherNames}}",
+    "parent{id, uuid}",
     "validityFrom",
     "validityTo",
     `headInsuree{${FAMILY_HEAD_PROJECTION(mm, false).join(",")}}`,
-    "clientMutationId",
     "location" + mm.getProjection("location.Location.FlatProjection"),
     "clientMutationId",
   ];

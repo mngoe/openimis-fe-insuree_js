@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useModulesManager, useTranslations, formatDateFromISO, historyPush, withHistory } from "@openimis/fe-core";
+import { useModulesManager, useTranslations, formatDateFromISO, historyPush, withHistory, decodeId } from "@openimis/fe-core";
 import {
   Table,
   TableBody,
@@ -38,24 +38,68 @@ const getPhotoUrl = (photo) => {
   return null;
 };
 
-const SubFamiliesTable = ({ familyUuid, history }) => {
+const SubFamiliesTable = ({ familyUuid, familyId, history }) => {
   const dispatch = useDispatch();
   const modulesManager = useModulesManager();
   const classes = useStyles();
   const { formatMessage } = useTranslations("insuree", modulesManager);
-  const { subFamilies, fetchingSubFamilies } = useSelector((store) => store.insuree);
+  const { subFamilies, fetchingSubFamilies, fetchedSubFamilies, errorSubFamilies, subFamiliesTotalCount } = useSelector((store) => store.insuree);
+  const triedAlternateFilter = useRef(false);
+  const triedIdFilter = useRef(false);
 
   useEffect(() => {
     if (familyUuid) {
-      dispatch(fetchSubFamilySummary(modulesManager, [`parent_Uuid: \"${familyUuid}\"`]));
+      triedAlternateFilter.current = false;
+      dispatch(
+        fetchSubFamilySummary(modulesManager, [
+          `parent_Uuid: \"${familyUuid}\"`,
+          "showHistory: true",
+        ])
+      );
     }
   }, [familyUuid, dispatch, modulesManager]);
+
+  useEffect(() => {
+    if (!familyUuid) return;
+    if (!fetchedSubFamilies) return;
+    const empty = !subFamilies || subFamilies.length === 0 || subFamiliesTotalCount === 0;
+    if ((empty || !!errorSubFamilies) && !triedAlternateFilter.current) {
+      triedAlternateFilter.current = true;
+      dispatch(
+        fetchSubFamilySummary(modulesManager, [
+          `parentUuid: \"${familyUuid}\"`,
+          "showHistory: true",
+          "ignoreLocation: true",
+        ])
+      );
+    }
+    if (
+      (empty || !!errorSubFamilies) &&
+      triedAlternateFilter.current &&
+      !triedIdFilter.current &&
+      !!familyId
+    ) {
+      triedIdFilter.current = true;
+      const numericId = decodeId(familyId);
+      if (numericId) {
+        dispatch(
+          fetchSubFamilySummary(modulesManager, [
+            `parent_Id: ${numericId}`,
+            "showHistory: true",
+          ])
+        );
+      }
+    }
+  }, [fetchedSubFamilies, subFamilies, subFamiliesTotalCount, errorSubFamilies, familyUuid, dispatch, modulesManager]);
 
   if (fetchingSubFamilies) {
     return <div>{formatMessage("insuree.SubFamiliesTable.loading")}</div>;
   }
 
 
+  if (!!errorSubFamilies) {
+    return <div style={{ color: "#c62828" }}>{errorSubFamilies?.message || String(errorSubFamilies)}</div>;
+  }
   if (!subFamilies?.length) {
     return <div>{formatMessage("insuree.SubFamiliesTable.noSubFamilies")}</div>;
   }
