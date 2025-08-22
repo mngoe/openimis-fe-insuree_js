@@ -7,5 +7,20 @@
     "insuree.insureeAttachment.fileName": "Fichier",
     "insureeAttachment.action": "Action",
     "insuree.attachments.title": "{filename}",
-    "insuree.Payment.none": "None"
+    "insuree.Payment.none": "None",
+    "insuree.SubFamiliesTable.loading": "Chargement des sous-familles...",
+    "insuree.SubFamiliesTable.noSubFamilies": "Aucune sous-famille trouvée.",
+    "insuree.SubFamiliesTable.title": "Sous-familles",
+    "insuree.SubFamiliesTable.InsuranceNo": "N° d’assurance",
+    "insuree.SubFamiliesTable.memberName": "Chef de sous-famille",
+    "insuree.SubFamiliesTable.photo": "Photo",
+    "insuree.SubFamiliesTable.gender": "Sexe",
+    "insuree.SubFamiliesTable.dob": "Date de naissance",
+    "insuree.SubFamiliesTable.phone": "Téléphone",
+    "insuree.FamilyMembersTable.InsuranceNo": "N° d’assurance",
+    "insuree.FamilyMembersTable.memberName": "Membre de la famille",
+    "insuree.FamilyMembersTable.photo": "Photo",
+    "insuree.FamilyMembersTable.gender": "Sexe",
+    "insuree.FamilyMembersTable.dob": "Date de naissance",
+    "insuree.FamilyMembersTable.phone": "Téléphone"
 }

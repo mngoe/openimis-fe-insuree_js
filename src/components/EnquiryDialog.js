@@ -15,14 +15,25 @@ import {
   withModulesManager,
   withHistory,
 } from "@openimis/fe-core";
+import { FAMILY_TYPE_POLYGAMY_CODE } from "../constants";
 import { fetchInsuree } from "../actions";
 import InsureeSummary from "./InsureeSummary";
+import SubFamiliesTable from "./SubFamiliesTable";
+import FamilyMembersTable from "./FamilyMembersTable";
 
 const useStyles = makeStyles(() => ({
   summary: {
     marginBottom: 32,
   },
 }));
+
+const shouldShowSubFamilies = (insuree) => {
+  if (!insuree) return false;
+  const familyTypeCode = insuree?.family?.familyType?.code;
+  const isPolygamyFamilyType = !!familyTypeCode && familyTypeCode === FAMILY_TYPE_POLYGAMY_CODE;
+  const isLinkedToSubFamily = !!insuree?.family?.parent?.uuid;
+  return isPolygamyFamilyType || isLinkedToSubFamily;
+};
 
 const EnquiryDialog = ({
   intl,
@@ -69,6 +80,19 @@ const EnquiryDialog = ({
         {!fetching && insuree && (
           <Fragment>
             <InsureeSummary modulesManager={modulesManager} insuree={insuree} className={classes.summary} />
+            {(() => {
+              if (insuree.head) {
+                return <FamilyMembersTable />;
+              }
+              if (shouldShowSubFamilies(insuree)) {
+                const familyUuid = insuree.family?.parent?.uuid || insuree.family?.uuid;
+                if (!familyUuid) {
+                  return null;
+                }
+                return <SubFamiliesTable familyUuid={familyUuid} />;
+              }
+              return <FamilyMembersTable />;
+            })()}
             <Contributions
               contributionKey="insuree.EnquiryDialog"
               insuree={insuree}
