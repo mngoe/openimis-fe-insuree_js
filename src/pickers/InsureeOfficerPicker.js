@@ -26,16 +26,27 @@ class InsureeOfficer extends Component {
   }
 
   componentDidMount() {
-    if (!this.props.fetchedInsureeOfficers || !this.isCurrentAdminEnrollmentOfficerActive == false ) {
-      // prevent loading multiple times the cache when component is
-      // several times on tha page
+    if (!this.props.fetchedInsureeOfficers || !this.isCurrentAdminEnrollmentOfficerActive == false) {
+      const filters = [];
+      !!this.props.locationId && this.props.locationId != "" ? filters.push(`locationId:"${decodeId(this.props.locationId)}"`) : filters;
+
       setTimeout(() => {
-        !this.props.fetchingInsureeOfficers && this.props.fetchInsureeOfficers(this.props.modulesManager);
+        !this.props.fetchingInsureeOfficers && this.props.fetchInsureeOfficers(this.props.modulesManager, filters);
       }, Math.floor(Math.random() * 300));
     }
-
   }
+
   componentDidUpdate(prevProps) {
+    // Recharger les données si locationId change
+    if (this.props.locationId !== prevProps.locationId) {
+      const { locationId } = this.props
+      const filters = [];
+      if (locationId != undefined && locationId != "" ) {
+        filters.push(`locationId:"${decodeId(locationId)}"`)
+      }
+      this.props.fetchInsureeOfficers(this.props.modulesManager, filters);
+    }
+
     if (this.isCurrentAdminEnrollmentOfficerActive == true &&
       this.props.insureeOfficers !== prevProps.insureeOfficers &&
       this.props.insureeOfficers &&
@@ -62,7 +73,7 @@ class InsureeOfficer extends Component {
     if (!insureeOfficers || !user) return false;
     if (user.username.trim() === insureeOfficers[0].code.trim()) return true;
     else return false
-  } 
+  }
 
   onSuggestionSelected = (v) => this.props.onChange(v, this.formatSuggestion(v));
 
@@ -88,7 +99,7 @@ class InsureeOfficer extends Component {
     return (
       <Fragment>
         <ProgressOrError progress={fetchingInsureeOfficers} error={errorInsureeOfficers} />
-        { fetchedInsureeOfficers && (
+        {fetchedInsureeOfficers && (
           <AutoSuggestion
             module="insuree"
             items={insureeOfficers}

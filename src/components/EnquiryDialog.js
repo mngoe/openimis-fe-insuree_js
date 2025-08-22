@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { injectIntl } from "react-intl";
 
-import { Dialog, Button, DialogActions, DialogContent } from "@material-ui/core";
+import { Dialog, DialogContent, Button, DialogActions } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 
 import {
@@ -14,6 +14,9 @@ import {
   ProgressOrError,
   withModulesManager,
   withHistory,
+  historyPush,
+  TableContainer,
+  CircularProgress,
 } from "@openimis/fe-core";
 import { FAMILY_TYPE_POLYGAMY_CODE } from "../constants";
 import { fetchInsuree } from "../actions";
@@ -50,7 +53,7 @@ const EnquiryDialog = ({
 }) => {
   const classes = useStyles();
   const prevMatchUrl = useRef(null);
-
+//recuperer les données de l assurer
   useEffect(() => {
     if (open && insuree?.id !== chfid) {
       fetchInsuree(modulesManager, chfid);
@@ -64,7 +67,6 @@ const EnquiryDialog = ({
       prevMatchUrl.current = match.url;
     }
   }, [open, chfid, match?.url]);
-
   return (
     <Dialog maxWidth="xl" fullWidth open={open} onClose={onClose}>
       <DialogContent>
@@ -115,6 +117,7 @@ const mapStateToProps = (state) => ({
   fetching: state.insuree.fetchingInsuree,
   fetched: state.insuree.fetchedInsuree,
   insuree: state.insuree.insuree,
+  subfamilies: state.insuree.subFamilies,
   error: state.insuree.errorInsuree,
 });
 

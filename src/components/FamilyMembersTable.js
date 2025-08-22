@@ -13,6 +13,13 @@ const useStyles = makeStyles((theme) => ({
     marginInline: 16,
     marginBlock: 12,
   },
+  tableContainer: {
+    marginTop: theme.spacing(1),
+  },
+  cell: {
+    paddingTop: 12,
+    paddingBottom: 12,
+  },
   headerTitle: theme.table.title,
   actionCell: {
     width: 60,
@@ -27,6 +34,9 @@ const FAMILY_MEMBERS_HEADERS = [
   "FamilyMembersTable.gender",
   "FamilyMembersTable.dob",
   "FamilyMembersTable.phone",
+  "FamilyMembersTable.genre",
+  "FamilyMembersTable.birthDate",
+  "FamilyMembersTable.photo",
 ];
 
 const getPhotoUrl = (photo) => {
@@ -63,7 +73,7 @@ const FamilyMembersTable = ({ history }) => {
         <TableHead className={classes.header}>
           <TableRow className={classes.headerTitle}>
             {FAMILY_MEMBERS_HEADERS.map((header) => (
-              <TableCell key={header}> {formatMessage(header)} </TableCell>
+              <TableCell className={classes.cell} key={header}> {formatMessage(header)} </TableCell>
             ))}
           </TableRow>
         </TableHead>
@@ -117,7 +127,7 @@ const FamilyMembersTable = ({ history }) => {
             ))
           ) : (
             <TableRow>
-              <TableCell> {formatMessage("insuree.FamilyMembersTable.noMembers")} </TableCell>
+              <TableCell className={classes.cell}> {formatMessage("insuree.FamilyMembersTable.noMembers")} </TableCell>
             </TableRow>
           )}
         </TableBody>
@@ -125,5 +135,4 @@ const FamilyMembersTable = ({ history }) => {
     </TableContainer>
   );
 };
-
 export default withHistory(FamilyMembersTable);
