@@ -44,12 +44,10 @@ const SubFamiliesTable = ({ familyUuid, familyId, history }) => {
   const classes = useStyles();
   const { formatMessage } = useTranslations("insuree", modulesManager);
   const { subFamilies, fetchingSubFamilies, fetchedSubFamilies, errorSubFamilies, subFamiliesTotalCount } = useSelector((store) => store.insuree);
-  const triedAlternateFilter = useRef(false);
   const triedIdFilter = useRef(false);
 
   useEffect(() => {
     if (familyUuid) {
-      triedAlternateFilter.current = false;
       dispatch(
         fetchSubFamilySummary(modulesManager, [
           `parent_Uuid: \"${familyUuid}\"`,
@@ -63,22 +61,7 @@ const SubFamiliesTable = ({ familyUuid, familyId, history }) => {
     if (!familyUuid) return;
     if (!fetchedSubFamilies) return;
     const empty = !subFamilies || subFamilies.length === 0 || subFamiliesTotalCount === 0;
-    if ((empty || !!errorSubFamilies) && !triedAlternateFilter.current) {
-      triedAlternateFilter.current = true;
-      dispatch(
-        fetchSubFamilySummary(modulesManager, [
-          `parentUuid: \"${familyUuid}\"`,
-          "showHistory: true",
-          "ignoreLocation: true",
-        ])
-      );
-    }
-    if (
-      (empty || !!errorSubFamilies) &&
-      triedAlternateFilter.current &&
-      !triedIdFilter.current &&
-      !!familyId
-    ) {
+    if ((empty || !!errorSubFamilies) && !triedIdFilter.current && !!familyId) {
       triedIdFilter.current = true;
       const numericId = decodeId(familyId);
       if (numericId) {
