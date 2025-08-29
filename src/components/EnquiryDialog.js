@@ -34,8 +34,14 @@ const shouldShowSubFamilies = (insuree) => {
   if (!insuree) return false;
   const familyTypeCode = insuree?.family?.familyType?.code;
   const isPolygamyFamilyType = !!familyTypeCode && familyTypeCode === FAMILY_TYPE_POLYGAMY_CODE;
-  const isLinkedToSubFamily = !!insuree?.family?.parent?.uuid;
-  return isPolygamyFamilyType || isLinkedToSubFamily;
+
+  // If insuree belongs to a sub-family, only show parent's sub-families when
+  // the parent family is polygamous AND the insuree is the head of that parent family (polygamous parent).
+  const parent = insuree?.family?.parent;
+  const isParentPolygamy = parent?.familyType?.code === FAMILY_TYPE_POLYGAMY_CODE;
+  const isInsureeParentHead = !!insuree?.uuid && !!parent?.headInsuree?.uuid && insuree.uuid === parent.headInsuree.uuid;
+
+  return isPolygamyFamilyType || (isParentPolygamy && isInsureeParentHead);
 };
 
 const EnquiryDialog = ({

@@ -65,7 +65,8 @@ const FAMILY_FULL_PROJECTION = (mm) => [
   `headInsuree{${FAMILY_HEAD_PROJECTION(mm).join(",")}}`,
   "location" + mm.getProjection("location.Location.FlatProjection"),
   "clientMutationId",
-  "parent{id,uuid}",
+  // include parent's head and type to determine if current insuree is the polygamous parent
+  "parent{id,uuid, familyType{code}, headInsuree{uuid}}",
   "attachments{idAttachment,filename,document,title,date,mime}",
 ];
 
