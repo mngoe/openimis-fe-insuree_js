@@ -65,7 +65,8 @@ const FAMILY_FULL_PROJECTION = (mm) => [
   `headInsuree{${FAMILY_HEAD_PROJECTION(mm).join(",")}}`,
   "location" + mm.getProjection("location.Location.FlatProjection"),
   "clientMutationId",
-  "parent{id}",
+  // include parent's head and type to determine if current insuree is the polygamous parent
+  "parent{id,uuid, familyType{code}, headInsuree{uuid}}",
   "attachments{idAttachment,filename,document,title,date,mime}",
 ];
 
@@ -135,6 +136,7 @@ export function fetchInsuree(mm, chfid) {
       "validityTo",
       "gender{code}",
       "status",
+      "head", // Ajout explicite du champ head
       `family{${FAMILY_FULL_PROJECTION(mm).join(",")}}`,
       "photo{folder,filename,photo}",
       "gender{code, gender, altLanguage}",
@@ -185,7 +187,7 @@ export function fetchFamilySummaries(mm, filters) {
     "parent{id}",
     "validityFrom",
     "validityTo",
-    `headInsuree{${FAMILY_HEAD_PROJECTION(mm, true).join(",")}}`,
+    `headInsuree{${FAMILY_HEAD_PROJECTION(mm, false).join(",")}}`,
     "location" + mm.getProjection("location.Location.FlatProjection"),
     "clientMutationId",
   ];
@@ -194,11 +196,23 @@ export function fetchFamilySummaries(mm, filters) {
 }
 
 export function fetchFamilyMembers(mm, filters) {
-  let projections = ["uuid", "chfId", "otherNames", "lastName", "head", "phone", "gender{code}", "dob", "cardIssued"];
+  let projections = [
+    "uuid",
+    "chfId",
+    "otherNames",
+    "lastName",
+    "head",
+    "phone",
+    "gender{code}",
+    "dob",
+    "cardIssued",
+    "photo{id,uuid,date,folder,filename,officerId,photo}",
+  ];
   const payload = formatPageQueryWithCount("familyMembers", filters, projections);
   return graphql(payload, "INSUREE_FAMILY_MEMBERS");
 }
 export function fetchSubFamilySummary(mm, filters) {
+
   let projections = [
     "id",
     "uuid",
@@ -207,14 +221,16 @@ export function fetchSubFamilySummary(mm, filters) {
     "confirmationType{code}",
     "familyType{code}",
     "address",
-    "parent{id}",
+    "parent{id, uuid}",
     "validityFrom",
     "validityTo",
-    `headInsuree{${FAMILY_HEAD_PROJECTION(mm, true).join(",")}}`,
+    `headInsuree{${FAMILY_HEAD_PROJECTION(mm, false).join(",")}}`,
     "location" + mm.getProjection("location.Location.FlatProjection"),
     "clientMutationId",
   ];
+
   const payload = formatPageQueryWithCount("families", filters, projections);
+  console.log('[fetchSubFamilySummary] Envoi de la requête avec les filtres:', filters);
   return graphql(payload, "INSUREE_SUB_FAMILY");
 }
 

@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
-import { TableContainer, TableHead, TableBody, Table, TableCell, TableRow, Paper } from "@material-ui/core";
+import { TableContainer, TableHead, TableBody, Table, TableCell, TableRow, Paper, Avatar } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 
-import { useModulesManager, useTranslations } from "@openimis/fe-core";
+import { useModulesManager, useTranslations, formatDateFromISO, historyPush, withHistory } from "@openimis/fe-core";
 import { fetchFamilyMembers } from "../actions";
 import { DEFAULT, HYPHEN, MODULE_NAME } from "../constants";
 
@@ -12,6 +12,13 @@ const useStyles = makeStyles((theme) => ({
   footer: {
     marginInline: 16,
     marginBlock: 12,
+  },
+  tableContainer: {
+    marginTop: theme.spacing(1),
+  },
+  cell: {
+    paddingTop: 12,
+    paddingBottom: 12,
   },
   headerTitle: theme.table.title,
   actionCell: {
@@ -21,12 +28,25 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const FAMILY_MEMBERS_HEADERS = [
+  "FamilyMembersTable.photo",
   "FamilyMembersTable.InsuranceNo",
   "FamilyMembersTable.memberName",
+  "FamilyMembersTable.gender",
+  "FamilyMembersTable.dob",
   "FamilyMembersTable.phone",
 ];
 
-const FamilyMembersTable = () => {
+const getPhotoUrl = (photo) => {
+  if (photo?.photo) {
+    return `data:image/png;base64,${photo.photo}`;
+  }
+  if (photo?.filename && photo?.folder) {
+    return `/photos/${photo.folder}/${photo.filename}`;
+  }
+  return null;
+};
+
+const FamilyMembersTable = ({ history }) => {
   const dispatch = useDispatch();
   const modulesManager = useModulesManager();
   const classes = useStyles();
@@ -50,26 +70,61 @@ const FamilyMembersTable = () => {
         <TableHead className={classes.header}>
           <TableRow className={classes.headerTitle}>
             {FAMILY_MEMBERS_HEADERS.map((header) => (
-              <TableCell key={header}> {formatMessage(header)} </TableCell>
+              <TableCell className={classes.cell} key={header}> {formatMessage(header)} </TableCell>
             ))}
           </TableRow>
         </TableHead>
         <TableBody>
           {familyMembers?.length !== 0 ? (
             familyMembers?.map((familyMember) => (
-              <TableRow key={familyMember?.uuid}>
+              <TableRow
+                key={familyMember?.uuid}
+                hover
+                style={{ cursor: "pointer" }}
+                onClick={() =>
+                  historyPush(
+                    modulesManager,
+                    history,
+                    "insuree.route.insuree",
+                    [familyMember?.uuid, insuree?.family?.uuid],
+                    true
+                  )
+                }
+                onDoubleClick={() =>
+                  historyPush(
+                    modulesManager,
+                    history,
+                    "insuree.route.insuree",
+                    [familyMember?.uuid, insuree?.family?.uuid],
+                    true
+                  )
+                }
+              >
+                <TableCell>
+                  <Avatar src={getPhotoUrl(familyMember?.photo)} style={{ width: 70, height: 70 }} />
+                </TableCell>
                 <TableCell> {familyMember?.chfId} </TableCell>
                 <TableCell>
                   {renderLastNameFirst
                     ? `${familyMember?.lastName} ${familyMember?.otherNames}`
                     : `${familyMember?.otherNames} ${familyMember?.lastName}`}
                 </TableCell>
+                <TableCell>
+                  {familyMember?.gender?.code
+                    ? formatMessage(`insuree.InsureeGender.${familyMember.gender.code}`)
+                    : HYPHEN}
+                </TableCell>
+                <TableCell>
+                  {familyMember?.dob
+                    ? formatDateFromISO(modulesManager, null, familyMember.dob)
+                    : HYPHEN}
+                </TableCell>
                 <TableCell> {familyMember?.phone ?? HYPHEN} </TableCell>
               </TableRow>
             ))
           ) : (
             <TableRow>
-              <TableCell> {formatMessage("insuree.FamilyMembersTable.noMembers")} </TableCell>
+              <TableCell className={classes.cell}> {formatMessage("insuree.FamilyMembersTable.noMembers")} </TableCell>
             </TableRow>
           )}
         </TableBody>
@@ -77,5 +132,4 @@ const FamilyMembersTable = () => {
     </TableContainer>
   );
 };
-
-export default FamilyMembersTable;
+export default withHistory(FamilyMembersTable);
