@@ -43,7 +43,6 @@ class InsureeSearcher extends Component {
     confirmedAction: null,
     reset: 0,
     failedExport: false,
-    searchInitiated: false,
     initialFitlers: this.props.defaultFilters,
   };
 
@@ -109,22 +108,6 @@ class InsureeSearcher extends Component {
   };
 
 
-
-  scheduleCanInsureeDetails = () => {
-    if (this.debounceTimeout) {
-      clearTimeout(this.debounceTimeout);
-    }
-
-    this.debounceTimeout = setTimeout(() => {
-      this.canFetchInsureeDetails();
-    }, 100);
-  };
-
-  canFetchInsureeDetails = () => {
-    if (this.state.searchInitiated === false && !!this.state.initialFitlers) {
-      this.onFiltersApplied(this.state.initialFitlers);
-    }
-  };
 
   scheduleCanInsureeDetails = () => {
     if (this.debounceTimeout) {
@@ -337,12 +320,7 @@ class InsureeSearcher extends Component {
 
   rowDisabled = (selection, i) => !!i.validityTo;
   rowLocked = (selection, i) => !!i.clientMutationId;
-  onFiltersApplied = (filters) => {
-        this.setState({
-          searchInitiated: true,
-          filters, // Update the active filters
-        });
-      };
+  
   render() {
     const {
       intl,
