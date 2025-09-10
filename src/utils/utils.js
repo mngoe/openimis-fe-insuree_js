@@ -25,7 +25,6 @@ export const isValidInsuree = (insuree, modulesManager) => {
   const isInsureeStatusRequired = modulesManager.getConf("fe-insuree", "insureeForm.isInsureeStatusRequired", false);
   const passportMinLength = modulesManager.getConf("fe-insuree", "passportMinLength", PASSPORT_MIN_LENGTH);
   const passportMaxLength = modulesManager.getConf("fe-insuree", "passportMaxLength", PASSPORT_MAX_LENGTH);
-
   const insureeChildId = modulesManager.getConf("fe-insuree", "insureeForm.insureeChildId", 4);
   if (isInsureeFirstServicePointRequired && !insuree.healthFacility) return false;
   if (insuree.validityTo) return false;
@@ -42,7 +41,9 @@ export const isValidInsuree = (insuree, modulesManager) => {
     }
   }
   if (
-    (!!insuree.passport && (insuree.passport.length < passportMinLength || insuree.passport.length > passportMaxLength))
+    !!insuree.passport &&
+    insuree.passport.length !== passportMinLength &&
+    insuree.passport.length !== passportMaxLength
   )
     return false;
   if (!!insuree.preferredPaymentMethod && insuree.preferredPaymentMethod == INSUREE_PREFERRED_PAYMENT_METHOD && !insuree.bankCoordinates)
@@ -53,7 +54,7 @@ export const isValidInsuree = (insuree, modulesManager) => {
   if (isInsureePhotoRequired && !insuree.photo) return false;
   if (
     !!insuree.relationship &&
-    insuree.relationship.id == insureeChildId &&
+    insuree.relationship.id == insureeChildId  &&
     (!insuree.education || (!!insuree.education && insuree.education.id == null))
   )
     return false;
@@ -62,6 +63,13 @@ export const isValidInsuree = (insuree, modulesManager) => {
   } 
   if (!!insuree.status && insuree.status !== INSUREE_ACTIVE_STRING && (!insuree.statusDate || !insuree.statusReason))
     return false;
+    
+  // Validation des nouveaux champs obligatoires
+  if (!insuree.residenceEnvironment || !insuree.residenceEnvironment.code) return false;
+  if (!insuree.housingType || !insuree.housingType.code) return false;
+  if (!insuree.mutualInsuranceCoverage || !insuree.mutualInsuranceCoverage.code) return false;
+  if (!insuree.noDisability || !insuree.noDisability.code) return false;
+  if (!insuree.nonDisablingDisease || !insuree.nonDisablingDisease.code) return false;
 
   return true;
 };

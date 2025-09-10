@@ -157,13 +157,11 @@ class FamilySearcher extends Component {
     if (parentFamily !== i) {
       this.setState({
         parentFamily: i,
-        parentFamilySet: true,
       });
       this.props.OnFamilySelect(i);
     } else {
       this.setState({
         parentFamily: null,
-        parentFamilySet: false,
       });
     }
   };
@@ -290,13 +288,14 @@ class FamilySearcher extends Component {
             headers={this.headers}
             itemFormatters={this.itemFormatters}
             sorts={this.sorts}
-            rowDisabled={shouldBeLocked == true ? shouldBeLocked :this.rowDisabled}
+            rowDisabled={shouldBeLocked == true ?  () => true :this.rowDisabled}
             rowLocked={shouldBeLocked == true ? () => true: this.rowLocked}
             onDoubleClick={(f) => !f.clientMutationId  && !selectParent && onDoubleClick(f)}
             reset={this.state.reset}
             actions={actions}
             actionsContributionKey={actionsContributionKey}
             withSelection={canSelectMutiple == false  ? null : "multiple"}
+            isModal={this.props.isModal}
           />
         </Fragment>
     );
