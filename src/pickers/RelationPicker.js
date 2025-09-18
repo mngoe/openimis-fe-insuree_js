@@ -44,9 +44,11 @@ class RelationPicker extends Component {
       withNull = false,
       nullLabel = null,
     } = this.props;
+
     const filteredRelations = Array.isArray(relations)
       ? relations.filter(item => item !== 1)
       : [];
+
     return (
       <AutoSuggestion
         module="insuree"

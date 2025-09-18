@@ -146,6 +146,7 @@ class FamilyForm extends Component {
   };
 
   canSave = () => {
+    console.log(this.state.family);
     if (!this.state.family.location) return false;
     if (!this.state.family.familyType ) return false;
     if (!!this.state.family.familyType && !!this.state.family.familyType.code == '' || this.state.family.familyType.code == null) return false
