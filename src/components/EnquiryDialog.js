@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { injectIntl } from "react-intl";
 
-import { Dialog, Button, DialogActions, DialogContent } from "@material-ui/core";
+import { Dialog, DialogContent, Button, DialogActions } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 
 import {
@@ -14,9 +14,15 @@ import {
   ProgressOrError,
   withModulesManager,
   withHistory,
+  historyPush,
+  TableContainer,
+  CircularProgress,
 } from "@openimis/fe-core";
+import { FAMILY_TYPE_POLYGAMY_CODE } from "../constants";
 import { fetchInsuree } from "../actions";
 import InsureeSummary from "./InsureeSummary";
+import SubFamiliesTable from "./SubFamiliesTable";
+import FamilyMembersTable from "./FamilyMembersTable";
 
 const useStyles = makeStyles(() => ({
   summary: {
@@ -24,12 +30,27 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
+const shouldShowSubFamilies = (insuree) => {
+  if (!insuree) return false;
+  const familyTypeCode = insuree?.family?.familyType?.code;
+  const isPolygamyFamilyType = !!familyTypeCode && familyTypeCode === FAMILY_TYPE_POLYGAMY_CODE;
+
+  // If insuree belongs to a sub-family, only show parent's sub-families when
+  // the parent family is polygamous AND the insuree is the head of that parent family (polygamous parent).
+  const parent = insuree?.family?.parent;
+  const isParentPolygamy = parent?.familyType?.code === FAMILY_TYPE_POLYGAMY_CODE;
+  const isInsureeParentHead = !!insuree?.uuid && !!parent?.headInsuree?.uuid && insuree.uuid === parent.headInsuree.uuid;
+
+  return isPolygamyFamilyType || (isParentPolygamy && isInsureeParentHead);
+};
+
 const EnquiryDialog = ({
   intl,
   modulesManager,
   fetchInsuree,
   fetching,
   fetched,
+  clearInsuree,
   insuree,
   error,
   onClose,
@@ -39,7 +60,7 @@ const EnquiryDialog = ({
 }) => {
   const classes = useStyles();
   const prevMatchUrl = useRef(null);
-
+//recuperer les données de l assurer
   useEffect(() => {
     if (open && insuree?.id !== chfid) {
       fetchInsuree(modulesManager, chfid);
@@ -53,7 +74,6 @@ const EnquiryDialog = ({
       prevMatchUrl.current = match.url;
     }
   }, [open, chfid, match?.url]);
-
   return (
     <Dialog maxWidth="xl" fullWidth open={open} onClose={onClose}>
       <DialogContent>
@@ -69,6 +89,17 @@ const EnquiryDialog = ({
         {!fetching && insuree && (
           <Fragment>
             <InsureeSummary modulesManager={modulesManager} insuree={insuree} className={classes.summary} />
+            {(() => {
+              if (shouldShowSubFamilies(insuree)) {
+                const familyUuid = insuree.family?.parent?.uuid || insuree.family?.uuid;
+                const familyId = insuree.family?.parent?.id || insuree.family?.id;
+                if (!familyUuid) {
+                  return null;
+                }
+                return <SubFamiliesTable familyUuid={familyUuid} familyId={familyId} />;
+              }
+              return <FamilyMembersTable />;
+            })()}
             <Contributions
               contributionKey="insuree.EnquiryDialog"
               insuree={insuree}
@@ -91,6 +122,7 @@ const mapStateToProps = (state) => ({
   fetching: state.insuree.fetchingInsuree,
   fetched: state.insuree.fetchedInsuree,
   insuree: state.insuree.insuree,
+  subfamilies: state.insuree.subFamilies,
   error: state.insuree.errorInsuree,
 });
 
