@@ -61,7 +61,6 @@ const FAMILY_FULL_PROJECTION = (mm) => [
   "familyType{code}",
   "address",
   "validityFrom",
-  "incomeLevel{id, firstLanguage, secondLanguage}",
   "validityTo",
   `headInsuree{${FAMILY_HEAD_PROJECTION(mm).join(",")}}`,
   "location" + mm.getProjection("location.Location.FlatProjection"),
@@ -186,7 +185,6 @@ export function fetchFamilySummaries(mm, filters) {
     "familyType{code}",
     "address",
     "parent{id}",
-    "incomeLevel{id, firstLanguage, secondLanguage}",
     "validityFrom",
     "validityTo",
     "headInsuree{id,uuid,chfId,lastName,otherNames,email,phone, dob}",
@@ -224,7 +222,6 @@ export function fetchSubFamilySummary(mm, filters) {
     "familyType{code}",
     "address",
     "parent{id, uuid}",
-    "incomeLevel{id, firstLanguage, secondLanguage}",
     "validityFrom",
     "validityTo",
     "headInsuree{id,uuid,chfId,lastName,otherNames,email,phone, dob}",
@@ -478,7 +475,6 @@ export function formatFamilyGQL(mm, family) {
     ${!!family.contribution ? `contribution: ${formatJsonField(family.contribution)}` : ""}
     ${!!family.parentFamily ? `parentId: ${decodeId(family.parentFamily)}` : ""}
     ${!!family.attachments && family.attachments.length>0 ? formatAttachments(family.attachments): ""}
-    ${!!family.incomeLevel ? `incomeLevelId: ${decodeId(family.incomeLevel.id)}` : ""}
   `;
 }
 

@@ -233,17 +233,6 @@ class FamilyMasterPanel extends FormPanel {
               label={formatMessage(intl, "insuree", "Family.poverty")}
             />
           </Grid>
-          <Grid item xs={3} className={classes.item}>
-            <PublishedComponent
-              pubRef="insuree.InsureIncomeLevelPicker"
-              module="insuree"
-              value={!!edited && !!edited.incomeLevel ? edited.incomeLevel : null}
-              readOnly={readOnly}
-              withNull={false}
-              required={true}
-              onChange={(v) => this.updateAttribute("incomeLevel", v)}
-            />
-          </Grid>
           <Divider />
         </Grid>
         <Contributions
