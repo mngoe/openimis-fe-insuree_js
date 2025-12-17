@@ -109,6 +109,7 @@ const INSUREE_FULL_PROJECTION = (mm) => [
   "statusDate",
   "statusReason{code,insureeStatusReason}",
   "email",
+  "fixIncome",
   "phone",
   "healthFacility" + mm.getProjection("location.HealthFacilityPicker.projection"),
 ];
@@ -136,6 +137,7 @@ export function fetchInsuree(mm, chfid) {
       "validityTo",
       "gender{code}",
       "status",
+      "fixIncome",
       "head", // Ajout explicite du champ head
       `family{${FAMILY_FULL_PROJECTION(mm).join(",")}}`,
       "photo{folder,filename,photo}",
@@ -384,6 +386,7 @@ export function fetchInsureeSummaries(mm, filters, ignoreLocation = false) {
     "preferredPaymentMethod",
     "marital",
     "status",
+    "fixIncome",
     "family{uuid,location" + mm.getProjection("location.Location.FlatProjection") + "}",
     "currentVillage" + mm.getProjection("location.Location.FlatProjection"),
   ];
@@ -443,6 +446,7 @@ export function formatInsureeGQL(mm, insuree) {
     }
     ${!!insuree.jsonExt ? `jsonExt: ${formatJsonField(insuree.jsonExt)}` : ""}
     ${!!insuree.preferredPaymentMethod ? `preferredPaymentMethod: "${insuree.preferredPaymentMethod}"` : ""}
+    ${!!insuree.fixIncome ? `fixIncome: "${insuree.fixIncome}"` : ""}
     ${!!insuree.professionalSituation ? `professionalSituation: "${insuree.professionalSituation}"` : ""}
     ${!!insuree.residenceEnvironment ? `residenceEnvironmentId: ${parseInt(insuree.residenceEnvironment.code, 10)}` : ""}
     ${!!insuree.housingType ? `housingTypeId: ${parseInt(insuree.housingType.code, 10)}` : ""}
