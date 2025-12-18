@@ -8,6 +8,7 @@ import {
   PublishedComponent,
   FormPanel,
   TextInput,
+  NumberInput,
   Contributions,
   withModulesManager,
 } from "@openimis/fe-core";
@@ -403,6 +404,20 @@ class InsureeMasterPanel extends FormPanel {
                       onChange={(v) => this.updateAttribute("incomeLevel", v)}
                     />
                   </Grid>
+                  <Grid item xs={3} className={classes.item}>
+                    <NumberInput
+                      module="insuree"
+                      label="Insuree.FixIncome"
+                      error={
+                        !!edited &&
+                        (edited.fixIncome === undefined || edited.fixIncome === "")
+                      }
+                      readOnly={readOnly}
+                      required={false}
+                      value={!!edited && !!edited.fixIncome ? edited.fixIncome : "0"}
+                      onChange={(v) => this.updateAttribute("fixIncome", !!v ? v : null)}
+                    />
+                  </Grid> 
                   {(!!edited && !!edited.family && !!edited.family.headInsuree && edited?.head == true) ||
                     (!!edited && !edited.family) ? (
                     <Grid item xs={3} className={classes.item}>

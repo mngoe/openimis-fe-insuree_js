@@ -61,7 +61,6 @@ const FAMILY_FULL_PROJECTION = (mm) => [
   "familyType{code}",
   "address",
   "validityFrom",
-  "incomeLevel{id, firstLanguage, secondLanguage}",
   "validityTo",
   `headInsuree{${FAMILY_HEAD_PROJECTION(mm).join(",")}}`,
   "location" + mm.getProjection("location.Location.FlatProjection"),
@@ -110,6 +109,7 @@ const INSUREE_FULL_PROJECTION = (mm) => [
   "statusDate",
   "statusReason{code,insureeStatusReason}",
   "email",
+  "fixIncome",
   "phone",
   "healthFacility" + mm.getProjection("location.HealthFacilityPicker.projection"),
 ];
@@ -137,6 +137,7 @@ export function fetchInsuree(mm, chfid) {
       "validityTo",
       "gender{code}",
       "status",
+      "fixIncome",
       "head", // Ajout explicite du champ head
       `family{${FAMILY_FULL_PROJECTION(mm).join(",")}}`,
       "photo{folder,filename,photo}",
@@ -186,7 +187,6 @@ export function fetchFamilySummaries(mm, filters) {
     "familyType{code}",
     "address",
     "parent{id}",
-    "incomeLevel{id, firstLanguage, secondLanguage}",
     "validityFrom",
     "validityTo",
     "headInsuree{id,uuid,chfId,lastName,otherNames,email,phone, dob}",
@@ -224,7 +224,6 @@ export function fetchSubFamilySummary(mm, filters) {
     "familyType{code}",
     "address",
     "parent{id, uuid}",
-    "incomeLevel{id, firstLanguage, secondLanguage}",
     "validityFrom",
     "validityTo",
     "headInsuree{id,uuid,chfId,lastName,otherNames,email,phone, dob}",
@@ -387,6 +386,7 @@ export function fetchInsureeSummaries(mm, filters, ignoreLocation = false) {
     "preferredPaymentMethod",
     "marital",
     "status",
+    "fixIncome",
     "family{uuid,location" + mm.getProjection("location.Location.FlatProjection") + "}",
     "currentVillage" + mm.getProjection("location.Location.FlatProjection"),
   ];
@@ -446,6 +446,7 @@ export function formatInsureeGQL(mm, insuree) {
     }
     ${!!insuree.jsonExt ? `jsonExt: ${formatJsonField(insuree.jsonExt)}` : ""}
     ${!!insuree.preferredPaymentMethod ? `preferredPaymentMethod: "${insuree.preferredPaymentMethod}"` : ""}
+    ${!!insuree.fixIncome ? `fixIncome: "${insuree.fixIncome}"` : ""}
     ${!!insuree.professionalSituation ? `professionalSituation: "${insuree.professionalSituation}"` : ""}
     ${!!insuree.residenceEnvironment ? `residenceEnvironmentId: ${parseInt(insuree.residenceEnvironment.code, 10)}` : ""}
     ${!!insuree.housingType ? `housingTypeId: ${parseInt(insuree.housingType.code, 10)}` : ""}
@@ -478,7 +479,6 @@ export function formatFamilyGQL(mm, family) {
     ${!!family.contribution ? `contribution: ${formatJsonField(family.contribution)}` : ""}
     ${!!family.parentFamily ? `parentId: ${decodeId(family.parentFamily)}` : ""}
     ${!!family.attachments && family.attachments.length>0 ? formatAttachments(family.attachments): ""}
-    ${!!family.incomeLevel ? `incomeLevelId: ${decodeId(family.incomeLevel.id)}` : ""}
   `;
 }
 
