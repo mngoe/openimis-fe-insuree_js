@@ -42,6 +42,7 @@ const FAMILY_HEAD_PROJECTION = (mm) => [
   "phone",
   "healthFacility" + mm.getProjection("location.HealthFacilityPicker.projection"),
   "incomeLevel{id, firstLanguage, secondLanguage}",
+  "fixIncome",
   "preferredPaymentMethod", 
   "bankCoordinates", 
   "coordinates",
