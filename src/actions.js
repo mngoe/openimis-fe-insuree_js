@@ -110,7 +110,8 @@ export const INSUREE_PICKER_PROJECTION = [
   "lastName", 
   "otherNames", 
   "dob", 
-  "insureePolicies{edges{node{policy{id status policyNumber effectiveDate expiryDate product{id name program{id nameProgram}}}}}}"
+  "insureePolicies{edges{node{policy{id status policyNumber effectiveDate expiryDate product{id name program{id nameProgram}}}}}}",
+  "family { id }"
 ];
 
 export function fetchInsureeGenders() {
