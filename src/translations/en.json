@@ -85,6 +85,10 @@
   "insuree.familySummaries.deleteFamily.tooltip": "Delete family",
   "insuree.familySummaries.includeHeadOfFamily": "Include Head of Family",
   "insuree.familySummaries.RemoveSubFamily": "Remove Subfamily",
+  "insuree.familySummaries.photo": "Photo",
+  "insuree.FamilyMembersTable.photo": "Photo",
+  "insuree.FamilyMembersTable.title": "Family Members",
+  "insuree.SubFamilies.title": "Subfamilies",
   "insuree.Family.headInsuree.lastName": "Head Last Name",
   "insuree.Family.headInsuree.otherNames": "Head Given Name",
   "insuree.Family.headInsuree.chfId": "Head Ins. No.",
@@ -335,6 +339,7 @@
   "insuree.insureeAttachment.fileName": "File",
   "insureeAttachment.action": "Action",
   "insuree.attachments.title": "{filename}",
+<<<<<<< HEAD
   "insuree.ResidenceEnvironment.1": "Urban",
   "insuree.ResidenceEnvironment.2": "Rural",
   "insuree.MutualInsuranceCoverage.1": "Without health insurance coverage",
@@ -363,4 +368,17 @@
   "insuree.HousingType.20": "Straw, dirt floor, sheet metal roof",
   "insuree.HousingType.21": "Straw, dirt floor, straw roof",
   "disabledReportNoRegion": "No region selected"
+=======
+  "insuree.FamilyMembersTable.gender": "Gender",
+  "insuree.FamilyMembersTable.birthDate": "Birth Date",
+  "insuree.FamilyMembersTable.beneficiaryCard": "Beneficiary Card",
+  "insuree.FamilyMembersTable.photoDate": "Photo Date",
+  "insuree.FamilyMembersTable.photoOfficer": "Officer (Photo)",
+  "insuree.FamilyMembersTable.photoFilename": "File Name",
+  "insuree.FamilyMembersTable.email": "Email",
+  "insuree.FamilyMembersTable.passport": "Identification No.",
+  "insuree.FamilyMembersTable.currentVillage.sameAsFamily": "Same Village as Family",
+  "insuree.FamilyMembersTable.currentAddress": "Address",
+  "insuree.FamilyMembersTable.currentAddress.sameAsFamily": "Same Address as Family"
+>>>>>>> ffe316aa5e0f8cb3e8946e666297eeaff8b1b78d
 }
