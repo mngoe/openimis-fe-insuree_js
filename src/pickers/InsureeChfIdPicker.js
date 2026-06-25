@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { injectIntl } from "react-intl";
 import { bindActionCreators } from "redux";
 import { Grid } from "@material-ui/core";
-import { withModulesManager, TextInput, ProgressOrError, formatMessage } from "@openimis/fe-core";
+import { withModulesManager, TextInput, ProgressOrError, formatMessage, formatMessageWithValues } from "@openimis/fe-core";
 
 import { fetchInsuree } from "../actions";
 import _debounce from "lodash/debounce";
@@ -19,7 +19,8 @@ class InsureeChfIdPicker extends Component {
 
   constructor(props) {
     super(props);
-    this.chfIdMaxLength = props.modulesManager.getConf("fe-insuree", "insureeForm.chfIdMaxLength", 12);
+    this.chfIdMinLength = props.modulesManager.getConf("fe-insuree", "insureeForm.chfIdMinLength", 12);
+    this.chfIdMaxLength = props.modulesManager.getConf("fe-insuree", "insureeForm.chfIdMaxLength", 20);
     this.renderLastNameFirst = props.modulesManager.getConf(
       "fe-insuree",
       "renderLastNameFirst",
@@ -79,10 +80,10 @@ class InsureeChfIdPicker extends Component {
   }
 
   render() {
-    const { readOnly = false, required = false } = this.props;
+    const { readOnly = false, required = false, intl } = this.props;
     return (
-      <Grid container>
-        <Grid item xs={4}>
+      <Grid container spacing={2}>
+        <Grid item xs={6}>
           <TextInput
             readOnly={readOnly}
             autoFocus={true}
@@ -93,33 +94,28 @@ class InsureeChfIdPicker extends Component {
             //inputProps={{
             //"maxLength": this.chfIdMaxLength,
             //}}
+            error={
+              !!this.state.search && 
+              this.state.search.length < this.chfIdMinLength ?
+              formatMessageWithValues(intl, "insuree", "chfIdMinLengthRequired", {minLength: this.chfIdMinLength}): 
+              this.state.search.length > this.chfIdMaxLength ? 
+              formatMessageWithValues(intl, "insuree", "chfIdMaxLengthRequired", {maxLength: this.chfIdMaxLength}) :
+              null
+            }
             required={required}
           />
         </Grid>
-        {
-          !!this.state.selected ? this.state.selected[`email`] !== "newhivuser_XM7dw70J0M3N@gmail.com" ?
-            <Grid item xs={8}>
-              <ProgressOrError progress={this.props.fetching} error={this.props.error} />
-              {!this.props.fetching && (
-                <TextInput
-                  readOnly={true}
-                  module="insuree"
-                  label="Insuree.names"
-                  value={this.formatInsuree(this.state.selected)}
-                />
-              )}
-            </Grid> :
-            null :
-            <Grid item xs={8}>
+        <Grid item xs={6} hidden={!!this.state.selected && this.state.selected[`email`] === "newhivuser_XM7dw70J0M3N@gmail.com"}>
+            <ProgressOrError progress={this.props.fetching} error={this.props.error} />
+            {!this.props.fetching && (
               <TextInput
                 readOnly={true}
                 module="insuree"
                 label="Insuree.names"
                 value={this.formatInsuree(this.state.selected)}
               />
-            </Grid>
-        }
-
+            )}
+          </Grid>
       </Grid>
     );
   }
