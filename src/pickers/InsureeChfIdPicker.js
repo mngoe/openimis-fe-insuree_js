@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { injectIntl } from "react-intl";
 import { bindActionCreators } from "redux";
 import { Grid } from "@material-ui/core";
-import { withModulesManager, TextInput, ProgressOrError, formatMessage, formatMessageWithValues } from "@openimis/fe-core";
+import { withModulesManager, TextInput, ProgressOrError, formatMessage } from "@openimis/fe-core";
 
 import { fetchInsuree } from "../actions";
 import _debounce from "lodash/debounce";
@@ -20,7 +20,6 @@ class InsureeChfIdPicker extends Component {
   constructor(props) {
     super(props);
     this.chfIdMinLength = props.modulesManager.getConf("fe-insuree", "insureeForm.chfIdMinLength", 12);
-    this.chfIdMaxLength = props.modulesManager.getConf("fe-insuree", "insureeForm.chfIdMaxLength", 20);
     this.renderLastNameFirst = props.modulesManager.getConf(
       "fe-insuree",
       "renderLastNameFirst",
@@ -94,14 +93,6 @@ class InsureeChfIdPicker extends Component {
             //inputProps={{
             //"maxLength": this.chfIdMaxLength,
             //}}
-            error={
-              !!this.state.search && 
-              this.state.search.length < this.chfIdMinLength ?
-              formatMessageWithValues(intl, "insuree", "chfIdMinLengthRequired", {minLength: this.chfIdMinLength}): 
-              this.state.search.length > this.chfIdMaxLength ? 
-              formatMessageWithValues(intl, "insuree", "chfIdMaxLengthRequired", {maxLength: this.chfIdMaxLength}) :
-              null
-            }
             required={required}
           />
         </Grid>
