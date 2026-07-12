@@ -61,6 +61,17 @@ class InsureeFilter extends Component {
     this.props.onChangeFilters(filters);
   };
 
+  _onChangeStatus = (statusValue) => {
+    this.setState({ status: statusValue });
+    this.props.onChangeFilters([
+      {
+        id: "status",
+        value: statusValue,
+        filter: statusValue ? `affiliationType: "${statusValue}"` : null,
+      },
+    ]);
+  };
+
   renderLastNameField = () => {
     const { classes } = this.props;
     return (
@@ -121,6 +132,8 @@ class InsureeFilter extends Component {
 
   render() {
     const { intl, classes, filters, onChangeFilters } = this.props;
+    const { status } = this.state;
+
     return (
       <Grid container className={classes.form}>
           {!this.isWorker && (<ControlledField
@@ -286,6 +299,22 @@ class InsureeFilter extends Component {
                 </Grid>
               }
           />)}
+
+          <ControlledField
+            module="insuree"
+            id="InsureeFilter.status"
+            field={
+              <Grid item xs={3} className={classes.item}>
+                <PublishedComponent
+                  pubRef="insuree.InsureeStatusPicker"
+                  withNull={true}
+                  value={status}
+                  onChange={this._onChangeStatus}
+                />
+              </Grid>
+            }
+          />
+
           {!this.isWorker && (<ControlledField
               module="insuree"
               id="InsureeFilter.dob"

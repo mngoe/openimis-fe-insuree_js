@@ -308,7 +308,6 @@
   "insuree.InsureeReasonPicker.placeholder": "Search reason…",
   "insuree.FamilyMembersTable.InsuranceNo": "Insurance No.",
   "insuree.FamilyMembersTable.memberName": "Family Member",
-  "insuree.FamilyMembersTable.photo": "Photo",
   "insuree.FamilyMembersTable.gender": "Gender",
   "insuree.FamilyMembersTable.dob": "Birth Date",
   "insuree.FamilyMembersTable.phone": "Phone",
@@ -362,5 +361,11 @@
   "insuree.HousingType.19": "Straw, cement floor, straw roof",
   "insuree.HousingType.20": "Straw, dirt floor, sheet metal roof",
   "insuree.HousingType.21": "Straw, dirt floor, straw roof",
-  "disabledReportNoRegion": "No region selected"
+  "disabledReportNoRegion": "No region selected",
+  "insuree.status": "Status",
+  "insuree.status.null": "All Statuses",
+  "insuree.status.preaffiliated": "Pre-affiliated",
+  "insuree.status.affiliated": "Affiliated",
+  "insuree.status.insured": "Insured",
+  "insuree.status.suspended": "Suspended Insured"
 }
