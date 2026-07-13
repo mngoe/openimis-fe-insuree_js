@@ -362,10 +362,10 @@
   "insuree.HousingType.20": "Straw, dirt floor, sheet metal roof",
   "insuree.HousingType.21": "Straw, dirt floor, straw roof",
   "disabledReportNoRegion": "No region selected",
-  "insuree.status": "Status",
-  "insuree.status.null": "All Statuses",
-  "insuree.status.preaffiliated": "Pre-affiliated",
-  "insuree.status.affiliated": "Affiliated",
-  "insuree.status.insured": "Insured",
-  "insuree.status.suspended": "Suspended Insured"
+  "insuree.affiliationStatus": "Affiliation status",
+  "insuree.affiliationStatus.null": "All Statuses",
+  "insuree.affiliationStatus.preaffiliated": "Pre-affiliated",
+  "insuree.affiliationStatus.affiliated": "Affiliated",
+  "insuree.affiliationStatus.insured": "Insured",
+  "insuree.affiliationStatus.suspended": "Suspended Insured"
 }

@@ -30,6 +30,7 @@ const styles = (theme) => ({
 class FamilyFilter extends Component {
   state = {
     additionalFilters: {},
+    status: null,
   };
 
   constructor(props) {
@@ -345,11 +346,11 @@ class FamilyFilter extends Component {
         
         <ControlledField
           module="insuree"
-          id="FamilyFilter.status"
+          id="FamilyFilter.affiliationStatus"
           field={
             <Grid item xs={2} className={classes.item}>
               <PublishedComponent
-                pubRef="insuree.InsureeStatusPicker"
+                pubRef="insuree.InsureeAffiliationStatusPicker"
                 withNull={true}
                 value={status}
                 onChange={this._onChangeStatus}
