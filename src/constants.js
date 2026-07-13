@@ -38,7 +38,8 @@ export const INSUREE_PREFERRED_PAYMENT_METHOD = "PB"
 export const WITHOUT_STR = "without"
 export const PASSPORT_MIN_LENGTH = 7
 export const PASSPORT_MAX_LENGTH = 9
-export const INSUREE_STATUS = [
+
+export const INSUREE_AFFILIATION_STATUSES = [
   'preaffiliated',
   'affiliated',
   'insured',
