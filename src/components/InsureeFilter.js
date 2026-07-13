@@ -30,11 +30,16 @@ const styles = (theme) => ({
 const INSUREE_FILTER_CONTRIBUTION_KEY = "insuree.Filter";
 
 class InsureeFilter extends Component {
-    constructor(props) {
-        super(props);
-        this.isWorker = props.modulesManager.getConf("fe-core", "isWorker", DEFAULT.IS_WORKER);
-        this.renderLastNameFirst = props.modulesManager.getConf("fe-insuree", "renderLastNameFirst", DEFAULT.RENDER_LAST_NAME_FIRST);
-    }
+  constructor(props) {
+      super(props);
+      this.isWorker = props.modulesManager.getConf("fe-core", "isWorker", DEFAULT.IS_WORKER);
+      this.renderLastNameFirst = props.modulesManager.getConf("fe-insuree", "renderLastNameFirst", DEFAULT.RENDER_LAST_NAME_FIRST);
+  }
+
+  state = {
+      status: null,
+  };
+
   debouncedOnChangeFilter = _debounce(
     this.props.onChangeFilters,
     this.props.modulesManager.getConf("fe-insuree", "debounceTime", 200),
@@ -302,11 +307,11 @@ class InsureeFilter extends Component {
 
           <ControlledField
             module="insuree"
-            id="InsureeFilter.status"
+            id="InsureeFilter.affiliationStatus"
             field={
               <Grid item xs={3} className={classes.item}>
                 <PublishedComponent
-                  pubRef="insuree.InsureeStatusPicker"
+                  pubRef="insuree.InsureeAffiliationStatusPicker"
                   withNull={true}
                   value={status}
                   onChange={this._onChangeStatus}
