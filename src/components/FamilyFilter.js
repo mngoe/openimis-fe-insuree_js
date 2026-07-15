@@ -28,10 +28,6 @@ const styles = (theme) => ({
 });
 
 class FamilyFilter extends Component {
-  state = {
-    additionalFilters: {},
-  };
-
   constructor(props) {
     super(props);
     this.filterFamiliesOnMembers = props.modulesManager.getConf("fe-insuree", "filterFamiliesOnMembers", true);
@@ -66,6 +62,16 @@ class FamilyFilter extends Component {
       },
     ];
     this.props.onChangeFilters(filters);
+  };
+
+  _onChangeStatus = (statusValue) => {
+    this.props.onChangeFilters([
+      {
+        id: "status",
+        value: statusValue,
+        filter: statusValue ? `affiliationType: "${statusValue}"` : null,
+      },
+    ]);
   };
 
   renderLastNameField = (anchor, classes) => (
@@ -310,6 +316,7 @@ class FamilyFilter extends Component {
 
   render() {
     const { intl, classes, filters, onChangeFilters, filterPaneContributionsKey } = this.props;
+
     return (
       <Grid container className={classes.form}>
         <ControlledField
@@ -329,6 +336,22 @@ class FamilyFilter extends Component {
         />
         {this.familyHeadFilter()}
         {this.filterFamiliesOnMembers && this.familyMemberFilter()}
+        
+        <ControlledField
+          module="insuree"
+          id="FamilyFilter.affiliationStatus"
+          field={
+            <Grid item xs={2} className={classes.item}>
+              <PublishedComponent
+                pubRef="insuree.InsureeAffiliationStatusPicker"
+                withNull={true}
+                value={this._filterValue("status")}
+                onChange={this._onChangeStatus}
+              />
+            </Grid>
+          }
+        />
+        
         <ControlledField
           module="insuree"
           id="FamilyFilter.poverty"
