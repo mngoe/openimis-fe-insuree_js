@@ -36,10 +36,6 @@ class InsureeFilter extends Component {
       this.renderLastNameFirst = props.modulesManager.getConf("fe-insuree", "renderLastNameFirst", DEFAULT.RENDER_LAST_NAME_FIRST);
   }
 
-  state = {
-      status: null,
-  };
-
   debouncedOnChangeFilter = _debounce(
     this.props.onChangeFilters,
     this.props.modulesManager.getConf("fe-insuree", "debounceTime", 200),
@@ -67,7 +63,6 @@ class InsureeFilter extends Component {
   };
 
   _onChangeStatus = (statusValue) => {
-    this.setState({ status: statusValue });
     this.props.onChangeFilters([
       {
         id: "status",
@@ -137,7 +132,6 @@ class InsureeFilter extends Component {
 
   render() {
     const { intl, classes, filters, onChangeFilters } = this.props;
-    const { status } = this.state;
 
     return (
       <Grid container className={classes.form}>
@@ -313,7 +307,7 @@ class InsureeFilter extends Component {
                 <PublishedComponent
                   pubRef="insuree.InsureeAffiliationStatusPicker"
                   withNull={true}
-                  value={status}
+                  value={this._filterValue("status")}
                   onChange={this._onChangeStatus}
                 />
               </Grid>
