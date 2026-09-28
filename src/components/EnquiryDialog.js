@@ -107,7 +107,7 @@ const EnquiryDialog = ({
               hideAddPolicyButton
             />
             <Contributions 
-              contributionKey="insuree.FamilyOverview.panels" 
+              contributionKey="insuree.EnquiryDialog.familyInvoicePaymentsOverview" 
               insuree={insuree}
             />
             <Contributions 
