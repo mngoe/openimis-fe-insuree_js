@@ -106,6 +106,14 @@ const EnquiryDialog = ({
               disableSelection
               hideAddPolicyButton
             />
+            <Contributions 
+              contributionKey="insuree.EnquiryDialog.familyInvoicePaymentsOverview" 
+              insuree={insuree}
+            />
+            <Contributions 
+              contributionKey="insuree.ProfilePage.insureeClaims" 
+              insuree={insuree} 
+            />
           </Fragment>
         )}
       </DialogContent>
