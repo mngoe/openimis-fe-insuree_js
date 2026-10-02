@@ -107,8 +107,6 @@ class InsureeSearcher extends Component {
     }
   };
 
-
-
   scheduleCanInsureeDetails = () => {
     if (this.debounceTimeout) {
       clearTimeout(this.debounceTimeout);
@@ -226,7 +224,7 @@ class InsureeSearcher extends Component {
           pubRef="insuree.InsureeMaritalStatusPicker"
           withLabel={false}
           readOnly={true}
-          value={insuree.marital}
+          value={insuree.marital || INSUREE_MARITAL_STATUS[0]}
         />
       ),
       (insuree) => (
