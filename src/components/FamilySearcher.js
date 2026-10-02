@@ -16,7 +16,7 @@ import {
 import { fetchFamilySummaries, deleteFamily } from "../actions";
 import { Delete as DeleteIcon } from "@material-ui/icons";
 import FamilyFilter from "./FamilyFilter";
-import { RIGHT_FAMILY_DELETE } from "../constants";
+import { DEFAULT, RIGHT_FAMILY_DELETE } from "../constants";
 import { familyLabel } from "../utils/utils";
 import DeleteFamilyDialog from "./DeleteFamilyDialog";
 
@@ -24,8 +24,10 @@ const FAMILY_SEARCHER_CONTRIBUTION_KEY = "insuree.FamilySearcher";
 
 class FamilySearcher extends Component {
   state = {
+    searchInitiated: false,
     deleteFamily: null,
     reset: 0,
+    initialFitlers: this.props.defaultFilters,
   };
 
   constructor(props) {
@@ -37,6 +39,20 @@ class FamilySearcher extends Component {
     );
     this.defaultPageSize = props.modulesManager.getConf("fe-insuree", "familyFilter.defaultPageSize", 10);
     this.locationLevels = this.props.modulesManager.getConf("fe-location", "location.Location.MaxLevels", 4);
+    this.renderLastNameFirst = props.modulesManager.getConf(
+      "fe-insuree",
+      "renderLastNameFirst",
+      DEFAULT.RENDER_LAST_NAME_FIRST,
+    );
+    this.isDefaultFetchFamilyActivated = this.props.modulesManager.getConf(
+      "fe-insuree",
+      "isDefaultFetchFamilyActivated",
+      true
+    );
+  }
+
+  componentDidMount() {
+    this.scheduleCanFetchFamilyDetails();
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -44,10 +60,34 @@ class FamilySearcher extends Component {
       this.props.journalize(this.props.mutation);
       this.setState({ reset: this.state.reset + 1 });
     }
+    if (
+      prevState.searchInitiated !== this.state.searchInitiated ||
+      prevState.initialFitlers !== this.state.initialFitlers
+    ) {
+      this.scheduleCanFetchFamilyDetails();
+    }
   }
 
   fetch = (prms) => {
     this.props.fetchFamilySummaries(this.props.modulesManager, prms);
+  };
+
+  canFetchFamilyDetails = () => {
+    if (this.state.searchInitiated === false && !!this.state.initialFitlers) {
+      this.onFiltersApplied(this.state.initialFitlers);
+    }
+  };
+
+
+
+  scheduleCanFetchFamilyDetails = () => {
+    if (this.debounceTimeout) {
+      clearTimeout(this.debounceTimeout);
+    }
+
+    this.debounceTimeout = setTimeout(() => {
+      this.canFetchFamilyDetails();
+    }, 100);
   };
 
   rowIdentifier = (r) => r.uuid;
@@ -86,9 +126,8 @@ class FamilySearcher extends Component {
     }
     h.push(
       "insuree.familySummaries.confirmationNo",
-      "insuree.familySummaries.validityFrom",
-      "insuree.familySummaries.validityTo",
-      "insuree.familySummaries.poverty",
+      filters?.showHistory?.value ? "insuree.familySummaries.validityFrom" : null,
+      filters?.showHistory?.value ? "insuree.familySummaries.validityTo" : null,
       "insuree.familySummaries.openNewTab",
     );
     if (!!this.props.rights.includes(RIGHT_FAMILY_DELETE)) {
@@ -161,9 +200,12 @@ class FamilySearcher extends Component {
     }
     formatters.push(
       (family) => family.confirmationNo,
-      (family) => formatDateFromISO(this.props.modulesManager, this.props.intl, family.validityFrom),
-      (family) => formatDateFromISO(this.props.modulesManager, this.props.intl, family.validityTo),
-      (family) => <Checkbox color="primary" checked={family.poverty} readOnly />,
+      filters?.showHistory?.value
+        ? (family) => formatDateFromISO(this.props.modulesManager, this.props.intl, family.validityFrom)
+        : null,
+      filters?.showHistory?.value
+        ? (family) => formatDateFromISO(this.props.modulesManager, this.props.intl, family.validityTo)
+        : null,
       (family) => (
         <Tooltip title={formatMessage(this.props.intl, "insuree", "familySummaries.openNewTabButton.tooltip")}>
           <IconButton onClick={(e) => !family.clientMutationId && this.props.onDoubleClick(family, true)}>
@@ -179,9 +221,20 @@ class FamilySearcher extends Component {
     return formatters;
   };
 
+  onFiltersApplied = (filters) => {
+    this.setState({
+      searchInitiated: true,
+      filters, // Update the active filters
+    });
+  };
   rowDisabled = (selection, i) => !!i.validityTo;
   rowLocked = (selection, i) => !!i.clientMutationId;
-
+  onFiltersApplied = (filters) => {
+    this.setState({
+      searchInitiated: true,
+      filters, // Update the active filters
+    });
+  };
   render() {
     const {
       intl,
@@ -196,6 +249,7 @@ class FamilySearcher extends Component {
       actionsContributionKey,
     } = this.props;
     let count = familiesPageInfo.totalCount;
+    const { searchInitiated } = this.state;
     return (
       <Fragment>
         <DeleteFamilyDialog
@@ -217,7 +271,7 @@ class FamilySearcher extends Component {
           tableTitle={formatMessageWithValues(intl, "insuree", "familySummaries", { count })}
           rowsPerPageOptions={this.rowsPerPageOptions}
           defaultPageSize={this.defaultPageSize}
-          fetch={this.fetch}
+          fetch={this.isDefaultFetchFamilyActivated == false  && searchInitiated ? this.fetch : this.isDefaultFetchFamilyActivated == true ? this.fetch : () => {}}
           rowIdentifier={this.rowIdentifier}
           filtersToQueryParams={this.filtersToQueryParams}
           defaultOrderBy="-id"
@@ -231,6 +285,7 @@ class FamilySearcher extends Component {
           actions={[]}
           actionsContributionKey={actionsContributionKey}
           canFetch = {false}
+          onChangeFilters={this.onFiltersApplied}
         />
       </Fragment>
     );
