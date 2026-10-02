@@ -320,5 +320,7 @@
     "insuree.FamilyMembersTable.memberName": "",
     "insuree.FamilyMembersTable.phone": "",
     "insuree.workersMainMenu": "",
-    "insuree.menu.workers": ""
+    "insuree.menu.workers": "",
+    "insuree.chfIdMaxLengthRequired": "Maximum requis: {maxLength} caractères",
+    "insuree.chfIdMinLengthRequired": "Minimum requis: {minLength} caractères"
 }

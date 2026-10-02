@@ -23,6 +23,7 @@ const styles = (theme) => ({
   },
 });
 import { DEFAULT, INSUREE_ACTIVE_STRING } from "../constants";
+import { isChfIdOnlyNumbers } from "../utils/utils";
 
 const INSUREE_INSUREE_CONTRIBUTION_KEY = "insuree.Insuree";
 const INSUREE_INSUREE_PANELS_CONTRIBUTION_KEY = "insuree.Insuree.panels";
@@ -151,6 +152,7 @@ class InsureeMasterPanel extends FormPanel {
                   label="Insuree.chfId"
                   required={true}
                   readOnly={readOnly}
+                  error={!!edited &&!!edited.chfId && isChfIdOnlyNumbers(edited.chfId) ? true : false}
                   value={edited?.chfId}
                   error={!!edited &&!!edited.chfId && isChfIdOnlyNumbers(edited.chfId) ? true : false}
                   editedId={editedId}

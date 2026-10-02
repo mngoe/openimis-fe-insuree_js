@@ -19,7 +19,7 @@ class InsureeChfIdPicker extends Component {
 
   constructor(props) {
     super(props);
-    this.chfIdMaxLength = props.modulesManager.getConf("fe-insuree", "insureeForm.chfIdMaxLength", 12);
+    this.chfIdMinLength = props.modulesManager.getConf("fe-insuree", "insureeForm.chfIdMinLength", 12);
     this.renderLastNameFirst = props.modulesManager.getConf(
       "fe-insuree",
       "renderLastNameFirst",
@@ -79,10 +79,10 @@ class InsureeChfIdPicker extends Component {
   }
 
   render() {
-    const { readOnly = false, required = false } = this.props;
+    const { readOnly = false, required = false, intl } = this.props;
     return (
-      <Grid container>
-        <Grid item xs={4}>
+      <Grid container spacing={2}>
+        <Grid item xs={6}>
           <TextInput
             readOnly={readOnly}
             autoFocus={true}
@@ -96,30 +96,17 @@ class InsureeChfIdPicker extends Component {
             required={required}
           />
         </Grid>
-        {
-          !!this.state.selected ? this.state.selected[`email`] !== "newhivuser_XM7dw70J0M3N@gmail.com" ?
-            <Grid item xs={8}>
-              <ProgressOrError progress={this.props.fetching} error={this.props.error} />
-              {!this.props.fetching && (
-                <TextInput
-                  readOnly={true}
-                  module="insuree"
-                  label="Insuree.names"
-                  value={this.formatInsuree(this.state.selected)}
-                />
-              )}
-            </Grid> :
-            null :
-            <Grid item xs={8}>
+        <Grid item xs={6} hidden={!!this.state.selected && this.state.selected[`email`] === "newhivuser_XM7dw70J0M3N@gmail.com"}>
+            <ProgressOrError progress={this.props.fetching} error={this.props.error} />
+            {!this.props.fetching && (
               <TextInput
                 readOnly={true}
                 module="insuree"
                 label="Insuree.names"
                 value={this.formatInsuree(this.state.selected)}
               />
-            </Grid>
-        }
-
+            )}
+          </Grid>
       </Grid>
     );
   }
