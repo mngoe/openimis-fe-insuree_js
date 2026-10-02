@@ -213,6 +213,9 @@ class InsureeForm extends Component {
   };
 
   canSave = () => {
+    // const doesInsureeChange = this.doesInsureeChange();
+    // if (!doesInsureeChange) return false;
+    // if (!this.props.isInsureeNumberValid) return false;
     if (!this.state.insuree.chfId) return false;
     if (!this.state.insuree.dob) return false;
     if (!this.state.insuree.gender || !this.state.insuree.gender?.code) return false;
