@@ -9,8 +9,38 @@ import {
   formatGQLString,
   graphqlWithVariables,
 } from "@openimis/fe-core";
+import { INSUREE_ACTIVE_STRING } from "./constants";
 
-const FAMILY_HEAD_PROJECTION = "headInsuree{id,uuid,chfId,lastName,otherNames,email,phone,dob,gender{code}}";
+//NOTE: Fetching all INSUREE_FULL_PROJECTION fields except family.
+const FAMILY_HEAD_PROJECTION = (mm) => [
+  "id",
+  "uuid",
+  "chfId",
+  "lastName",
+  "otherNames",
+  "dob",
+  "age",
+  "validityFrom",
+  "validityTo",
+  `photo{id,uuid,date,folder,filename,officerId,photo}`,
+  "gender{code, gender}",
+  "education{id}",
+  "profession{id}",
+  "marital",
+  "cardIssued",
+  "currentVillage" + mm.getProjection("location.Location.FlatProjection"),
+  "currentAddress",
+  "typeOfId{code}",
+  "passport",
+  "relationship{id}",
+  "head",
+  "status",
+  "statusDate",
+  "statusReason{code,insureeStatusReason}",
+  "email",
+  "phone",
+  "healthFacility" + mm.getProjection("location.HealthFacilityPicker.projection"),
+];
 
 const USER_SUMMARY_PROJECTION = [
   "id",
@@ -26,13 +56,14 @@ const FAMILY_FULL_PROJECTION = (mm) => [
   "uuid",
   "poverty",
   "confirmationNo",
-  "confirmationType{code}",
+  "confirmationType{code, isConfirmationNumberRequired}",
   "familyType{code}",
   "address",
   "validityFrom",
   "validityTo",
-  FAMILY_HEAD_PROJECTION,
+  `headInsuree{${FAMILY_HEAD_PROJECTION(mm).join(",")}}`,
   "location" + mm.getProjection("location.Location.FlatProjection"),
+  "policies{edges{node{uuid status product{code name program{nameProgram}}}}}",
   "clientMutationId",
 ];
 
@@ -50,7 +81,7 @@ const INSUREE_FULL_PROJECTION = (mm) => [
   "validityTo",
   `family{${FAMILY_FULL_PROJECTION(mm).join(",")}}`,
   `photo{id,uuid,date,folder,filename,officerId,photo}`,
-  "gender{code}",
+  "gender{code, gender}",
   "education{id}",
   "profession{id}",
   "marital",
@@ -61,6 +92,9 @@ const INSUREE_FULL_PROJECTION = (mm) => [
   "passport",
   "relationship{id}",
   "head",
+  "status",
+  "statusDate",
+  "statusReason{code,insureeStatusReason}",
   "email",
   "phone",
   "dead",
@@ -74,8 +108,10 @@ export const INSUREE_PICKER_PROJECTION = [
   "uuid", 
   "chfId", 
   "lastName", 
-  "otherNames",
-  "insureePolicies{edges{node{policy{id status policyNumber product{id name program{id nameProgram}}}}}}"
+  "otherNames", 
+  "dob", 
+  "insureePolicies{edges{node{policy{id status effectiveDate expiryDate policyNumber product{id name program{id nameProgram}}}}}}",
+  "family { id }",
 ];
 
 export function fetchInsureeGenders() {
@@ -86,7 +122,7 @@ export function fetchInsureeGenders() {
 export function fetchInsuree(mm, chfid) {
   let payload = formatPageQuery(
     "insurees",
-    [`chfId:"${chfid != '' ? chfid:"'"}", ignoreLocation:true`],
+    [`chfId:"${chfid}", ignoreLocation:true`],
     [
       "id",
       "uuid",
@@ -99,18 +135,21 @@ export function fetchInsuree(mm, chfid) {
       "validityFrom",
       "validityTo",
       "gender{code}",
-      `family{id}`,
+      "status",
+      `family{${FAMILY_FULL_PROJECTION(mm).join(",")}}`,
       "photo{folder,filename,photo}",
       "gender{code, gender, altLanguage}",
       "healthFacility" + mm.getProjection("location.HealthFacilityPicker.projection"),
-      "insureePolicies{edges{node{policy{id status policyNumber product{id name program{id nameProgram}}}}}}"
+      "insureePolicies{edges{node{policy{id status effectiveDate expiryDate policyNumber product{id name program{id nameProgram}}}}}}"
     ],
   );
   return graphql(payload, "INSUREE_INSUREE");
 }
 
-export function fetchInsureeFull(mm, uuid) {
-  let payload = formatPageQuery("insurees", [`uuid:"${uuid}"`], INSUREE_FULL_PROJECTION(mm), "clientMutationId");
+export function fetchInsureeFull(mm, uuid, ignoreLocation = false) {
+  let args = [`uuid:"${uuid}"`];
+  if (ignoreLocation) args.push("ignoreLocation: true");
+  let payload = formatPageQuery("insurees", args, INSUREE_FULL_PROJECTION(mm), "clientMutationId");
   return graphql(payload, "INSUREE_INSUREE");
 }
 
@@ -158,7 +197,7 @@ export function selectFamilyMember(member) {
 }
 
 export function fetchConfirmationTypes() {
-  const payload = formatQuery("confirmationTypes", null, ["code"]);
+  const payload = formatQuery("confirmationTypes", null, ["code", "isConfirmationNumberRequired"]);
   return graphql(payload, "INSUREE_CONFIRMATION_TYPES");
 }
 
@@ -227,7 +266,8 @@ export function fetchRelations(mm) {
   return graphql(payload, "INSUREE_RELATIONS");
 }
 
-export function fetchInsureeSummaries(mm, filters) {
+export function fetchInsureeSummaries(mm, filters, ignoreLocation = false) {
+  if (ignoreLocation) filters.push("ignoreLocation: true");
   var projections = [
     "id",
     "uuid",
@@ -241,6 +281,7 @@ export function fetchInsureeSummaries(mm, filters) {
     "gender{code}",
     "dob",
     "marital",
+    "status",
     "family{uuid,location" + mm.getProjection("location.Location.FlatProjection") + "}",
     "currentVillage" + mm.getProjection("location.Location.FlatProjection"),
   ];
@@ -289,6 +330,13 @@ export function formatInsureeGQL(mm, insuree) {
     ${!!insuree.typeOfId && !!insuree.typeOfId.code ? `typeOfIdId: "${insuree.typeOfId.code}"` : ""}
     ${!!insuree.family && !!insuree.family.id ? `familyId: ${decodeId(insuree.family.id)}` : ""}
     ${!!insuree.relationship && !!insuree.relationship.id ? `relationshipId: ${insuree.relationship.id}` : ""}
+    ${!!insuree.status ? `status: "${insuree.status}"` : ""}
+    ${!!insuree.statusDate && !!insuree.status != INSUREE_ACTIVE_STRING ? `statusDate: "${insuree.statusDate}"` : ""}
+    ${
+      !!insuree.statusReason && !!insuree.status != INSUREE_ACTIVE_STRING
+        ? `statusReason: "${insuree.statusReason.code}"`
+        : ""
+    }
     ${
       !!insuree.healthFacility && !!insuree.healthFacility.id
         ? `healthFacilityId: ${decodeId(insuree.healthFacility.id)}`
@@ -480,5 +528,21 @@ export function checkIfHeadSelected(insuree) {
 
   return (dispatch) => {
     dispatch({ type: "INSUREE_CHECK_IS_HEAD_SELECTED", payload: { headSelected } });
+  };
+}
+
+export function downloadWorkers(params) {
+  const payload = `
+  {
+    insureesExport${!!params && params.length ? `(${params.join(",")})` : ""}
+  }`;
+  return graphql(payload, "WORKERS_EXPORT");
+}
+
+export function clearWorkersExport() {
+  return (dispatch) => {
+    dispatch({
+      type: "WORKERS_EXPORT_CLEAR",
+    });
   };
 }
