@@ -30,11 +30,12 @@ const styles = (theme) => ({
 const INSUREE_FILTER_CONTRIBUTION_KEY = "insuree.Filter";
 
 class InsureeFilter extends Component {
-    constructor(props) {
-        super(props);
-        this.isWorker = props.modulesManager.getConf("fe-core", "isWorker", DEFAULT.IS_WORKER);
-        this.renderLastNameFirst = props.modulesManager.getConf("fe-insuree", "renderLastNameFirst", DEFAULT.RENDER_LAST_NAME_FIRST);
-    }
+  constructor(props) {
+      super(props);
+      this.isWorker = props.modulesManager.getConf("fe-core", "isWorker", DEFAULT.IS_WORKER);
+      this.renderLastNameFirst = props.modulesManager.getConf("fe-insuree", "renderLastNameFirst", DEFAULT.RENDER_LAST_NAME_FIRST);
+  }
+
   debouncedOnChangeFilter = _debounce(
     this.props.onChangeFilters,
     this.props.modulesManager.getConf("fe-insuree", "debounceTime", 200),
@@ -59,6 +60,16 @@ class InsureeFilter extends Component {
       },
     ];
     this.props.onChangeFilters(filters);
+  };
+
+  _onChangeStatus = (statusValue) => {
+    this.props.onChangeFilters([
+      {
+        id: "status",
+        value: statusValue,
+        filter: statusValue ? `affiliationType: "${statusValue}"` : null,
+      },
+    ]);
   };
 
   renderLastNameField = () => {
@@ -121,6 +132,7 @@ class InsureeFilter extends Component {
 
   render() {
     const { intl, classes, filters, onChangeFilters } = this.props;
+
     return (
       <Grid container className={classes.form}>
           {!this.isWorker && (<ControlledField
@@ -286,6 +298,22 @@ class InsureeFilter extends Component {
                 </Grid>
               }
           />)}
+
+          <ControlledField
+            module="insuree"
+            id="InsureeFilter.affiliationStatus"
+            field={
+              <Grid item xs={3} className={classes.item}>
+                <PublishedComponent
+                  pubRef="insuree.InsureeAffiliationStatusPicker"
+                  withNull={true}
+                  value={this._filterValue("status")}
+                  onChange={this._onChangeStatus}
+                />
+              </Grid>
+            }
+          />
+
           {!this.isWorker && (<ControlledField
               module="insuree"
               id="InsureeFilter.dob"
