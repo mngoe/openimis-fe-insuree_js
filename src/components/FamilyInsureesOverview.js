@@ -298,7 +298,7 @@ class FamilyInsureesOverview extends PagedDataHandler {
     </Tooltip>
   );
 
-  isHead = (f, i) => i.chfId === (!!f.headInsuree && f.headInsuree.chfId);
+  isHead = (f, i) => i?.chfId === f?.headInsuree?.chfId;
 
   formatters = [
     (i) => this.adornedChfId(i),
