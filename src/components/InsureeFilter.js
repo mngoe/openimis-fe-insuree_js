@@ -41,6 +41,7 @@ class InsureeFilter extends Component {
   };
 
   componentDidUpdate(prevProps, prevState, snapshot) {
+    document.addEventListener('keydown', this.props.handleEnter);
     if (
       prevProps.filters["showHistory"] !== this.props.filters["showHistory"] &&
       !!this.props.filters["showHistory"] &&
@@ -54,6 +55,7 @@ class InsureeFilter extends Component {
     this.props.onChangeFilters,
     this.props.modulesManager.getConf("fe-insuree", "debounceTime", 500),
   );
+
 
   _filterValue = (k) => {
     const { filters } = this.props;

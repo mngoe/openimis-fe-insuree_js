@@ -540,6 +540,75 @@ function reducer(
         workersExportPageInfo: {},
         errorWorkersExport: null,
       };
+    case "INSUREE_NUMBER_VALIDATION_FIELDS_REQ":
+      return {
+        ...state,
+        validationFields: {
+          ...state.validationFields,
+          insureeNumber: {
+            isValidating: true,
+            isValid: false,
+            validationErrorMessage: null,
+            validationError: null,
+          },
+        },
+      };
+    case "INSUREE_NUMBER_VALIDATION_FIELDS_RESP":
+      return {
+        ...state,
+        validationFields: {
+          ...state.validationFields,
+          insureeNumber: {
+            isValidating: false,
+            isValid: action.payload?.data.insureeNumberValidity.isValid,
+            validationErrorMessage: action.payload?.data.insureeNumberValidity.errorMessage,
+            validationError: formatGraphQLError(action.payload),
+          },
+        },
+      };
+    case "INSUREE_NUMBER_VALIDATION_FIELDS_ERR":
+      return {
+        ...state,
+        validationFields: {
+          ...state.validationFields,
+          insureeNumber: {
+            isValidating: false,
+            isValid: false,
+            validationError: formatServerError(action.payload),
+          },
+        },
+      };
+    case "INSUREE_NUMBER_VALIDATION_FIELDS_CLEAR":
+      return {
+        ...state,
+        validationFields: {
+          ...state.validationFields,
+          insureeNumber: {
+            isValidating: true,
+            isValid: false,
+            validationErrorMessage: null,
+            validationError: null,
+          },
+        },
+      };
+    case "INSUREE_NUMBER_VALIDATION_FIELDS_SET_VALID":
+      return {
+        ...state,
+        validationFields: {
+          ...state.validationFields,
+          insureeNumber: {
+            isValidating: false,
+            isValid: true,
+            validationErrorMessage: null,
+            validationError: null,
+          },
+        },
+      };
+    case "INSUREE_CHECK_IS_HEAD_SELECTED":
+      return {
+        ...state,
+        headSelected: action.payload?.headSelected,
+      };
     case "INSUREE_MUTATION_REQ":
       return dispatchMutationReq(state, action);
     case "INSUREE_MUTATION_ERR":
