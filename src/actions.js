@@ -119,10 +119,20 @@ export function fetchInsureeGenders() {
   return graphql(payload, "INSUREE_GENDERS");
 }
 
-export function fetchInsuree(mm, chfid) {
+export function fetchInsuree(mm, chfid, options = {}) {
+  // The searcher matches CHFIDs with a case-insensitive prefix lookup
+  // (`chfId_Istartswith`), which tolerates the legacy/imported values that
+  // carry extra whitespace. The enquiry must use the same matching so that
+  // any insuree visible in the searcher can also be enquired. The default
+  // (exact) lookup is kept for callers that need a strict match (e.g. the
+  // CHFID picker in the insuree/claim forms).
+  const normalizedChfId = (chfid || "").trim();
+  const chfIdFilter = options.prefix
+    ? `chfId_Istartswith: "${formatGQLString(normalizedChfId)}"`
+    : `chfId: "${formatGQLString(normalizedChfId)}"`;
   let payload = formatPageQuery(
     "insurees",
-    [`chfId:"${chfid}", ignoreLocation:true`],
+    [`${chfIdFilter}, ignoreLocation:true`],
     [
       "id",
       "uuid",
@@ -143,7 +153,7 @@ export function fetchInsuree(mm, chfid) {
       "insureePolicies{edges{node{policy{id status policyNumber effectiveDate expiryDate product{id name program{id nameProgram}}}}}}"
     ],
   );
-  return graphql(payload, "INSUREE_INSUREE");
+  return graphql(payload, "INSUREE_INSUREE", options.prefix ? { chfid: normalizedChfId } : {});
 }
 
 export function fetchInsureeFull(mm, uuid, ignoreLocation = false) {
