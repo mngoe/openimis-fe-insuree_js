@@ -42,7 +42,9 @@ const EnquiryDialog = ({
 
   useEffect(() => {
     if (open && insuree?.id !== chfid) {
-      fetchInsuree(modulesManager, chfid);
+      // Use the same (prefix) matching as the insuree searcher so that the
+      // enquiry never reports "not found" for an insuree listed in the search.
+      fetchInsuree(modulesManager, chfid, { prefix: true });
     }
 
     if (!!match?.url && match.url !== prevMatchUrl.current) {
