@@ -79,14 +79,26 @@ function reducer(
         insuree: null,
         errorInsuree: null,
       };
-    case "INSUREE_INSUREE_RESP":
+    case "INSUREE_INSUREE_RESP": {
+      const insurees = parseData(action.payload.data.insurees);
+      const searchedChfId = (action.meta?.chfid || "").trim().toLowerCase();
+      // A prefix lookup may return several insurees (e.g. when the stored value
+      // carries trailing whitespace). Prefer the exact CHFID match and only
+      // fall back to a single unambiguous prefix match.
+      const exactMatch = searchedChfId
+        ? insurees.find((i) => (i.chfId || "").trim().toLowerCase() === searchedChfId)
+        : undefined;
+      const insuree = searchedChfId
+        ? exactMatch || (insurees.length === 1 ? insurees[0] : null)
+        : insurees[0];
       return {
         ...state,
         fetchingInsuree: false,
         fetchedInsuree: true,
-        insuree: parseData(action.payload.data.insurees)[0],
+        insuree,
         errorInsuree: formatGraphQLError(action.payload),
       };
+    }
     case "INSUREE_INSUREE_ERR":
       return {
         ...state,

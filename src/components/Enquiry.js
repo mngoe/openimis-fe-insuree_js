@@ -57,8 +57,9 @@ const Enquiry = (props) => {
   const classes = useStyles();
 
   const handleKeyPress = (event) => {
-    if (event.charCode === 13 && event.target.value) {
-      setChfid(event.target.value);
+    const value = (event.target.value || "").trim();
+    if (event.charCode === 13 && value) {
+      setChfid(value);
     }
   };
 
