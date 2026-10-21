@@ -24,7 +24,6 @@ import {
   Clear as RemoveIcon,
   Remove as CloseIcon,
 } from "@material-ui/icons";
-import { withTheme, withStyles } from "@material-ui/core/styles";
 
 import {
   formatMessage,
