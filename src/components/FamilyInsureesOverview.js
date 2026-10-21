@@ -1,4 +1,5 @@
 import React, { Fragment } from "react";
+import { withTheme, withStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { injectIntl } from "react-intl";
@@ -23,7 +24,6 @@ import {
   Clear as RemoveIcon,
   Remove as CloseIcon,
 } from "@material-ui/icons";
-import { withTheme, withStyles } from "@material-ui/core/styles";
 
 import {
   formatMessage,

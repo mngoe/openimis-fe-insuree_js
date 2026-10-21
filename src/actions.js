@@ -110,8 +110,8 @@ export const INSUREE_PICKER_PROJECTION = [
   "lastName", 
   "otherNames", 
   "dob", 
-  "insureePolicies{edges{node{policy{id status policyNumber effectiveDate expiryDate product{id name program{id nameProgram}}}}}}",
-  "family { id }"
+  "insureePolicies{edges{node{policy{id status effectiveDate expiryDate policyNumber product{id name program{id nameProgram}}}}}}",
+  "family { id }",
 ];
 
 export function fetchInsureeGenders() {
@@ -140,7 +140,7 @@ export function fetchInsuree(mm, chfid) {
       "photo{folder,filename,photo}",
       "gender{code, gender, altLanguage}",
       "healthFacility" + mm.getProjection("location.HealthFacilityPicker.projection"),
-      "insureePolicies{edges{node{policy{id status policyNumber effectiveDate expiryDate product{id name program{id nameProgram}}}}}}"
+      "insureePolicies{edges{node{policy{id status effectiveDate expiryDate policyNumber product{id name program{id nameProgram}}}}}}"
     ],
   );
   return graphql(payload, "INSUREE_INSUREE");
@@ -349,7 +349,7 @@ export function formatInsureeGQL(mm, insuree) {
 export function formatFamilyGQL(mm, family) {
   let headInsuree = family.headInsuree;
   headInsuree["head"] = true;
-  return `
+  return `  
     ${family.uuid !== undefined && family.uuid !== null ? `uuid: "${family.uuid}"` : ""}
     headInsuree: {${formatInsureeGQL(mm, headInsuree)}}
     ${!!family.location ? `locationId: ${decodeId(family.location.id)}` : ""}

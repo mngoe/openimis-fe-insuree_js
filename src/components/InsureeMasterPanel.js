@@ -12,7 +12,6 @@ import {
   withModulesManager,
 } from "@openimis/fe-core";
 import { RIGHT_VIH } from "../constants";
-
 const styles = (theme) => ({
   paper: theme.paper.paper,
   tableTitle: theme.table.title,
@@ -153,6 +152,7 @@ class InsureeMasterPanel extends FormPanel {
                   readOnly={readOnly}
                   error={!!edited &&!!edited.chfId && isChfIdOnlyNumbers(edited.chfId) ? true : false}
                   value={edited?.chfId}
+                  error={!!edited &&!!edited.chfId && isChfIdOnlyNumbers(edited.chfId) ? true : false}
                   editedId={editedId}
                   onChange={(v) => this.updateAttribute("chfId", v)}
                 />
