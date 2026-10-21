@@ -12,8 +12,6 @@ import {
   withModulesManager,
 } from "@openimis/fe-core";
 import { RIGHT_VIH } from "../constants";
-import { isChfIdOnlyNumbers } from "../utils/utils";
-
 const styles = (theme) => ({
   paper: theme.paper.paper,
   tableTitle: theme.table.title,
