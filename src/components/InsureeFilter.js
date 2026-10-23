@@ -176,11 +176,18 @@ class InsureeFilter extends Component {
   }
 
   _clearFilter = (id) => {
+    if (id === "dobRange") {
+      this.props.onChangeFilters([
+        { id: "dobFrom", value: null, filter: null },
+        { id: "dobTo", value: null, filter: null },
+      ]);
+      return;
+    }
     this.props.onChangeFilters([{ id, value: null, filter: null }]);
   };
 
   _clearAll = () => {
-    const ids = ["chfId", "lastName", "givenName", "phone", "status"];
+    const ids = ["chfId", "lastName", "givenName", "phone", "status", "gender", "maritalStatus", "dobFrom", "dobTo", "photoStatus", "showHistory"];
     this.props.onChangeFilters(ids.map((id) => ({ id, value: null, filter: null })));
   };
 
@@ -202,6 +209,23 @@ class InsureeFilter extends Component {
     const status = this._filterValue("status");
     if (status) {
       add("status", "insuree.affiliationStatus", status, formatMessage(intl, "insuree", `affiliationStatus.${status}`));
+    }
+    const gender = this._filterValue("gender");
+    if (gender) {
+      add("gender", "insuree.gender", gender, formatMessage(intl, "insuree", `gender.${gender}`));
+    }
+    const maritalStatus = this._filterValue("maritalStatus");
+    if (maritalStatus) {
+      add("maritalStatus", "insuree.InsureeMaritalStatus", maritalStatus, formatMessage(intl, "insuree", `InsureeMaritalStatus.${maritalStatus}`));
+    }
+    const dobFrom = this._filterValue("dobFrom");
+    const dobTo = this._filterValue("dobTo");
+    if (dobFrom || dobTo) {
+      add("dobRange", "Insuree.dob", `${dobFrom || "…"} → ${dobTo || "…"}`);
+    }
+    const photoStatus = this._filterValue("photoStatus");
+    if (photoStatus) {
+      add("photoStatus", "insuree.PhotoStatus", photoStatus, formatMessage(intl, "insuree", `PhotoStatus.${photoStatus}`));
     }
     return (
       <Fragment>
@@ -327,6 +351,9 @@ class InsureeFilter extends Component {
             {formatMessage(intl, "core", "advancedFilters")}
           </Button>
         </Grid>
+        <Grid item xs={12}>
+          <div className={classes.chips}>{this._renderChips()}</div>
+        </Grid>
         {this.state.advancedOpen && (
           <Fragment>
             {!this.isWorker && (
@@ -406,7 +433,7 @@ class InsureeFilter extends Component {
                 module="insuree"
                 id="InsureeFilter.dob"
                 field={
-                  <Grid item xs={12}>
+                  <Grid item xs={6}>
                     <Grid container>
                       <Grid item xs={6} className={classes.item}>
                         <PublishedComponent
@@ -454,7 +481,7 @@ class InsureeFilter extends Component {
                 module="insuree"
                 id="InsureeFilter.photoStatus"
                 field={
-                  <Grid item xs={4} className={classes.item}>
+                  <Grid item xs={3} className={classes.item}>
                     <PublishedComponent
                       pubRef="insuree.PhotoStatusPicker"
                       value={this._filterValue("photoStatus")}
@@ -476,7 +503,7 @@ class InsureeFilter extends Component {
               module="insuree"
               id="InsureeFilter.showHistory"
               field={
-                <Grid item xs={4} className={classes.item}>
+                <Grid item xs={3} className={classes.item}>
                   <FormControlLabel
                     control={
                       <Checkbox
@@ -490,9 +517,6 @@ class InsureeFilter extends Component {
                 </Grid>
               }
             />
-            <Grid item xs={12}>
-              <div className={classes.chips}>{this._renderChips()}</div>
-            </Grid>
             <Contributions
               filters={filters}
               onChangeFilters={onChangeFilters}
