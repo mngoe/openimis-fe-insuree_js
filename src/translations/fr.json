@@ -88,5 +88,11 @@
     "insuree.insureeSummaries.status": "Statut",
     "insuree.insureeSummaries.showSecondaryColumns": "Colonnes secondaires",
     "insuree.InsureeFilter.dobFromShort": "Naissance (du)",
-    "insuree.InsureeFilter.dobToShort": "Naissance (au)"
+    "insuree.InsureeFilter.dobToShort": "Naissance (au)",
+    "insuree.affiliationStatus": "Statut d'affiliation",
+    "insuree.affiliationStatus.null": "Tous les statuts",
+    "insuree.affiliationStatus.preaffiliated": "Pré-affilié",
+    "insuree.affiliationStatus.affiliated": "Affilié",
+    "insuree.affiliationStatus.insured": "Assuré",
+    "insuree.affiliationStatus.suspended": "Assuré suspendu"
 }
