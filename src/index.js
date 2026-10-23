@@ -68,6 +68,7 @@ const ROUTE_INSUREE_SUBFAMILY = "insuree/subfamily";
 const DEFAULT_CONFIG = {
   "translations": [
     { key: "en", messages: messages_en },
+    { key: "fr_KM", messages: messages_fr },
     { key: "fr", messages: messages_fr }
   ],
   "reducers": [{ key: "insuree", reducer }],
