@@ -2,7 +2,7 @@ import React, { Component, Fragment } from "react";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { injectIntl } from "react-intl";
-import { Checkbox, IconButton, Tooltip, Paper } from "@material-ui/core";
+import { Checkbox, FormControlLabel, IconButton, Tooltip, Paper } from "@material-ui/core";
 import TabIcon from "@material-ui/icons/Tab";
 import {
   withModulesManager,
@@ -28,6 +28,17 @@ const styles = (theme) => ({
   paperHeaderAction: theme.paper.action,
   tableTitle: theme.table.title,
   lockedPage: theme.page.locked,
+  titleWithToggle: {
+    display: "flex",
+    alignItems: "center",
+    gap: theme.spacing(2),
+    flexWrap: "wrap",
+  },
+  toggleLabel: {
+    fontSize: 12,
+    fontWeight: 600,
+    color: theme.palette.primary.main,
+  },
 });
 class FamilySearcher extends Component {
   state = {
@@ -36,6 +47,7 @@ class FamilySearcher extends Component {
     parentFamilySet: false,
     reset: 0,
     canSelectParent: false,
+    showDetailedColumns: false,
   };
 
   constructor(props) {
@@ -90,28 +102,55 @@ class FamilySearcher extends Component {
     return prms;
   };
 
+  _toggleDetailedColumns = (event) => {
+    this.setState({ showDetailedColumns: event.target.checked });
+  };
+
+  _tableTitle = (count) => {
+    const { intl, classes } = this.props;
+    return (
+      <div className={classes.titleWithToggle}>
+        <span>{formatMessageWithValues(intl, "insuree", "familySummaries", { count })}</span>
+        <FormControlLabel
+          control={
+            <Checkbox
+              color="primary"
+              checked={this.state.showDetailedColumns}
+              onChange={this._toggleDetailedColumns}
+            />
+          }
+          label={formatMessage(intl, "insuree", "familySummaries.showSecondaryColumns")}
+          classes={{ label: classes.toggleLabel }}
+        />
+      </div>
+    );
+  };
+
   headers = (filters) => {
-    var h = [
-      "insuree.familySummaries.insuranceNo",
-      this.renderLastNameFirst ? "insuree.familySummaries.lastName" : "insuree.familySummaries.otherNames",
-      !this.renderLastNameFirst ? "insuree.familySummaries.lastName" : "insuree.familySummaries.otherNames",
-      "insuree.familySummaries.email",
-      "insuree.familySummaries.phone",
-      "insuree.familySummaries.dob",
+    const h = [
+      "insuree.familySummaries.shortInsuranceNo",
+      this.renderLastNameFirst ? "insuree.familySummaries.shortLastName" : "insuree.familySummaries.shortOtherNames",
+      !this.renderLastNameFirst ? "insuree.familySummaries.shortLastName" : "insuree.familySummaries.shortOtherNames",
+      "insuree.familySummaries.shortPhone",
     ];
+    if (this.state.showDetailedColumns) {
+      h.push("insuree.familySummaries.email");
+    }
+    h.push("insuree.familySummaries.shortDob");
     if (this.props.selectParent && this.props.selectParent === true) {
       h.unshift("insuree.familySummaries.selectParent");
     }
-    for (var i = 0; i < this.locationLevels; i++) {
+    for (let i = 0; i < this.locationLevels; i++) {
       h.push(`location.locationType.${i}`);
     }
-    h.push(
-      "insuree.familySummaries.poverty",
-      "insuree.familySummaries.confirmationNo",
-      filters?.showHistory?.value ? "insuree.familySummaries.validityFrom" : null,
-      filters?.showHistory?.value ? "insuree.familySummaries.validityTo" : null,
-      "insuree.familySummaries.openNewTab",
-    );
+    h.push("insuree.familySummaries.poverty");
+    if (this.state.showDetailedColumns) {
+      h.push("insuree.familySummaries.confirmationNo");
+    }
+    if (filters?.showHistory?.value) {
+      h.push("insuree.familySummaries.validityFrom", "insuree.familySummaries.validityTo");
+    }
+    h.push("insuree.familySummaries.openNewTab");
     if (!!this.props.rights.includes(RIGHT_FAMILY_DELETE)) {
       h.push("insuree.familySummaries.delete");
     }
@@ -119,16 +158,33 @@ class FamilySearcher extends Component {
   };
 
   sorts = (filters) => {
-    var results = [
+    const results = [
       ["headInsuree__chfId", true],
       this.renderLastNameFirst ? ["headInsuree__lastName", true] : ["headInsuree__otherNames", true],
       !this.renderLastNameFirst ? ["headInsuree__lastName", true] : ["headInsuree__otherNames", true],
-      ["headInsuree__email", true],
       ["headInsuree__phone", true],
-      ["headInsuree__dob", true],
     ];
-    _.times(this.locationLevels, () => results.push(null));
-    results.push(null, ["confirmationNo", true], ["validityFrom", false], ["validityTo", false]);
+    if (this.state.showDetailedColumns) {
+      results.push(["headInsuree__email", true]);
+    }
+    results.push(["headInsuree__dob", true]);
+    if (this.props.selectParent && this.props.selectParent === true) {
+      results.unshift(null);
+    }
+    for (let i = 0; i < this.locationLevels; i++) {
+      results.push(null);
+    }
+    results.push(null);
+    if (this.state.showDetailedColumns) {
+      results.push(["confirmationNo", true]);
+    }
+    if (filters?.showHistory?.value) {
+      results.push(["validityFrom", false], ["validityTo", false]);
+    }
+    results.push(null);
+    if (!!this.props.rights.includes(RIGHT_FAMILY_DELETE)) {
+      results.push(null);
+    }
     return results;
   };
 
@@ -181,7 +237,7 @@ class FamilySearcher extends Component {
   };
 
   itemFormatters = (filters) => {
-    var formatters = [
+    const formatters = [
       (family) => (!!family.headInsuree ? family.headInsuree.chfId : ""),
       (family) =>
         (family.headInsuree && this.renderLastNameFirst
@@ -191,13 +247,16 @@ class FamilySearcher extends Component {
         (family.headInsuree && !this.renderLastNameFirst
           ? family.headInsuree.lastName
           : family.headInsuree.otherNames) || "",
-      (family) => (!!family.headInsuree ? family.headInsuree.email : ""),
       (family) => (!!family.headInsuree ? family.headInsuree.phone : ""),
-      (family) =>
-        !!family.headInsuree
-          ? formatDateFromISO(this.props.modulesManager, this.props.intl, family.headInsuree.dob)
-          : "",
     ];
+    if (this.state.showDetailedColumns) {
+      formatters.push((family) => (!!family.headInsuree ? family.headInsuree.email : ""));
+    }
+    formatters.push((family) =>
+      !!family.headInsuree
+        ? formatDateFromISO(this.props.modulesManager, this.props.intl, family.headInsuree.dob)
+        : "",
+    );
     if (this.props.selectParent && this.props.selectParent === true) {
       formatters.unshift((family) => (
         <Checkbox
@@ -208,29 +267,28 @@ class FamilySearcher extends Component {
         />
       ));
     }
-    for (var i = 0; i < this.locationLevels; i++) {
-      // need a fixed variable to refer to as parentLocation argument
+    for (let i = 0; i < this.locationLevels; i++) {
       let j = i + 0;
       formatters.push((family) => this.parentLocation(family.location, j));
     }
-    formatters.push(
-      (family) => <Checkbox color="primary" checked={family.poverty} readOnly />,
-      (family) => family.confirmationNo,
-      filters?.showHistory?.value
-        ? (family) => formatDateFromISO(this.props.modulesManager, this.props.intl, family.validityFrom)
-        : null,
-      filters?.showHistory?.value
-        ? (family) => formatDateFromISO(this.props.modulesManager, this.props.intl, family.validityTo)
-        : null,
-      (family) => (
-        <Tooltip title={formatMessage(this.props.intl, "insuree", "familySummaries.openNewTabButton.tooltip")}>
-          <IconButton onClick={(e) => !family.clientMutationId && this.props.onDoubleClick(family, true)}>
-            {" "}
-            <TabIcon />
-          </IconButton>
-        </Tooltip>
-      ),
-    );
+    formatters.push((family) => <Checkbox color="primary" checked={family.poverty} readOnly />);
+    if (this.state.showDetailedColumns) {
+      formatters.push((family) => family.confirmationNo);
+    }
+    if (filters?.showHistory?.value) {
+      formatters.push(
+        (family) => formatDateFromISO(this.props.modulesManager, this.props.intl, family.validityFrom),
+        (family) => formatDateFromISO(this.props.modulesManager, this.props.intl, family.validityTo),
+      );
+    }
+    formatters.push((family) => (
+      <Tooltip title={formatMessage(this.props.intl, "insuree", "familySummaries.openNewTabButton.tooltip")}>
+        <IconButton onClick={(e) => !family.clientMutationId && this.props.onDoubleClick(family, true)}>
+          {" "}
+          <TabIcon />
+        </IconButton>
+      </Tooltip>
+    ));
     if (!!this.props.rights.includes(RIGHT_FAMILY_DELETE)) {
       formatters.push(this.deleteFamilyAction);
     }
@@ -278,7 +336,7 @@ class FamilySearcher extends Component {
             fetchedItems={fetchedFamilies}
             errorItems={errorFamilies}
             contributionKey={FAMILY_SEARCHER_CONTRIBUTION_KEY}
-            tableTitle={formatMessageWithValues(intl, "insuree", "familySummaries", { count })}
+            tableTitle={this._tableTitle(count)}
             rowsPerPageOptions={this.rowsPerPageOptions}
             defaultPageSize={this.defaultPageSize}
             fetch={this.fetch}
