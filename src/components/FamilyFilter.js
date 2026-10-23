@@ -2,7 +2,7 @@ import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
 import _debounce from "lodash/debounce";
 
-import { Button, Checkbox, FormControlLabel, Grid, Typography } from "@material-ui/core";
+import { Button, Checkbox, Chip, FormControlLabel, Grid, Typography } from "@material-ui/core";
 import { withTheme, withStyles } from "@material-ui/core/styles";
 import ExpandLessIcon from "@material-ui/icons/ExpandLess";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
@@ -380,6 +380,96 @@ class FamilyFilter extends Component {
 
   familyHeadFilter = (mode = "primary") => this.personFilter("headInsuree", mode);
   familyMemberFilter = () => this.personFilter("members", "member");
+
+  _clearFilter = (id) => {
+    if (id === "headInsuree.dobRange") {
+      this.props.onChangeFilters([
+        { id: "headInsuree.dobFrom", value: null, filter: null },
+        { id: "headInsuree.dobTo", value: null, filter: null },
+      ]);
+      return;
+    }
+    if (id === "members.dobRange") {
+      this.props.onChangeFilters([
+        { id: "members.dobFrom", value: null, filter: null },
+        { id: "members.dobTo", value: null, filter: null },
+      ]);
+      return;
+    }
+    if (id === "familyType") {
+      this.props.onChangeFilters([
+        { id: "familyType", value: null, filter: null },
+        { id: "isSubfamily", value: null, filter: null },
+      ]);
+      return;
+    }
+    this.props.onChangeFilters([{ id, value: null, filter: null }]);
+  };
+
+  _clearAll = () => {
+    const ids = [
+      "headInsuree.chfId", "headInsuree.lastName", "headInsuree.givenName", "headInsuree.phone", "headInsuree.gender",
+      "headInsuree.dobFrom", "headInsuree.dobTo",
+      "members.chfId", "members.lastName", "members.givenName", "members.phone", "members.gender",
+      "members.dobFrom", "members.dobTo",
+      "status", "poverty", "confirmationNo", "familyType", "isSubfamily", "showHistory",
+    ];
+    this.props.onChangeFilters(ids.map((id) => ({ id, value: null, filter: null })));
+  };
+
+  _renderChips = () => {
+    const { intl, classes } = this.props;
+    const chips = [];
+    const add = (id, labelKey, value, formattedValue = null) => {
+      if (value === null || value === undefined || value === "") return;
+      chips.push({
+        id,
+        label: formatMessage(intl, "insuree", labelKey),
+        value: formattedValue ?? value,
+      });
+    };
+    add("headInsuree.chfId", "Family.headInsuree.chfId", this._filterTextFieldValue("headInsuree.chfId"));
+    add("headInsuree.lastName", "Family.headInsuree.lastName", this._filterTextFieldValue("headInsuree.lastName"));
+    add("headInsuree.givenName", "Family.headInsuree.otherNames", this._filterTextFieldValue("headInsuree.givenName"));
+    add("headInsuree.phone", "Family.headInsuree.phone", this._filterTextFieldValue("headInsuree.phone"));
+    add("members.chfId", "Family.members.chfId", this._filterTextFieldValue("members.chfId"));
+    add("members.lastName", "Family.members.lastName", this._filterTextFieldValue("members.lastName"));
+    add("members.givenName", "Family.members.otherNames", this._filterTextFieldValue("members.givenName"));
+    add("members.phone", "Family.members.phone", this._filterTextFieldValue("members.phone"));
+    const status = this._filterValue("status");
+    if (status) {
+      add("status", "affiliationStatus", status, formatMessage(intl, "insuree", `affiliationStatus.${status}`));
+    }
+    add("confirmationNo", "Family.confirmationNo", this._filterTextFieldValue("confirmationNo"));
+    const headFrom = this._filterValue("headInsuree.dobFrom");
+    const headTo = this._filterValue("headInsuree.dobTo");
+    if (headFrom || headTo) {
+      add("headInsuree.dobRange", "Family.headInsuree.dobFromShort", `${headFrom || "…"} → ${headTo || "…"}`);
+    }
+    const memberFrom = this._filterValue("members.dobFrom");
+    const memberTo = this._filterValue("members.dobTo");
+    if (memberFrom || memberTo) {
+      add("members.dobRange", "Family.members.dobFromShort", `${memberFrom || "…"} → ${memberTo || "…"}`);
+    }
+    return (
+      <Fragment>
+        {chips.map((chip) => (
+          <Chip
+            key={chip.id}
+            size="small"
+            className={classes.chip}
+            onDelete={() => this._clearFilter(chip.id)}
+            label={<span><b>{chip.label}</b> : {chip.value}</span>}
+          />
+        ))}
+        {chips.length > 0 && (
+          <Button className={classes.clearAll} onClick={this._clearAll}>
+            {formatMessage(intl, "core", "exportColumnsDialog.clearAllButton")}
+          </Button>
+        )}
+      </Fragment>
+    );
+  };
 
   _toggleAdvanced = () => {
     this.setState((state) => ({ advancedOpen: !state.advancedOpen }));
