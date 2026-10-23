@@ -94,5 +94,9 @@
     "insuree.affiliationStatus.preaffiliated": "Pré-affilié",
     "insuree.affiliationStatus.affiliated": "Affilié",
     "insuree.affiliationStatus.insured": "Assuré",
-    "insuree.affiliationStatus.suspended": "Assuré suspendu"
+    "insuree.affiliationStatus.suspended": "Assuré suspendu",
+    "insuree.InsureeFilter.familyStatusLabel": "Statut du ménage",
+    "insuree.InsureeFilter.familyStatusLabel.null": "Non spécifié",
+    "insuree.InsureeFilter.familyStatusLabel.with": "Avec famille",
+    "insuree.InsureeFilter.familyStatusLabel.without": "Sans famille"
 }

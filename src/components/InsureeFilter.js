@@ -277,53 +277,53 @@ class InsureeFilter extends Component {
             {this.renderLastNameField()}
           </>
         )}
-          {this.state.advancedOpen && !this.isWorker && (<Grid item xs={3}>
-              <Grid container>
-                  <ControlledField
-                      module="insuree"
-                      id="InsureeFilter.gender"
-                      field={
-                          <Grid item xs={6} className={classes.item}>
-                              <PublishedComponent
-                                  pubRef="insuree.InsureeGenderPicker"
-                                  withNull={true}
-                                  value={this._filterValue("gender")}
-                                  onChange={(v) =>
-                                      onChangeFilters([
-                                          {
-                                              id: "gender",
-                                              value: v,
-                                              filter: !!v ? `gender_Code: "${v}"` : null,
-                                          },
-                                      ])
-                                  }
-                              />
-                          </Grid>
-                      }
+          {this.state.advancedOpen && !this.isWorker && (
+            <ControlledField
+              module="insuree"
+              id="InsureeFilter.gender"
+              field={
+                <Grid item xs={4} className={classes.item}>
+                  <PublishedComponent
+                    pubRef="insuree.InsureeGenderPicker"
+                    withNull={true}
+                    value={this._filterValue("gender")}
+                    onChange={(v) =>
+                      onChangeFilters([
+                        {
+                          id: "gender",
+                          value: v,
+                          filter: !!v ? `gender_Code: "${v}"` : null,
+                        },
+                      ])
+                    }
                   />
-                  <ControlledField
-                      module="insuree"
-                      id="InsureeFilter.maritalStatus"
-                      field={
-                          <Grid item xs={6} className={classes.item}>
-                              <PublishedComponent
-                                  pubRef="insuree.InsureeMaritalStatusPicker"
-                                  value={this._filterValue("maritalStatus")}
-                                  onChange={(v) =>
-                                      onChangeFilters([
-                                          {
-                                              id: "maritalStatus",
-                                              value: v,
-                                              filter: `marital: "${v}"`,
-                                          },
-                                      ])
-                                  }
-                              />
-                          </Grid>
-                      }
+                </Grid>
+              }
+            />
+          )}
+          {this.state.advancedOpen && !this.isWorker && (
+            <ControlledField
+              module="insuree"
+              id="InsureeFilter.maritalStatus"
+              field={
+                <Grid item xs={4} className={classes.item}>
+                  <PublishedComponent
+                    pubRef="insuree.InsureeMaritalStatusPicker"
+                    value={this._filterValue("maritalStatus")}
+                    onChange={(v) =>
+                      onChangeFilters([
+                        {
+                          id: "maritalStatus",
+                          value: v,
+                          filter: `marital: "${v}"`,
+                        },
+                      ])
+                    }
                   />
-              </Grid>
-          </Grid>)}
+                </Grid>
+              }
+            />
+          )}
           {this.state.advancedOpen && !this.isWorker && (<ControlledField
               module="insuree"
               id="InsureeFilter.email"
@@ -347,7 +347,7 @@ class InsureeFilter extends Component {
                   </Grid>
               }
           />)}
-          {!this.isWorker && (<ControlledField
+          {this.state.advancedOpen && !this.isWorker && (<ControlledField
               module="insuree"
               id="InsureeFilter.phone"
               field={
@@ -374,9 +374,10 @@ class InsureeFilter extends Component {
             module="insuree"
             id="InsureeFilter.familyStatus"
             field={
-                <Grid item xs={6} className={classes.item}>
+                <Grid item xs={4} className={classes.item}>
                     <PublishedComponent
                         pubRef="insuree.FamilyStatusPicker"
+                        label="InsureeFilter.familyStatusLabel"
                         value={this._filterValue("familyStatus")}
                         onChange={(s) =>
                             onChangeFilters([
@@ -396,7 +397,7 @@ class InsureeFilter extends Component {
             module="insuree"
             id="InsureeFilter.affiliationStatus"
             field={
-              <Grid item xs={3} className={classes.item}>
+              <Grid item xs={4} className={classes.item}>
                 <PublishedComponent
                   pubRef="insuree.InsureeAffiliationStatusPicker"
                   withNull={true}
