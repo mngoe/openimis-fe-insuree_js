@@ -6,6 +6,8 @@ import {
   Grid,
   IconButton,
   Button,
+  Checkbox,
+  FormControlLabel,
   Tooltip,
   Dialog,
   DialogActions,
@@ -42,6 +44,7 @@ class InsureeSearcher extends Component {
     confirmedAction: null,
     reset: 0,
     failedExport: false,
+    showSecondaryColumns: false,
   };
 
   constructor(props) {
@@ -107,38 +110,88 @@ class InsureeSearcher extends Component {
     return prms;
   };
 
+  _toggleSecondaryColumns = (event) => {
+    this.setState({ showSecondaryColumns: event.target.checked });
+  };
+
+  _tableTitle = (count) => {
+    const { intl } = this.props;
+    return (
+      <div style={{ display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap" }}>
+        <span>{formatMessageWithValues(intl, "insuree", "insureeSummaries", { count })}</span>
+        <FormControlLabel
+          control={
+            <Checkbox
+              color="primary"
+              checked={this.state.showSecondaryColumns}
+              onChange={this._toggleSecondaryColumns}
+            />
+          }
+          label={
+            <span style={{ fontSize: 12, fontWeight: 600 }}>
+              {formatMessage(intl, "insuree", "insureeSummaries.showSecondaryColumns")}
+            </span>
+          }
+        />
+      </div>
+    );
+  };
+
   headers = (filters) => {
-    var h = [
-      "insuree.insureeSummaries.insuranceNo",
-      this.renderLastNameFirst ? "insuree.insureeSummaries.lastName" : "insuree.insureeSummaries.otherNames",
-      !this.renderLastNameFirst ? "insuree.insureeSummaries.lastName" : "insuree.insureeSummaries.otherNames",
-      this.isWorker ? null : "insuree.insureeSummaries.maritalStatus",
-      this.isWorker ? null : "insuree.insureeSummaries.gender",
-      this.isWorker ? null : "insuree.insureeSummaries.email",
-      this.isWorker ? null : "insuree.insureeSummaries.phone",
-      this.isWorker ? null : "insuree.insureeSummaries.dob",
-      ...Array.from(Array(this.locationLevels)).map((_, i) => (this.isWorker ? null : `location.locationType.${i}`)),
-      filters?.showHistory?.value ? "insuree.insureeSummaries.validityFrom" : null,
-      filters?.showHistory?.value ? "insuree.insureeSummaries.validityTo" : null,
-      "",
+    if (this.isWorker) {
+      return [
+        "insuree.insureeSummaries.shortInsuranceNo",
+        this.renderLastNameFirst ? "insuree.insureeSummaries.shortLastName" : "insuree.insureeSummaries.shortOtherNames",
+        !this.renderLastNameFirst ? "insuree.insureeSummaries.shortLastName" : "insuree.insureeSummaries.shortOtherNames",
+        "",
+      ];
+    }
+    const h = [
+      "insuree.insureeSummaries.shortInsuranceNo",
+      this.renderLastNameFirst ? "insuree.insureeSummaries.shortLastName" : "insuree.insureeSummaries.shortOtherNames",
+      !this.renderLastNameFirst ? "insuree.insureeSummaries.shortLastName" : "insuree.insureeSummaries.shortOtherNames",
+      "insuree.insureeSummaries.gender",
+      "insuree.insureeSummaries.dob",
+      "insuree.insureeSummaries.phone",
+      "insuree.insureeSummaries.family",
+      "insuree.insureeSummaries.status",
     ];
-    return h.filter(Boolean);
+    if (this.state.showSecondaryColumns) {
+      h.push(
+        "insuree.insureeSummaries.email",
+        "insuree.insureeSummaries.maritalStatus",
+        ...Array.from(Array(this.locationLevels)).map((_, i) => `location.locationType.${i}`),
+      );
+      if (filters?.showHistory?.value) {
+        h.push("insuree.insureeSummaries.validityFrom", "insuree.insureeSummaries.validityTo");
+      }
+    }
+    h.push("");
+    return h;
   };
 
   sorts = (filters) => {
-    var results = [
+    if (this.isWorker) {
+      return [["chfId", true], this.renderLastNameFirst ? ["lastName", true] : ["otherNames", true], !this.renderLastNameFirst ? ["lastName", true] : ["otherNames", true], null];
+    }
+    const results = [
       ["chfId", true],
       this.renderLastNameFirst ? ["lastName", true] : ["otherNames", true],
       !this.renderLastNameFirst ? ["lastName", true] : ["otherNames", true],
-      ["marital", true],
       ["gender__code", true],
-      ["email", true],
-      ["phone", true],
       ["dob", true],
-      filters?.showHistory?.value ? ["validityFrom", false] : null,
-      filters?.showHistory?.value ? ["validityTo", false] : null,
+      ["phone", true],
+      null,
+      null,
     ];
-    _.times(this.locationLevels, () => results.push(null));
+    if (this.state.showSecondaryColumns) {
+      results.push(["email", true], ["marital", true]);
+      _.times(this.locationLevels, () => results.push(null));
+      if (filters?.showHistory?.value) {
+        results.push(["validityFrom", false], ["validityTo", false]);
+      }
+    }
+    results.push(null);
     return results;
   };
 
@@ -181,13 +234,37 @@ class InsureeSearcher extends Component {
   };
 
   itemFormatters = (filters) => {
-    var formatters = [
+    const formatters = [
       (insuree) => insuree.chfId,
       (insuree) => (this.renderLastNameFirst ? insuree.lastName : insuree.otherNames) || "",
       (insuree) => (!this.renderLastNameFirst ? insuree.lastName : insuree.otherNames) || "",
-      this.isWorker
-        ? null
-        : (insuree) => (
+    ];
+    if (!this.isWorker) {
+      formatters.push(
+        (insuree) => (
+          <PublishedComponent
+            pubRef="insuree.InsureeGenderPicker"
+            withLabel={false}
+            readOnly={true}
+            value={!!insuree.gender ? insuree.gender.code : null}
+          />
+        ),
+        (insuree) => formatDateFromISO(this.props.modulesManager, this.props.intl, insuree.dob),
+        (insuree) => insuree.phone,
+        (insuree) => insuree.family?.headInsuree?.chfId || "",
+        (insuree) => (
+          <PublishedComponent
+            pubRef="insuree.InsureeStatusPicker"
+            withLabel={false}
+            readOnly={true}
+            value={insuree.status}
+          />
+        ),
+      );
+      if (this.state.showSecondaryColumns) {
+        formatters.push(
+          (insuree) => insuree.email,
+          (insuree) => (
             <PublishedComponent
               pubRef="insuree.InsureeMaritalStatusPicker"
               withLabel={false}
@@ -195,36 +272,22 @@ class InsureeSearcher extends Component {
               value={insuree.marital || INSUREE_MARITAL_STATUS[0]}
             />
           ),
-      this.isWorker
-        ? null
-        : (insuree) => (
-            <PublishedComponent
-              pubRef="insuree.InsureeGenderPicker"
-              withLabel={false}
-              readOnly={true}
-              value={!!insuree.gender ? insuree.gender.code : null}
-            />
-          ),
-      this.isWorker ? null : (insuree) => insuree.email,
-      this.isWorker ? null : (insuree) => insuree.phone,
-      this.isWorker ? null : (insuree) => formatDateFromISO(this.props.modulesManager, this.props.intl, insuree.dob),
-    ];
-    if (!this.isWorker) {
-      for (var i = 0; i < this.locationLevels; i++) {
-        // need a fixed variable to refer to as parentLocation argument
-        let j = i + 0;
-        formatters.push((insuree) =>
-          this.parentLocation(insuree.currentVillage || (!!insuree.family && insuree.family.location), j),
         );
+        for (let i = 0; i < this.locationLevels; i++) {
+          let j = i + 0;
+          formatters.push((insuree) =>
+            this.parentLocation(insuree.currentVillage || (!!insuree.family && insuree.family.location), j),
+          );
+        }
+        if (filters?.showHistory?.value) {
+          formatters.push(
+            (insuree) => formatDateFromISO(this.props.modulesManager, this.props.intl, insuree.validityFrom),
+            (insuree) => formatDateFromISO(this.props.modulesManager, this.props.intl, insuree.validityTo),
+          );
+        }
       }
     }
     formatters.push(
-      filters?.showHistory?.value
-        ? (insuree) => formatDateFromISO(this.props.modulesManager, this.props.intl, insuree.validityFrom)
-        : null,
-      filters?.showHistory?.value
-        ? (insuree) => formatDateFromISO(this.props.modulesManager, this.props.intl, insuree.validityTo)
-        : null,
       (insuree) => (
         <Grid container wrap="nowrap" spacing="2">
           {!this.isWorker && (
@@ -314,7 +377,7 @@ class InsureeSearcher extends Component {
           fetchedItems={fetchedInsurees}
           errorItems={errorInsurees}
           contributionKey={INSUREE_SEARCHER_CONTRIBUTION_KEY}
-          tableTitle={formatMessageWithValues(intl, "insuree", "insureeSummaries", { count })}
+          tableTitle={this._tableTitle(count)}
           rowsPerPageOptions={this.rowsPerPageOptions}
           defaultPageSize={this.defaultPageSize}
           fetch={this.fetch}

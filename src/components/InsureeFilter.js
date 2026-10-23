@@ -2,8 +2,11 @@ import React, { Component } from "react";
 import { injectIntl } from "react-intl";
 import _debounce from "lodash/debounce";
 
-import { Checkbox, FormControlLabel, Grid } from "@material-ui/core";
+import { Button, Checkbox, FormControlLabel, Grid } from "@material-ui/core";
 import { withTheme, withStyles } from "@material-ui/core/styles";
+import ExpandLessIcon from "@material-ui/icons/ExpandLess";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import FilterListIcon from "@material-ui/icons/FilterList";
 
 import {
   withModulesManager,
@@ -25,11 +28,31 @@ const styles = (theme) => ({
     padding: theme.spacing(1),
   },
   paperDivider: theme.paper.divider,
+  advancedRow: {
+    width: "100%",
+    flexBasis: "100%",
+    display: "flex",
+    alignItems: "center",
+    marginTop: theme.spacing(1),
+    paddingTop: theme.spacing(1),
+    borderTop: "1px solid #cfe5e4",
+  },
+  advancedButton: {
+    textTransform: "none",
+    border: "1px dashed rgba(0, 74, 124, .35)",
+    borderRadius: 4,
+    color: theme.palette.primary.main,
+    fontWeight: 600,
+  },
 });
 
 const INSUREE_FILTER_CONTRIBUTION_KEY = "insuree.Filter";
 
 class InsureeFilter extends Component {
+  state = {
+    advancedOpen: false,
+  };
+
   constructor(props) {
       super(props);
       this.isWorker = props.modulesManager.getConf("fe-core", "isWorker", DEFAULT.IS_WORKER);
@@ -184,7 +207,7 @@ class InsureeFilter extends Component {
             {this.renderLastNameField()}
           </>
         )}
-          {!this.isWorker && (<Grid item xs={3}>
+          {this.state.advancedOpen && !this.isWorker && (<Grid item xs={3}>
               <Grid container>
                   <ControlledField
                       module="insuree"
@@ -231,7 +254,7 @@ class InsureeFilter extends Component {
                   />
               </Grid>
           </Grid>)}
-          {!this.isWorker && (<ControlledField
+          {this.state.advancedOpen && !this.isWorker && (<ControlledField
               module="insuree"
               id="InsureeFilter.email"
               field={
@@ -314,7 +337,17 @@ class InsureeFilter extends Component {
             }
           />
 
-          {!this.isWorker && (<ControlledField
+          <Grid item xs={12} className={classes.advancedRow}>
+            <Button
+              className={classes.advancedButton}
+              onClick={() => this.setState((state) => ({ advancedOpen: !state.advancedOpen }))}
+              startIcon={<FilterListIcon />}
+              endIcon={this.state.advancedOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+            >
+              {formatMessage(intl, "core", "advancedFilters")}
+            </Button>
+          </Grid>
+          {this.state.advancedOpen && !this.isWorker && (<ControlledField
               module="insuree"
               id="InsureeFilter.dob"
               field={
@@ -360,7 +393,7 @@ class InsureeFilter extends Component {
                   </Grid>
               }
           />)}
-        <Grid item xs={3}>
+        {this.state.advancedOpen && (<Grid item xs={3}>
           <Grid container>
               {!this.isWorker && (<ControlledField
                   module="insuree"
@@ -402,12 +435,14 @@ class InsureeFilter extends Component {
               }
             />
           </Grid>
-        </Grid>
+        </Grid>)}
+        {this.state.advancedOpen && (
         <Contributions
           filters={filters}
           onChangeFilters={onChangeFilters}
           contributionKey={INSUREE_FILTER_CONTRIBUTION_KEY}
         />
+        )}
       </Grid>
     );
   }

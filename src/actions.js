@@ -388,7 +388,7 @@ export function fetchInsureeSummaries(mm, filters, ignoreLocation = false) {
     "marital",
     "status",
     "fixIncome",
-    "family{uuid,location" + mm.getProjection("location.Location.FlatProjection") + "}",
+    "family{uuid,headInsuree{chfId},location" + mm.getProjection("location.Location.FlatProjection") + "}",
     "currentVillage" + mm.getProjection("location.Location.FlatProjection"),
   ];
   const payload = formatPageQueryWithCount("insurees", filters, projections);

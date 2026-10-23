@@ -367,5 +367,11 @@
   "insuree.affiliationStatus.preaffiliated": "Pre-affiliated",
   "insuree.affiliationStatus.affiliated": "Affiliated",
   "insuree.affiliationStatus.insured": "Insured",
-  "insuree.affiliationStatus.suspended": "Suspended Insured"
+  "insuree.affiliationStatus.suspended": "Suspended Insured",
+  "insuree.insureeSummaries.shortInsuranceNo": "CHF ID",
+  "insuree.insureeSummaries.shortLastName": "Last name",
+  "insuree.insureeSummaries.shortOtherNames": "First name",
+  "insuree.insureeSummaries.family": "Family",
+  "insuree.insureeSummaries.status": "Status",
+  "insuree.insureeSummaries.showSecondaryColumns": "Secondary columns"
 }
