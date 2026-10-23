@@ -86,5 +86,7 @@
     "insuree.insureeSummaries.phone": "Téléphone",
     "insuree.insureeSummaries.family": "Famille",
     "insuree.insureeSummaries.status": "Statut",
-    "insuree.insureeSummaries.showSecondaryColumns": "Colonnes secondaires"
+    "insuree.insureeSummaries.showSecondaryColumns": "Colonnes secondaires",
+    "insuree.InsureeFilter.dobFromShort": "Naissance (du)",
+    "insuree.InsureeFilter.dobToShort": "Naissance (au)"
 }
