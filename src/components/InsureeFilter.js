@@ -424,14 +424,14 @@ class InsureeFilter extends Component {
               module="insuree"
               id="InsureeFilter.dob"
               field={
-                  <Grid item xs={3}>
+                  <Grid item xs={6}>
                       <Grid container>
                           <Grid item xs={6} className={classes.item}>
                               <PublishedComponent
                                   pubRef="core.DatePicker"
                                   value={this._filterValue("dobFrom")}
                                   module="insuree"
-                                  label="InsureeFilter.dobFromShort"
+                                  label="Insuree.dobFrom"
                                   {...(filters.dobTo ? { maxDate: filters.dobTo.value } : null)}
                                   onChange={(d) =>
                                       onChangeFilters([
@@ -449,7 +449,7 @@ class InsureeFilter extends Component {
                                   pubRef="core.DatePicker"
                                   value={this._filterValue("dobTo")}
                                   module="insuree"
-                                  label="InsureeFilter.dobToShort"
+                                  label="Insuree.dobTo"
                                   {...(filters.dobFrom ? { minDate: filters.dobFrom.value } : null)}
                                   onChange={(d) =>
                                       onChangeFilters([

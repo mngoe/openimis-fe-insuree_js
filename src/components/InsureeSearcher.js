@@ -5,6 +5,8 @@ import { injectIntl } from "react-intl";
 import {
   Grid,
   IconButton,
+  Chip,
+  Typography,
   Button,
   Checkbox,
   FormControlLabel,
@@ -236,30 +238,35 @@ class InsureeSearcher extends Component {
   itemFormatters = (filters) => {
     const formatters = [
       (insuree) => insuree.chfId,
-      (insuree) => (this.renderLastNameFirst ? insuree.lastName : insuree.otherNames) || "",
-      (insuree) => (!this.renderLastNameFirst ? insuree.lastName : insuree.otherNames) || "",
+      (insuree) => <Typography noWrap>{(this.renderLastNameFirst ? insuree.lastName : insuree.otherNames) || ""}</Typography>,
+      (insuree) => <Typography noWrap>{(!this.renderLastNameFirst ? insuree.lastName : insuree.otherNames) || ""}</Typography>,
     ];
     if (!this.isWorker) {
       formatters.push(
         (insuree) => (
-          <PublishedComponent
-            pubRef="insuree.InsureeGenderPicker"
-            withLabel={false}
-            readOnly={true}
-            value={!!insuree.gender ? insuree.gender.code : null}
+          <Chip
+            size="small"
+            label={formatMessage(this.props.intl, "insuree", `gender.${insuree.gender?.code}`)}
+            style={{ backgroundColor: "#e3f2fd", color: "#004A7C", fontWeight: 600 }}
           />
         ),
         (insuree) => formatDateFromISO(this.props.modulesManager, this.props.intl, insuree.dob),
         (insuree) => insuree.phone,
-        (insuree) => insuree.family?.headInsuree?.chfId || "",
-        (insuree) => (
-          <PublishedComponent
-            pubRef="insuree.InsureeStatusPicker"
-            withLabel={false}
-            readOnly={true}
-            value={insuree.status}
-          />
-        ),
+        (insuree) => <Typography noWrap>{insuree.family?.headInsuree?.chfId || ""}</Typography>,
+        (insuree) => {
+          const statusColors = {
+            AC: { backgroundColor: "#dff3e6", color: "#176b3a" },
+            IN: { backgroundColor: "#fff4d6", color: "#8a5a00" },
+            DE: { backgroundColor: "#fde4e1", color: "#a02a1f" },
+          };
+          return (
+            <Chip
+              size="small"
+              label={formatMessage(this.props.intl, "insuree", `Insuree.status.${insuree.status}`)}
+              style={{ fontWeight: 600, ...(statusColors[insuree.status] || {}) }}
+            />
+          );
+        },
       );
       if (this.state.showSecondaryColumns) {
         formatters.push(
