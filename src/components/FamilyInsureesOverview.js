@@ -216,6 +216,7 @@ class FamilyInsureesOverview extends PagedDataHandler {
   );
 
   confirmSetHeadInsuree = (i) => {
+    const currentHeadInsuree = this.props.family?.headInsuree ?? null;
     let confirmedAction = () => {
       this.props.setFamilyHead(
         this.props.modulesManager,
@@ -228,7 +229,7 @@ class FamilyInsureesOverview extends PagedDataHandler {
       formatMessageWithValues(this.props.intl, "insuree", "setHeadInsureeDialog.title", { label: insureeLabel(i) }),
       formatMessageWithValues(this.props.intl, "insuree", "setHeadInsureeDialog.message", {
         current: insureeLabel(i),
-        new: insureeLabel(this.props.family.headInsuree),
+        new: insureeLabel(currentHeadInsuree),
       }),
       confirmedAction,
     );
