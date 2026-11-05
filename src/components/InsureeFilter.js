@@ -1,9 +1,12 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import { injectIntl } from "react-intl";
 import _debounce from "lodash/debounce";
 
-import { Checkbox, FormControlLabel, Grid } from "@material-ui/core";
+import { Button, Checkbox, Chip, FormControlLabel, Grid } from "@material-ui/core";
 import { withTheme, withStyles } from "@material-ui/core/styles";
+import ExpandLessIcon from "@material-ui/icons/ExpandLess";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import FilterListIcon from "@material-ui/icons/FilterList";
 
 import {
   withModulesManager,
@@ -25,11 +28,69 @@ const styles = (theme) => ({
     padding: theme.spacing(1),
   },
   paperDivider: theme.paper.divider,
+  advancedRow: {
+    width: "100%",
+    flexBasis: "100%",
+    display: "flex",
+    alignItems: "center",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
+    gap: theme.spacing(1),
+    marginTop: theme.spacing(1),
+    paddingTop: theme.spacing(1),
+    borderTop: "1px solid #cfe5e4",
+  },
+  advancedButton: {
+    textTransform: "none",
+    border: "1px dashed rgba(0, 74, 124, .35)",
+    borderRadius: 4,
+    color: theme.palette.primary.main,
+    fontWeight: 600,
+  },
+  chips: {
+    display: "flex",
+    alignItems: "center",
+    gap: theme.spacing(1),
+    flexWrap: "wrap",
+    justifyContent: "flex-end",
+  },
+  chip: {
+    backgroundColor: "rgba(55, 212, 204, .22)",
+    color: theme.palette.primary.main,
+    fontWeight: 500,
+    height: 26,
+    fontSize: 12,
+  },
+  advancedBadge: {
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+    minWidth: 20,
+    height: 20,
+    borderRadius: 10,
+    backgroundColor: "rgba(0, 74, 124, .10)",
+    fontSize: 11,
+    fontWeight: 700,
+    marginLeft: theme.spacing(0.75),
+    padding: "0 6px",
+  },
+  clearAll: {
+    textTransform: "none",
+    fontSize: 12,
+    color: theme.palette.primary.main,
+    textDecoration: "underline",
+    minWidth: "auto",
+    padding: theme.spacing(0, 0.5),
+  },
 });
 
 const INSUREE_FILTER_CONTRIBUTION_KEY = "insuree.Filter";
 
 class InsureeFilter extends Component {
+  state = {
+    advancedOpen: false,
+  };
+
   constructor(props) {
       super(props);
       this.isWorker = props.modulesManager.getConf("fe-core", "isWorker", DEFAULT.IS_WORKER);
@@ -72,25 +133,25 @@ class InsureeFilter extends Component {
     ]);
   };
 
-  renderLastNameField = () => {
+  renderTextFilter = (key, labelKey, filterExpr, size = 3) => {
     const { classes } = this.props;
     return (
       <ControlledField
         module="insuree"
-        id="InsureeFilter.lastName"
+        id={`InsureeFilter.${key}`}
         field={
-          <Grid item xs={3} className={classes.item}>
+          <Grid item xs={12} sm={6} md={size} className={classes.item}>
             <TextInput
               module="insuree"
-              label="Insuree.lastName"
-              name="lastName"
-              value={this._filterTextFieldValue("lastName")}
+              label={labelKey}
+              name={key}
+              value={this._filterTextFieldValue(key)}
               onChange={(v) =>
                 this.debouncedOnChangeFilter([
                   {
-                    id: "lastName",
+                    id: key,
                     value: v,
-                    filter: `lastName_Icontains: "${v}"`,
+                    filter: !!v ? filterExpr(v) : null,
                   },
                 ])
               }
@@ -99,27 +160,26 @@ class InsureeFilter extends Component {
         }
       />
     );
-  }
+  };
 
-  renderGivenNameField = () => {
-    const { classes } = this.props;
+  renderPickerFilter = (key, pubRef, filterExpr, { withNull = false, size = 3 } = {}) => {
+    const { classes, onChangeFilters } = this.props;
     return (
       <ControlledField
         module="insuree"
-        id="InsureeFilter.givenName"
+        id={`InsureeFilter.${key}`}
         field={
-          <Grid item xs={3} className={classes.item}>
-            <TextInput
-              module="insuree"
-              label="Insuree.otherNames"
-              name="givenName"
-              value={this._filterTextFieldValue("givenName")}
+          <Grid item xs={12} sm={6} md={size} className={classes.item}>
+            <PublishedComponent
+              pubRef={pubRef}
+              withNull={withNull}
+              value={this._filterValue(key)}
               onChange={(v) =>
-                this.debouncedOnChangeFilter([
+                onChangeFilters([
                   {
-                    id: "givenName",
+                    id: key,
                     value: v,
-                    filter: `otherNames_Icontains: "${v}"`,
+                    filter: filterExpr(v),
                   },
                 ])
               }
@@ -128,266 +188,232 @@ class InsureeFilter extends Component {
         }
       />
     );
-  }
+  };
+
+  renderDobFilter = (size = 3) => {
+    const { classes, filters, onChangeFilters } = this.props;
+    return (
+      <ControlledField
+        module="insuree"
+        id="InsureeFilter.dob"
+        field={
+          <Grid item xs={12} sm={6} md={size} className={classes.item}>
+            <PublishedComponent
+              pubRef="core.DatePicker"
+              value={this._filterValue("dobFrom")}
+              module="insuree"
+              label="Insuree.dobFrom"
+              {...(filters.dobTo ? { maxDate: filters.dobTo.value } : null)}
+              onChange={(d) => onChangeFilters([{ id: "dobFrom", value: d, filter: !!d ? `dob_Gte: "${d}"` : null }])}
+            />
+          </Grid>
+        }
+      />
+    );
+  };
+
+  renderDobToFilter = (size = 3) => {
+    const { classes, filters, onChangeFilters } = this.props;
+    return (
+      <ControlledField
+        module="insuree"
+        id="InsureeFilter.dobTo"
+        field={
+          <Grid item xs={12} sm={6} md={size} className={classes.item}>
+            <PublishedComponent
+              pubRef="core.DatePicker"
+              value={this._filterValue("dobTo")}
+              module="insuree"
+              label="Insuree.dobTo"
+              {...(filters.dobFrom ? { minDate: filters.dobFrom.value } : null)}
+              onChange={(d) => onChangeFilters([{ id: "dobTo", value: d, filter: !!d ? `dob_Lte: "${d}"` : null }])}
+            />
+          </Grid>
+        }
+      />
+    );
+  };
+
+  _clearFilter = (id) => {
+    if (id === "dobRange") {
+      this.props.onChangeFilters([
+        { id: "dobFrom", value: null, filter: null },
+        { id: "dobTo", value: null, filter: null },
+      ]);
+      return;
+    }
+    this.props.onChangeFilters([{ id, value: null, filter: null }]);
+  };
+
+  _clearAll = () => {
+    const ids = ["chfId", "lastName", "givenName", "phone", "status", "gender", "maritalStatus", "dobFrom", "dobTo", "photoStatus", "showHistory"];
+    this.props.onChangeFilters(ids.map((id) => ({ id, value: null, filter: null })));
+  };
+
+  _renderChips = () => {
+    const { intl, classes } = this.props;
+    const chips = [];
+    const add = (id, labelKey, value, formattedValue = null) => {
+      if (value === null || value === undefined || value === "") return;
+      chips.push({
+        id,
+        label: formatMessage(intl, "insuree", labelKey),
+        value: formattedValue ?? value,
+      });
+    };
+    add("chfId", "Insuree.chfId", this._filterTextFieldValue("chfId"));
+    add("lastName", "Insuree.lastName", this._filterTextFieldValue("lastName"));
+    add("givenName", "Insuree.otherNames", this._filterTextFieldValue("givenName"));
+    add("phone", "Insuree.phone", this._filterTextFieldValue("phone"));
+    const status = this._filterValue("status");
+    if (status) {
+      add("status", "insuree.affiliationStatus", status, formatMessage(intl, "insuree", `affiliationStatus.${status}`));
+    }
+    const gender = this._filterValue("gender");
+    if (gender) {
+      add("gender", "insuree.gender", gender, formatMessage(intl, "insuree", `gender.${gender}`));
+    }
+    const maritalStatus = this._filterValue("maritalStatus");
+    if (maritalStatus) {
+      add("maritalStatus", "insuree.InsureeMaritalStatus", maritalStatus, formatMessage(intl, "insuree", `InsureeMaritalStatus.${maritalStatus}`));
+    }
+    const dobFrom = this._filterValue("dobFrom");
+    const dobTo = this._filterValue("dobTo");
+    if (dobFrom || dobTo) {
+      add("dobRange", "Insuree.dob", `${dobFrom || "…"} → ${dobTo || "…"}`);
+    }
+    const photoStatus = this._filterValue("photoStatus");
+    if (photoStatus) {
+      add("photoStatus", "insuree.PhotoStatus", photoStatus, formatMessage(intl, "insuree", `PhotoStatus.${photoStatus}`));
+    }
+    return (
+      <Fragment>
+        {chips.map((chip) => (
+          <Chip
+            key={chip.id}
+            size="small"
+            className={classes.chip}
+            onDelete={() => this._clearFilter(chip.id)}
+            label={<span><b>{chip.label}</b> : {chip.value}</span>}
+          />
+        ))}
+        {chips.length > 0 && (
+          <Button className={classes.clearAll} onClick={this._clearAll}>
+            {formatMessage(intl, "core", "exportColumnsDialog.clearAllButton")}
+          </Button>
+        )}
+      </Fragment>
+    );
+  };
 
   render() {
     const { intl, classes, filters, onChangeFilters } = this.props;
+    const { advancedOpen } = this.state;
+    const nameFields = (
+      <Fragment>
+        {this.renderTextFilter("lastName", "Insuree.lastName", (v) => `lastName_Icontains: "${v}"`)}
+        {this.renderTextFilter("givenName", "Insuree.otherNames", (v) => `otherNames_Icontains: "${v}"`)}
+      </Fragment>
+    );
+    const orderedNames = this.renderLastNameFirst ? (
+      nameFields
+    ) : (
+      <Fragment>
+        {this.renderTextFilter("givenName", "Insuree.otherNames", (v) => `otherNames_Icontains: "${v}"`)}
+        {this.renderTextFilter("lastName", "Insuree.lastName", (v) => `lastName_Icontains: "${v}"`)}
+      </Fragment>
+    );
+    const contributionCount = this.props.modulesManager.getContribs(INSUREE_FILTER_CONTRIBUTION_KEY).length;
+    const advancedCount = (this.isWorker ? 0 : 5) + 1 + contributionCount;
 
     return (
       <Grid container className={classes.form}>
-          {!this.isWorker && (<ControlledField
-              module="insuree"
-              id="InsureeFilter.location"
-              field={
-                  <Grid item xs={12}>
-                      <PublishedComponent
-                          pubRef="location.DetailedLocationFilter"
-                          withNull={true}
-                          filters={filters}
-                          onChangeFilters={onChangeFilters}
-                          anchor="parentLocation"
-                      />
-                  </Grid>
-              }
-          />)}
-        <ControlledField
-          module="insuree"
-          id="InsureeFilter.chfId"
-          field={
-            <Grid item xs={3} className={classes.item}>
-              <TextInput
-                module="insuree"
-                label="Insuree.chfId"
-                name="chfId"
-                value={this._filterTextFieldValue("chfId")}
-                onChange={(v) =>
-                  this.debouncedOnChangeFilter([
-                    {
-                      id: "chfId",
-                      value: v,
-                      filter: `chfId_Istartswith: "${v}"`,
-                    },
-                  ])
-                }
-              />
-            </Grid>
-          }
-        />
-        {this.renderLastNameFirst ? (
-          <>
-            {this.renderLastNameField()}
-            {this.renderGivenNameField()}
-          </>
-        ) : (
-          <>
-            {this.renderGivenNameField()}
-            {this.renderLastNameField()}
-          </>
-        )}
-          {!this.isWorker && (<Grid item xs={3}>
-              <Grid container>
-                  <ControlledField
-                      module="insuree"
-                      id="InsureeFilter.gender"
-                      field={
-                          <Grid item xs={6} className={classes.item}>
-                              <PublishedComponent
-                                  pubRef="insuree.InsureeGenderPicker"
-                                  withNull={true}
-                                  value={this._filterValue("gender")}
-                                  onChange={(v) =>
-                                      onChangeFilters([
-                                          {
-                                              id: "gender",
-                                              value: v,
-                                              filter: !!v ? `gender_Code: "${v}"` : null,
-                                          },
-                                      ])
-                                  }
-                              />
-                          </Grid>
-                      }
-                  />
-                  <ControlledField
-                      module="insuree"
-                      id="InsureeFilter.maritalStatus"
-                      field={
-                          <Grid item xs={6} className={classes.item}>
-                              <PublishedComponent
-                                  pubRef="insuree.InsureeMaritalStatusPicker"
-                                  value={this._filterValue("maritalStatus")}
-                                  onChange={(v) =>
-                                      onChangeFilters([
-                                          {
-                                              id: "maritalStatus",
-                                              value: v,
-                                              filter: `marital: "${v}"`,
-                                          },
-                                      ])
-                                  }
-                              />
-                          </Grid>
-                      }
-                  />
-              </Grid>
-          </Grid>)}
-          {!this.isWorker && (<ControlledField
-              module="insuree"
-              id="InsureeFilter.email"
-              field={
-                  <Grid item xs={3} className={classes.item}>
-                      <TextInput
-                          module="insuree"
-                          label="Insuree.email"
-                          name="email"
-                          value={this._filterTextFieldValue("email")}
-                          onChange={(v) =>
-                              this.debouncedOnChangeFilter([
-                                  {
-                                      id: "email",
-                                      value: v,
-                                      filter: `email_Icontains: "${v}"`,
-                                  },
-                              ])
-                          }
-                      />
-                  </Grid>
-              }
-          />)}
-          {!this.isWorker && (<ControlledField
-              module="insuree"
-              id="InsureeFilter.phone"
-              field={
-                  <Grid item xs={3} className={classes.item}>
-                      <TextInput
-                          module="insuree"
-                          label="Insuree.phone"
-                          name="phone"
-                          value={this._filterTextFieldValue("phone")}
-                          onChange={(v) =>
-                              this.debouncedOnChangeFilter([
-                                  {
-                                      id: "phone",
-                                      value: v,
-                                      filter: `phone_Icontains: "${v}"`,
-                                  },
-                              ])
-                          }
-                      />
-                  </Grid>
-              }
-          />)}
-          {!this.isWorker && (<ControlledField
-            module="insuree"
-            id="InsureeFilter.familyStatus"
-            field={
-                <Grid item xs={6} className={classes.item}>
-                    <PublishedComponent
-                        pubRef="insuree.FamilyStatusPicker"
-                        value={this._filterValue("familyStatus")}
-                        onChange={(s) =>
-                            onChangeFilters([
-                                {
-                                    id: "familyStatus",
-                                    value: s,
-                                    filter: `family_Isnull: ${s === WITHOUT_STR}`,
-                                },
-                            ])
-                        }
-                    />
-                </Grid>
-              }
-          />)}
-
+        {!this.isWorker && (
           <ControlledField
             module="insuree"
-            id="InsureeFilter.affiliationStatus"
+            id="InsureeFilter.location"
             field={
-              <Grid item xs={3} className={classes.item}>
+              <Grid item xs={12}>
                 <PublishedComponent
-                  pubRef="insuree.InsureeAffiliationStatusPicker"
+                  pubRef="location.DetailedLocationFilter"
                   withNull={true}
-                  value={this._filterValue("status")}
-                  onChange={this._onChangeStatus}
+                  filters={filters}
+                  onChangeFilters={onChangeFilters}
+                  anchor="parentLocation"
                 />
               </Grid>
             }
           />
+        )}
 
-          {!this.isWorker && (<ControlledField
-              module="insuree"
-              id="InsureeFilter.dob"
-              field={
-                  <Grid item xs={3}>
-                      <Grid container>
-                          <Grid item xs={6} className={classes.item}>
-                              <PublishedComponent
-                                  pubRef="core.DatePicker"
-                                  value={this._filterValue("dobFrom")}
-                                  module="insuree"
-                                  label="Insuree.dobFrom"
-                                  {...(filters.dobTo ? { maxDate: filters.dobTo.value } : null)}
-                                  onChange={(d) =>
-                                      onChangeFilters([
-                                          {
-                                              id: "dobFrom",
-                                              value: d,
-                                              filter: `dob_Gte: "${d}"`,
-                                          },
-                                      ])
-                                  }
-                              />
-                          </Grid>
-                          <Grid item xs={6} className={classes.item}>
-                              <PublishedComponent
-                                  pubRef="core.DatePicker"
-                                  value={this._filterValue("dobTo")}
-                                  module="insuree"
-                                  label="Insuree.dobTo"
-                                  {...(filters.dobFrom ? { minDate: filters.dobFrom.value } : null)}
-                                  onChange={(d) =>
-                                      onChangeFilters([
-                                          {
-                                              id: "dobTo",
-                                              value: d,
-                                              filter: `dob_Lte: "${d}"`,
-                                          },
-                                      ])
-                                  }
-                              />
-                          </Grid>
-                      </Grid>
-                  </Grid>
-              }
-          />)}
-        <Grid item xs={3}>
-          <Grid container>
-              {!this.isWorker && (<ControlledField
-                  module="insuree"
-                  id="InsureeFilter.photoStatus"
-                  field={
-                      <Grid item xs={6} className={classes.item}>
-                          <PublishedComponent
-                              pubRef="insuree.PhotoStatusPicker"
-                              value={this._filterValue("photoStatus")}
-                              onChange={(s) =>
-                                  onChangeFilters([
-                                      {
-                                          id: "photoStatus",
-                                          value: s,
-                                          filter: `photo_Isnull: ${s === WITHOUT_STR}`,
-                                      },
-                                  ])
-                              }
-                          />
-                      </Grid>
+        {this.renderTextFilter("chfId", "Insuree.chfId", (v) => `chfId_Istartswith: "${v}"`)}
+        {orderedNames}
+        {this.renderTextFilter("phone", "Insuree.phone", (v) => `phone_Icontains: "${v}"`)}
+
+        {!this.isWorker && (
+          <ControlledField
+            module="insuree"
+            id="InsureeFilter.familyStatus"
+            field={
+              <Grid item xs={12} sm={6} md={6} className={classes.item}>
+                <PublishedComponent
+                  pubRef="insuree.FamilyStatusPicker"
+                  value={this._filterValue("familyStatus")}
+                  onChange={(s) =>
+                    onChangeFilters([
+                      {
+                        id: "familyStatus",
+                        value: s,
+                        filter: `family_Isnull: ${s === WITHOUT_STR}`,
+                      },
+                    ])
                   }
-              />)}
+                />
+              </Grid>
+            }
+          />
+        )}
+
+        <ControlledField
+          module="insuree"
+          id="InsureeFilter.affiliationStatus"
+          field={
+            <Grid item xs={12} sm={6} md={6} className={classes.item}>
+              <PublishedComponent
+                pubRef="insuree.InsureeAffiliationStatusPicker"
+                withNull={true}
+                value={this._filterValue("status")}
+                onChange={this._onChangeStatus}
+              />
+            </Grid>
+          }
+        />
+
+        <Grid item xs={12} className={classes.advancedRow}>
+          <Button
+            className={classes.advancedButton}
+            onClick={() => this.setState((state) => ({ advancedOpen: !state.advancedOpen }))}
+            startIcon={<FilterListIcon />}
+            endIcon={advancedOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+          >
+            {formatMessage(intl, "core", "advancedFilters")}
+            <span className={classes.advancedBadge}>{advancedCount}</span>
+          </Button>
+          <div className={classes.chips}>{this._renderChips()}</div>
+        </Grid>
+
+        {advancedOpen && (
+          <Fragment>
+            {!this.isWorker && this.renderPickerFilter("gender", "insuree.InsureeGenderPicker", (v) => (!!v ? `gender_Code: "${v}"` : null), { withNull: true })}
+            {!this.isWorker && this.renderPickerFilter("maritalStatus", "insuree.InsureeMaritalStatusPicker", (v) => `marital: "${v}"`)}
+            {!this.isWorker && this.renderDobFilter()}
+            {!this.isWorker && this.renderDobToFilter()}
+            {!this.isWorker && this.renderPickerFilter("photoStatus", "insuree.PhotoStatusPicker", (s) => `photo_Isnull: ${s === WITHOUT_STR}`, { size: 6 })}
             <ControlledField
               module="insuree"
               id="InsureeFilter.showHistory"
               field={
-                <Grid item xs={6} className={classes.item}>
+                <Grid item xs={12} sm={6} md={this.isWorker ? 12 : 6} className={classes.item}>
                   <FormControlLabel
                     control={
                       <Checkbox
@@ -401,13 +427,13 @@ class InsureeFilter extends Component {
                 </Grid>
               }
             />
-          </Grid>
-        </Grid>
-        <Contributions
-          filters={filters}
-          onChangeFilters={onChangeFilters}
-          contributionKey={INSUREE_FILTER_CONTRIBUTION_KEY}
-        />
+            <Contributions
+              filters={filters}
+              onChangeFilters={onChangeFilters}
+              contributionKey={INSUREE_FILTER_CONTRIBUTION_KEY}
+            />
+          </Fragment>
+        )}
       </Grid>
     );
   }
