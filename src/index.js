@@ -12,6 +12,7 @@ import Enquiry from "./components/Enquiry";
 import InsureeOfficerPicker from "./pickers/InsureeOfficerPicker";
 import FamilyPicker from "./pickers/FamilyPicker";
 import InsureePicker from "./pickers/InsureePicker";
+import InsureeAffiliationStatusPicker from "./pickers/InsureeAffiliationStatusPicker";
 import InsureeChfIdPicker from "./pickers/InsureeChfIdPicker";
 import InsureeGenderPicker from "./pickers/InsureeGenderPicker";
 import EducationPicker from "./pickers/EducationPicker";
@@ -119,6 +120,7 @@ const DEFAULT_CONFIG = {
   ],
   "refs": [
     { key: "insuree.InsureeOfficerPicker", ref: InsureeOfficerPicker },
+    { key: "insuree.InsureeAffiliationStatusPicker", ref: InsureeAffiliationStatusPicker },
     { key: "insuree.InsureeOfficerPicker.projection", ref: ["id", "uuid", "code", "lastName", "otherNames"] },
     { key: "insuree.InsureePicker", ref: InsureePicker },
     { key: "insuree.InsureeChfIdPicker", ref: InsureeChfIdPicker },
