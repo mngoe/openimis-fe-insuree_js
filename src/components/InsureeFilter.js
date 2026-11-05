@@ -323,8 +323,8 @@ class InsureeFilter extends Component {
         {this.renderTextFilter("lastName", "Insuree.lastName", (v) => `lastName_Icontains: "${v}"`)}
       </Fragment>
     );
-    const advancedCount =
-      (this.isWorker ? 0 : 5) + 1 + (!!INSUREE_FILTER_CONTRIBUTION_KEY ? 1 : 0);
+    const contributionCount = this.props.modulesManager.getContribs(INSUREE_FILTER_CONTRIBUTION_KEY).length;
+    const advancedCount = (this.isWorker ? 0 : 5) + 1 + contributionCount;
 
     return (
       <Grid container className={classes.form}>
