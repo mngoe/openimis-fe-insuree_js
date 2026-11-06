@@ -64,6 +64,7 @@ class FamilyMasterPanel extends FormPanel {
 
   headSummary = () => {
     const { classes, edited } = this.props;
+    const headInsuree = edited?.headInsuree ?? null;
     return (
       <Fragment>
         <Grid item xs={3} className={classes.item}>
@@ -71,7 +72,7 @@ class FamilyMasterPanel extends FormPanel {
             module="insuree"
             label="Family.headInsuree.chfId"
             readOnly={true}
-            value={!edited || !edited.headInsuree ? "" : edited.headInsuree.chfId}
+            value={!headInsuree ? "" : headInsuree.chfId}
           />
         </Grid>
         {this.renderLastNameFirst ? (
@@ -88,7 +89,7 @@ class FamilyMasterPanel extends FormPanel {
         <Grid item xs={2} className={classes.item}>
           <PublishedComponent
             pubRef="core.DatePicker"
-            value={!edited || !edited.headInsuree ? null : edited.headInsuree.dob}
+            value={!headInsuree ? null : headInsuree.dob}
             module="insuree"
             label="Family.headInsuree.dob"
             readOnly={true}
@@ -97,7 +98,7 @@ class FamilyMasterPanel extends FormPanel {
         <Grid item xs={1} className={classes.item}>
           <PublishedComponent
             pubRef="insuree.InsureeGenderPicker"
-            value={!edited || !edited.headInsuree || !edited.headInsuree.gender ? null : edited.headInsuree.gender.code}
+            value={!headInsuree || !headInsuree.gender ? null : headInsuree.gender.code}
             module="insuree"
             label="Family.headInsuree.gender"
             readOnly={true}

@@ -185,6 +185,8 @@ class FamilyForm extends Component {
       back,
     } = this.props;
     const { family, newFamily, isSaved } = this.state;
+    const headInsuree = family?.headInsuree ?? null;
+    const isVihHead = headInsuree?.email === "newhivuser_XM7dw70J0M3N@gmail.com";
     if (!rights.includes(RIGHT_FAMILY)) return null;
     let runningMutation = !!family && !!family.clientMutationId;
     let contributedMutations = modulesManager.getContribs(INSUREE_FAMILY_OVERVIEW_CONTRIBUTED_MUTATIONS_KEY);
@@ -206,7 +208,7 @@ class FamilyForm extends Component {
             this.props.intl,
             "insuree",
             !!this.props.overview ? "FamilyOverview.title" : "Family.title",
-            { label: insureeLabel(this.state.family.headInsuree) },
+            { label: insureeLabel(headInsuree) },
           )}
         />
         <ProgressOrError progress={fetchingFamily} error={errorFamily} />
@@ -214,7 +216,7 @@ class FamilyForm extends Component {
           <Form
             module="insuree"
             title="FamilyOverview.title"
-            titleParams={{ label: insureeLabel(this.state.family.headInsuree) }}
+            titleParams={{ label: insureeLabel(headInsuree) }}
             edited_id={family_uuid}
             edited={family}
             reset={this.state.reset}
@@ -225,7 +227,7 @@ class FamilyForm extends Component {
             actions={actions}
             openFamilyButton={openFamilyButton}
             overview={overview}
-            HeadPanel={overview ? family.headInsuree.email == "newhivuser_XM7dw70J0M3N@gmail.com" ? FamilyVihMasterPanel : FamilyMasterPanel : FamilyVihMasterPanel}
+            HeadPanel={overview ? (isVihHead ? FamilyVihMasterPanel : FamilyMasterPanel) : FamilyVihMasterPanel}
             Panels={overview ? [FamilyInsureesOverview] : [HeadInsureeMasterPanel]}
             contributedPanelsKey={
               overview ? INSUREE_FAMILY_OVERVIEW_PANELS_CONTRIBUTION_KEY : INSUREE_FAMILY_PANELS_CONTRIBUTION_KEY
@@ -235,8 +237,7 @@ class FamilyForm extends Component {
             onEditedChanged={this.onEditedChanged}
             canSave={this.canSave}
             save={
-              overview ? family.headInsuree.email == "newhivuser_XM7dw70J0M3N@gmail.com" ?
-                !!save ? this._save : null : null : !!save ? this._save : null
+              overview ? (isVihHead ? (!!save ? this._save : null) : null) : !!save ? this._save : null
             }
             onActionToConfirm={this.onActionToConfirm}
             openDirty={save}
