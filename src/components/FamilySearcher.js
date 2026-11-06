@@ -183,15 +183,29 @@ class FamilySearcher extends Component {
   };
 
   itemFormatters = (filters) => {
+    const getHeadInsuree = (family) => family?.headInsuree ?? null;
+    const isPlaceholderEmail = (headInsuree) => headInsuree?.email === "newhivuser_XM7dw70J0M3N@gmail.com";
     var formatters = [
-      (family) => (!!family.headInsuree ? family.headInsuree.chfId : ""),
-      (family) => (!!family.headInsuree ? family.headInsuree.email == "newhivuser_XM7dw70J0M3N@gmail.com" ? "" : family.headInsuree.lastName : ""),
-      (family) => (!!family.headInsuree ? family.headInsuree.email == "newhivuser_XM7dw70J0M3N@gmail.com" ? "" : family.headInsuree.otherNames : ""),
-      (family) => (!!family.headInsuree ? family.headInsuree.phone : ""),
-      (family) =>
-        !!family.headInsuree
-          ? formatDateFromISO(this.props.modulesManager, this.props.intl, family.headInsuree.dob)
-          : "",
+      (family) => {
+        const headInsuree = getHeadInsuree(family);
+        return !headInsuree ? "" : headInsuree.chfId;
+      },
+      (family) => {
+        const headInsuree = getHeadInsuree(family);
+        return !headInsuree || isPlaceholderEmail(headInsuree) ? "" : headInsuree.lastName;
+      },
+      (family) => {
+        const headInsuree = getHeadInsuree(family);
+        return !headInsuree || isPlaceholderEmail(headInsuree) ? "" : headInsuree.otherNames;
+      },
+      (family) => {
+        const headInsuree = getHeadInsuree(family);
+        return !headInsuree ? "" : headInsuree.phone;
+      },
+      (family) => {
+        const headInsuree = getHeadInsuree(family);
+        return !headInsuree ? "" : formatDateFromISO(this.props.modulesManager, this.props.intl, headInsuree.dob);
+      },
     ];
     for (var i = 0; i < this.locationLevels; i++) {
       // need a fixed variable to refer to as parentLocation argument
