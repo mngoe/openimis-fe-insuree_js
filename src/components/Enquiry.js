@@ -57,8 +57,10 @@ const Enquiry = (props) => {
   const classes = useStyles();
 
   const handleKeyPress = (event) => {
-    if (event.charCode === 13 && event.target.value) {
-      setChfid(event.target.value);
+    // un copier-coller peut ajouter des espaces : on nettoie avant la recherche exacte
+    const value = (event.target.value || "").trim();
+    if (event.charCode === 13 && value) {
+      setChfid(value);
     }
   };
 
