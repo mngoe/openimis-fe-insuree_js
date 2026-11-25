@@ -120,9 +120,11 @@ export function fetchInsureeGenders() {
 }
 
 export function fetchInsuree(mm, chfid) {
+  // la recherche reste exacte, mais la saisie est nettoyee (espaces de copier-coller)
+  const normalizedChfId = (chfid || "").trim();
   let payload = formatPageQuery(
     "insurees",
-    [`chfId:"${chfid}", ignoreLocation:true`],
+    [`chfId:"${formatGQLString(normalizedChfId)}", ignoreLocation:true`],
     [
       "id",
       "uuid",
